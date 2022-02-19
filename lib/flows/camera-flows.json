@@ -13,6 +13,11 @@
         "camlocation": "http://127.0.0.1:1880"
     },
     {
+        "id": "48b8c1b86a590714",
+        "type": "camera-server",
+        "camlocation": "http://172.17.0.1:5555"
+    },
+    {
         "id": "cfc5bba0e14882c9",
         "type": "http request",
         "z": "e583048378e103aa",
@@ -467,7 +472,8 @@
         "camlocation": "425904c32524013a",
         "camId": "142120208749",
         "camProp": "Device Model Name",
-        "x": 680,
+        "propVal": "Testing Demo Name",
+        "x": 730,
         "y": 560,
         "wires": [
             []
@@ -480,7 +486,8 @@
         "camlocation": "425904c32524013a",
         "camId": "142121710143",
         "camProp": "Device TL Version Sub Minor",
-        "x": 710,
+        "propVal": "4",
+        "x": 690,
         "y": 640,
         "wires": [
             []
@@ -490,6 +497,10 @@
         "id": "972ffc632cb89250",
         "type": "set-camera-property",
         "z": "e583048378e103aa",
+        "camlocation": "48b8c1b86a590714",
+        "camId": "142121710143",
+        "camProp": "",
+        "propVal": "",
         "x": 650,
         "y": 720,
         "wires": [

@@ -101,7 +101,7 @@ class CameraController {
             }
             this.$('<option/>', toPass).appendTo(this.camSelector);
         })
-        this.$(this.camSelector).removeClass('loading').attr('disabled', false)
+        this.$(this.camSelector).removeClass('loading').prop('disabled', false)
         this.getToolTip();
     }
 
@@ -120,7 +120,7 @@ class CameraController {
             return false;
         }
 
-        this.$(this.camSelector).addClass('loading').attr('disabled', true)
+        this.$(this.camSelector).addClass('loading').prop('disabled', true)
         var url = this.host + '/api/vision/vision/cameras';
         if (document.location.port === new URL(this.host).port) {
             url = "resources/fvonprem-nodes/api/cameras.json";
@@ -136,8 +136,8 @@ class CameraController {
             this.allCamerasCallback(cameras);
         }).error((err) => {
             console.error("LOAD CAM FAILED", err);
-            this.$(this.camSelector).removeClass('loading').attr('disabled', false)
-            return err; // TODO: display error?
+            this.$(this.camSelector).removeClass('loading').prop('disabled', false)
+            return err; // TODO: dispatch event to display
         });
     }
 
@@ -180,7 +180,7 @@ class CameraController {
             this.saveToLocalStorage();
         }).error(err => {
             this.camSettings = {};
-            this.$(this.camPropSelector).removeClass('loading').attr('disabled', false);
+            this.$(this.camPropSelector).removeClass('loading').prop('disabled', false);
             console.error("LOAD CAM CONFIG FAILED", err);
         })
     }
@@ -212,7 +212,7 @@ class CameraController {
                 this.$('<option/>', toPass).appendTo(this.camPropSelector);
             }
         }
-        this.$(this.camPropSelector).removeClass('loading').attr('disabled', false);
+        this.$(this.camPropSelector).removeClass('loading').prop('disabled', false);
         this.buildPropValField()
         // console.info(allTypes);
     }

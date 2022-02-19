@@ -4,8 +4,8 @@
   "description": "",
   "main": "settings.js",
   "scripts": {
-    "debug": "node node_modules/node-red/red.js lib/flows/camera-flows.json -v -u . -dev",
-    "start": "node node_modules/node-red/red.js -v -u ."
+    "start": "node node_modules/node-red/red.js lib/flows/camera-flows.json -v -u . -dev",
+    "prod": "node node_modules/node-red/red.js -v -u ."
   },
   "node-red": {
     "nodes": {
