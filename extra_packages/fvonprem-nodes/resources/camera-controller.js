@@ -20,6 +20,7 @@ class CameraController {
         this.allCameras = [];
 
         this.host = "";
+        this.camlocation = p.camlocation || '';
         if (p.camlocation) {
             this.host = this.$(this.camServerSelector + ' option:selected').text();
         }
@@ -258,7 +259,7 @@ class CameraController {
             // this.propVal = this.$(this.camPropValSelector).val();
         });
 
-        console.log("buildPropValField " + this.propVal);
+        // console.log("buildPropValField " + this.propVal);
 
         this.getToolTip()
 
@@ -289,6 +290,7 @@ class CameraController {
     // like ComponentDidUpdate in react.js
     syncToForm() {
         let defaults = {
+            camlocation : this.camlocation,
             host: this.host,
             camId: this.camId,
             camProperty: this.camProperty,
@@ -300,7 +302,8 @@ class CameraController {
             let test = new URL(check);
             if (check && check.length > 0) {
                 defaults.host = check;
-                this.setHost(check)
+                this.host = check;
+                this.camlocation = this.$(this.camServerSelector + ' option:selected').val()
             }
         } catch (e) {
         }
@@ -329,7 +332,7 @@ class CameraController {
         } else if (defaults.propVal) {
             this.$(this.camPropValSelector).val(defaults.propVal)
         }
-        console.log(defaults);
+        console.log('synced form', defaults);
 
         const event = new CustomEvent('updateToolContext', {detail: defaults});
         document.getElementById("fvCamForm").dispatchEvent(event);
@@ -346,6 +349,7 @@ class CameraController {
     getContext() {
         const prop = this.$(this.camPropSelector + ' option:selected');
         let form = {
+            camlocation:this.$(this.camServerSelector + ' option:selected').val(),
             host: this.$(this.camServerSelector + ' option:selected').text(),
             camId: this.$(this.camSelector).val(),
             camProp: prop.val(),
@@ -356,6 +360,7 @@ class CameraController {
         }
 
         const ctx = {
+            camlocation:this.camlocation,
             host: this.host,
             camId: this.camId,
             camProp: this.camProp,

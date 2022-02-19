@@ -97,7 +97,7 @@
                 if (this.propVal && this.propVal.length > 0) parts.push(this.propVal);
                 if (parts.length === 0) parts.unshift(this._def.paletteLabel);
                 else if (parts.length === 1) parts.unshift("Config");
-                console.log("cam-label", parts, this);
+                // console.log("cam-label", parts, this);
                 return parts.join(' - ');
             },
             /*

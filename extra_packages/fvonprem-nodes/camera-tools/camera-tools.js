@@ -21,8 +21,24 @@ module.exports = function (RED) {
 
     function SetCameraConfig(n) {
         RED.nodes.createNode(this, n);
-        var node = this;
+        const node = this;
         const hostConfig = RED.nodes.getNode(n.camlocation || n.host);
+
+        const getContext = function(p) {
+            return {
+                camlocation: p.camlocation,
+                host: p.host,
+                camId: p.camId,
+                camProp: p.camProp,
+                propVal: p.propVal,
+                camProperty: p.camProperty
+            };
+        }
+
+        console.log("SetCameraConfig1", getContext(n));
+
+        node.camlocation = n.camlocation;
+        node.host = n.host;
         if (hostConfig && hostConfig.camlocation && hostConfig.camlocation.indexOf('http') > -1) {
             node.host = hostConfig.camlocation
         } else if (n.camlocation && n.camlocation.indexOf('http') > -1) {
@@ -33,7 +49,8 @@ module.exports = function (RED) {
         node.camId = n.camId;
         node.camProp = n.camProp;
         node.propVal = n.propVal;
-        // console.log("SetCameraConfig1", node);
+
+        console.log("SetCameraConfig2", getContext(node));
 
         const HandleFailures = function (msg) {
             // TODO: use RED.settings.logging.console.level to control debug / error messages
@@ -50,9 +67,10 @@ module.exports = function (RED) {
         }
 
         node.on('input', function (msg) {
-            node.debug(node)
+            console.log(getContext(node))
+
             const url = node.host + '/vision/configureCamera/' + node.camId + '/' + encodeURIComponent(node.camProp) + '/' + encodeURIComponent(node.propVal);
-            console.log("POST Image to " + url);
+            console.log("POST to " + url);
             node.status({fill:"green",shape:"dot",text:url})
 
             const options = {method: 'POST', timeout:2000, headers: {'Content-Type': 'application/json'}};

@@ -31,8 +31,8 @@
         "proxy": "",
         "authType": "",
         "senderr": false,
-        "x": 630,
-        "y": 240,
+        "x": 330,
+        "y": 60,
         "wires": [
             [
                 "360d68bf5cb74e80"
@@ -51,8 +51,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1050,
-        "y": 240,
+        "x": 750,
+        "y": 60,
         "wires": []
     },
     {
@@ -76,8 +76,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 420,
-        "y": 240,
+        "x": 120,
+        "y": 60,
         "wires": [
             [
                 "cfc5bba0e14882c9"
@@ -92,8 +92,8 @@
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 890,
-        "y": 240,
+        "x": 590,
+        "y": 60,
         "wires": [
             [
                 "16325bd41334fa7d"
@@ -114,8 +114,8 @@
         "proxy": "",
         "authType": "",
         "senderr": false,
-        "x": 650,
-        "y": 320,
+        "x": 350,
+        "y": 140,
         "wires": [
             [
                 "48af1cfbc885cd77"
@@ -143,8 +143,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 420,
-        "y": 320,
+        "x": 120,
+        "y": 140,
         "wires": [
             [
                 "af38eff819915b90"
@@ -159,8 +159,8 @@
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 890,
-        "y": 320,
+        "x": 590,
+        "y": 140,
         "wires": [
             [
                 "738bb8ec231dff6b"
@@ -179,8 +179,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1050,
-        "y": 320,
+        "x": 750,
+        "y": 140,
         "wires": []
     },
     {
@@ -197,8 +197,8 @@
         "proxy": "",
         "authType": "",
         "senderr": false,
-        "x": 670,
-        "y": 400,
+        "x": 370,
+        "y": 220,
         "wires": [
             [
                 "2f4d4bf455043661"
@@ -226,8 +226,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 420,
-        "y": 400,
+        "x": 120,
+        "y": 220,
         "wires": [
             [
                 "2ddcfc05db778bfc"
@@ -246,8 +246,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1050,
-        "y": 400,
+        "x": 750,
+        "y": 220,
         "wires": []
     },
     {
@@ -258,8 +258,8 @@
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 890,
-        "y": 400,
+        "x": 590,
+        "y": 220,
         "wires": [
             [
                 "054d985bd452b6d5"
@@ -280,8 +280,8 @@
         "proxy": "",
         "authType": "",
         "senderr": false,
-        "x": 680,
-        "y": 480,
+        "x": 380,
+        "y": 300,
         "wires": [
             [
                 "bbe8ebd4e7727f43"
@@ -309,8 +309,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 420,
-        "y": 480,
+        "x": 120,
+        "y": 300,
         "wires": [
             [
                 "355d49faeb81cb91"
@@ -329,8 +329,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1050,
-        "y": 480,
+        "x": 750,
+        "y": 300,
         "wires": []
     },
     {
@@ -341,8 +341,8 @@
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 890,
-        "y": 480,
+        "x": 590,
+        "y": 300,
         "wires": [
             [
                 "17e650abb383392a"
@@ -370,8 +370,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 420,
-        "y": 560,
+        "x": 120,
+        "y": 380,
         "wires": [
             [
                 "58163978efd9c314"
@@ -399,8 +399,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 420,
-        "y": 640,
+        "x": 120,
+        "y": 460,
         "wires": [
             [
                 "1e6e85594225af9b"
@@ -428,8 +428,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 420,
-        "y": 720,
+        "x": 120,
+        "y": 540,
         "wires": [
             [
                 "972ffc632cb89250"
@@ -457,8 +457,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 420,
-        "y": 800,
+        "x": 120,
+        "y": 620,
         "wires": [
             [
                 "ce911d44d4a63a98"
@@ -473,20 +473,28 @@
         "camId": "142121710143",
         "camProp": "Device Family Name",
         "propVal": "23",
-        "x": 670,
-        "y": 720,
+        "x": 370,
+        "y": 540,
         "wires": [
-            []
+            [
+                "caf576a4ca1271a3"
+            ]
         ]
     },
     {
         "id": "ce911d44d4a63a98",
         "type": "set-camera-property",
         "z": "e583048378e103aa",
-        "x": 650,
-        "y": 800,
+        "camlocation": "425904c32524013a",
+        "camId": "142121710143",
+        "camProp": "Device Vendor Name",
+        "propVal": "34",
+        "x": 370,
+        "y": 620,
         "wires": [
-            []
+            [
+                "814468df4bcfa559"
+            ]
         ]
     },
     {
@@ -497,10 +505,12 @@
         "camId": "142121710143",
         "camProp": "Device Manufacturer Info",
         "propVal": "test",
-        "x": 690,
-        "y": 560,
+        "x": 390,
+        "y": 380,
         "wires": [
-            []
+            [
+                "595fd0e25a23de7a"
+            ]
         ]
     },
     {
@@ -511,10 +521,76 @@
         "camId": "142121710143",
         "camProp": "Device Version",
         "propVal": "233",
-        "x": 660,
-        "y": 640,
+        "x": 360,
+        "y": 460,
         "wires": [
-            []
+            [
+                "8d529e734524ca86"
+            ]
         ]
+    },
+    {
+        "id": "595fd0e25a23de7a",
+        "type": "debug",
+        "z": "e583048378e103aa",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 670,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "8d529e734524ca86",
+        "type": "debug",
+        "z": "e583048378e103aa",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 610,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "caf576a4ca1271a3",
+        "type": "debug",
+        "z": "e583048378e103aa",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 630,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "814468df4bcfa559",
+        "type": "debug",
+        "z": "e583048378e103aa",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 610,
+        "y": 620,
+        "wires": []
     }
 ]
