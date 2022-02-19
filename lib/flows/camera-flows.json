@@ -10,7 +10,7 @@
     {
         "id": "425904c32524013a",
         "type": "camera-server",
-        "camlocation": "http://127.0.0.1:1880"
+        "camlocation": "http://127.0.0.1:1881"
     },
     {
         "id": "48b8c1b86a590714",
