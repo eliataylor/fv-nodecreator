@@ -1,0 +1,509 @@
+[
+    {
+        "id": "e583048378e103aa",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "425904c32524013a",
+        "type": "camera-server",
+        "camlocation": "http://127.0.0.1:1880"
+    },
+    {
+        "id": "cfc5bba0e14882c9",
+        "type": "http request",
+        "z": "e583048378e103aa",
+        "name": "List Cameras",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://172.17.0.1:5555/api/vision/vision/cameras",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 630,
+        "y": 240,
+        "wires": [
+            [
+                "360d68bf5cb74e80"
+            ]
+        ]
+    },
+    {
+        "id": "16325bd41334fa7d",
+        "type": "debug",
+        "z": "e583048378e103aa",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1050,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "ac06bcc66037e711",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 420,
+        "y": 240,
+        "wires": [
+            [
+                "cfc5bba0e14882c9"
+            ]
+        ]
+    },
+    {
+        "id": "360d68bf5cb74e80",
+        "type": "json",
+        "z": "e583048378e103aa",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 890,
+        "y": 240,
+        "wires": [
+            [
+                "16325bd41334fa7d"
+            ]
+        ]
+    },
+    {
+        "id": "af38eff819915b90",
+        "type": "http request",
+        "z": "e583048378e103aa",
+        "name": "Camera Config List",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://172.17.0.1:5555/api/vision/vision/configTree/142121710143",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 650,
+        "y": 320,
+        "wires": [
+            [
+                "48af1cfbc885cd77"
+            ]
+        ]
+    },
+    {
+        "id": "8b348b979914d36f",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 420,
+        "y": 320,
+        "wires": [
+            [
+                "af38eff819915b90"
+            ]
+        ]
+    },
+    {
+        "id": "48af1cfbc885cd77",
+        "type": "json",
+        "z": "e583048378e103aa",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 890,
+        "y": 320,
+        "wires": [
+            [
+                "738bb8ec231dff6b"
+            ]
+        ]
+    },
+    {
+        "id": "738bb8ec231dff6b",
+        "type": "debug",
+        "z": "e583048378e103aa",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1050,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "2ddcfc05db778bfc",
+        "type": "http request",
+        "z": "e583048378e103aa",
+        "name": "Release Single Camera",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://172.17.0.1:5555/api/vision/vision/release/142121710143",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 670,
+        "y": 400,
+        "wires": [
+            [
+                "2f4d4bf455043661"
+            ]
+        ]
+    },
+    {
+        "id": "9761744557772628",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 420,
+        "y": 400,
+        "wires": [
+            [
+                "2ddcfc05db778bfc"
+            ]
+        ]
+    },
+    {
+        "id": "054d985bd452b6d5",
+        "type": "debug",
+        "z": "e583048378e103aa",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1050,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "2f4d4bf455043661",
+        "type": "json",
+        "z": "e583048378e103aa",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 890,
+        "y": 400,
+        "wires": [
+            [
+                "054d985bd452b6d5"
+            ]
+        ]
+    },
+    {
+        "id": "355d49faeb81cb91",
+        "type": "http request",
+        "z": "e583048378e103aa",
+        "name": "Update Camera Resolution",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://172.17.0.1:5555/api/vision/vision/resolution/142121710143/640/480",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 680,
+        "y": 480,
+        "wires": [
+            [
+                "bbe8ebd4e7727f43"
+            ]
+        ]
+    },
+    {
+        "id": "85cbef71f22e860f",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 420,
+        "y": 480,
+        "wires": [
+            [
+                "355d49faeb81cb91"
+            ]
+        ]
+    },
+    {
+        "id": "17e650abb383392a",
+        "type": "debug",
+        "z": "e583048378e103aa",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1050,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "bbe8ebd4e7727f43",
+        "type": "json",
+        "z": "e583048378e103aa",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 890,
+        "y": 480,
+        "wires": [
+            [
+                "17e650abb383392a"
+            ]
+        ]
+    },
+    {
+        "id": "cd2fe1d9cad7e57e",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 420,
+        "y": 560,
+        "wires": [
+            [
+                "ca1f3ae4635b04d5"
+            ]
+        ]
+    },
+    {
+        "id": "871e617d1fed829a",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 420,
+        "y": 640,
+        "wires": [
+            [
+                "1e802378a067a475"
+            ]
+        ]
+    },
+    {
+        "id": "e7bf9e4d442831a3",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 420,
+        "y": 720,
+        "wires": [
+            [
+                "972ffc632cb89250"
+            ]
+        ]
+    },
+    {
+        "id": "88941b4b4106906b",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 420,
+        "y": 800,
+        "wires": [
+            [
+                "ce911d44d4a63a98"
+            ]
+        ]
+    },
+    {
+        "id": "ca1f3ae4635b04d5",
+        "type": "set-camera-property",
+        "z": "e583048378e103aa",
+        "camlocation": "425904c32524013a",
+        "camId": "142120208749",
+        "camProp": "Device Model Name",
+        "x": 680,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1e802378a067a475",
+        "type": "set-camera-property",
+        "z": "e583048378e103aa",
+        "camlocation": "425904c32524013a",
+        "camId": "142121710143",
+        "camProp": "Device TL Version Sub Minor",
+        "x": 710,
+        "y": 640,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "972ffc632cb89250",
+        "type": "set-camera-property",
+        "z": "e583048378e103aa",
+        "x": 650,
+        "y": 720,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ce911d44d4a63a98",
+        "type": "set-camera-property",
+        "z": "e583048378e103aa",
+        "x": 650,
+        "y": 800,
+        "wires": [
+            []
+        ]
+    }
+]

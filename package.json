@@ -1,0 +1,26 @@
+{
+  "name": "flexvision",
+  "version": "1.0.0",
+  "description": "",
+  "main": "settings.js",
+  "scripts": {
+    "debug": "node node_modules/node-red/red.js lib/flows/camera-flows.json -v -u . -dev",
+    "start": "node node_modules/node-red/red.js -v -u ."
+  },
+  "node-red": {
+    "nodes": {
+      "camera-tools": "camera-tools/camera-tools.js"
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-red": "^2.2.0",
+    "node-red-contrib-barcode": "0.0.3",
+    "node-red-contrib-fv-detection-nodes": "~1.0.3",
+    "node-red-contrib-modbus": "~5.21.0",
+    "node-red-contrib-refined-motion": "file:../node-red-contrib-refined-motion",
+    "node-red-node-serialport": "~0.15.0"
+  }
+}
