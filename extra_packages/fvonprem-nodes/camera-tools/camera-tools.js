@@ -89,6 +89,11 @@ module.exports = function (RED) {
                 console.log(`STATUS: ${res.statusCode}`);
                 console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
                 res.setEncoding('utf8');
+                let data = ''
+                res.on('data', (chunk) => {
+                    console.log(`BODY: ${chunk}`);
+                    data += chunk;
+                });
             });
             req.setTimeout(15000, (e) => {
                 HandleFailures('timeout', url);
