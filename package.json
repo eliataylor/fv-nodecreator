@@ -22,7 +22,6 @@
     "node-red-contrib-barcode": "0.0.3",
     "node-red-contrib-fv-detection-nodes": "~1.0.3",
     "node-red-contrib-modbus": "~5.21.0",
-    "node-red-contrib-refined-motion": "file:../node-red-contrib-refined-motion",
     "node-red-node-serialport": "~0.15.0"
   }
 }
