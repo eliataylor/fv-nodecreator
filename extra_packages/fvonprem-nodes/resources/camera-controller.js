@@ -29,7 +29,7 @@ class CameraController {
         this.propVal = p.propVal || "";
 
         this.syncToForm();
-        console.log('CTR INITALIZED', this.getContext());
+        console.log('CTR INITIALIZED', this.getContext());
 
     }
 
@@ -116,10 +116,15 @@ class CameraController {
                 }
             }
         }
+        if (this.host === "") {
+            return false;
+        }
 
         this.$(this.camSelector).addClass('loading').attr('disabled', true)
-        // var url = this.host + '/vision/cameras';
-        var url = "resources/fvonprem-nodes/api/cameras.json";
+        var url = this.host + '/api/vision/vision/cameras';
+        if (document.location.port === new URL(this.host).port) {
+            url = "resources/fvonprem-nodes/api/cameras.json";
+        }
 
         this.$.ajax({
             url: url,
@@ -157,8 +162,11 @@ class CameraController {
             }
         }
 
-        // var url = this.host + '/api/vision/vision/configTree/' + this.cam;
-        let url = "resources/fvonprem-nodes/api/configTree.json?camId=" + this.cam;
+
+        var url = this.host + '/api/vision/vision/configTree/' + this.cam;
+        if (document.location.port === new URL(this.host).port) {
+            url = "resources/fvonprem-nodes/api/configTree.json?camId=" + this.cam;
+        }
 
         this.$(this.camPropSelector).addClass('loading').attr('disabled', true);
 
