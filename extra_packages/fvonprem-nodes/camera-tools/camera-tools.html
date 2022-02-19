@@ -1,0 +1,145 @@
+<script type="text/javascript" src="resources/fvonprem-nodes/camera-controller.js" />
+<style type="text/css">
+    .red-ui-editor .form-row, .red-ui-editor-dialog .form-row { display: flex!important; align-content: center!important; }
+</style>
+
+<script type="text/html" data-template-name="remote-server">
+    <div class="form-row">
+        <label for="node-config-input-host"><i class="fa fa-bookmark"></i> Host</label>
+        <input type="text" id="node-config-input-host">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-port"><i class="fa fa-bookmark"></i> Port</label>
+        <input type="text" id="node-config-input-port">
+    </div>
+</script>
+
+<script type="text/html" data-template-name="camera-server">
+    <div class="form-row">
+        <label for="node-config-input-camlocation"><i class="fa fa-link" ></i> Host : Port</label>
+        <input type="text" id="node-config-input-camlocation" placeholder="http://locahost:8080">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="camera-server">
+    <p>Camera Location</p>
+</script>
+
+<script type="text/html" data-template-name="set-camera-property">
+    <div id="fvCamForm">
+    <div class="form-row">
+        <label for="node-input-camlocation"><i class="fa fa-link" ></i> Cam Location</label>
+        <select id="node-input-camlocation" ></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-camera"><i class="fa fa-camera" ></i> Target Cam</label>
+        <select id="node-input-camera" ></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-camprop"><i class="fa fa-tag" ></i> Cam Property</label>
+        <select id="node-input-camprop" ></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-propval"><i class="fa fa-outdent" ></i> Property Value</label>
+        <select id="node-input-propval" ></select>
+    </div>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="set-camera-property">
+    <p>Camera Property Options</p>
+    <div id="camPropertyDesc"></div>
+</script>
+
+<script type="text/javascript">
+    (function () {
+
+        RED.nodes.registerType('remote-server', {
+            category: 'config',
+            defaults: {
+                host: {value:"localhost",required:true},
+                port: {value:1234,required:true,validate:RED.validators.number()},
+            },
+            label: function() {
+                return this.host+":"+this.port;
+            }
+        });
+
+        RED.nodes.registerType('camera-server', {
+            category: 'config',
+            paletteLabel:'Camera Server',
+            defaults: {
+                camlocation: {value: "http://127.0.0.1:1880", required: true}
+            },
+            inputs: 0,
+            outputs: 0,
+            label: function () {
+                return this.camlocation;
+            }
+        });
+
+        RED.nodes.registerType('set-camera-property', {
+            category: 'Flexible Vision',
+            paletteLabel:'Configure Camera',
+            color: '#de7f7f',
+            defaults: {
+                camlocation: {type: "camera-server", required: true},
+                camId: {value: "", required: true},
+                camProp: {value: "", required: true},
+                propVal: {value: "", required: true}
+            },
+            inputs: 1,
+            outputs: 1,
+            icon: "outline-visibility-24px.svg",
+            label: function () {
+                let parts = [];
+                if (this.camProp && this.camProp.length > 0) parts.push(this.camProp);
+                if (this.propVal && this.propVal.length > 0) parts.push(this.propVal);
+                if (parts.length === 0) parts.unshift(this._def.paletteLabel);
+                else if (parts.length === 1) parts.unshift("Config");
+                console.log("cam-label", parts, this);
+                return parts.join(' - ');
+            },
+            /*
+            onpaletteremove: function() {
+                document.getElementById("fvCamForm").removeEventListener('updateToolContext', this.setFVContext);
+            },
+            oneditcancel: function() {
+                document.getElementById("fvCamForm").removeEventListener('updateToolContext', this.setFVContext);
+            },
+            oneditsave: function() {
+                document.getElementById("fvCamForm").removeEventListener('updateToolContext', this.setFVContext);
+            },
+            setFVContext: function(e) {
+                console.log("updateToolContext", e.detail);
+                this.camlocation = e.detail.host
+                this.camId = e.detail.camId
+                this.camProp = e.detail.camProp
+                this.propVal = e.detail.propVal
+            },
+             */
+            oneditprepare: function() {
+                const camController = new CameraController($, {
+                    camlocation: this.camlocation,
+                    camId:this.camId,
+                    camProp:this.camProp,
+                    propVal:this.propVal
+                })
+                camController.startListeners();
+
+                document.getElementById("fvCamForm").addEventListener('updateToolContext',
+//                    (e) => this.setFVContext(e),
+                    (e) => {
+                        console.log("updateToolContext", e.detail);
+                        debugger;
+                        this.camlocation = e.detail.host
+                        this.camId = e.detail.camId
+                        this.camProp = e.detail.camProp
+                        this.propVal = e.detail.propVal
+                    },
+                    {capture:false}
+                );
+            }
+        });
+    })();
+</script>

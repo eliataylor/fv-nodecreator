@@ -1,0 +1,173 @@
+<!-- fanuc registry definition -->
+<script type="text/x-red" data-template-name="imagerie-settings">
+    <div class="form-row">
+        <label for="node-config-input-host"><i class="fa fa-link" aria-hidden="true"></i> Hostname</label>
+        <input type="text" id="node-config-input-host" placeholder="host">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="imagerie-settings">
+    <p>Imagerie Server Hostname</p>
+</script>
+
+<!-- getter -->
+<script type="text/x-red" data-template-name="predict-upload">
+    <div class="form-row">
+        <label for="node-input-imagerieconfig"><i class="fa fa-link" aria-hidden="true"></i>Host:Port</label>
+        <select id="node-input-imagerieconfig" ></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-project"><i class="fa fa-outdent" aria-hidden="true"></i>Project</label>
+        <select type="text" id="node-input-project" >
+          <option>Set your host:port/path to load projects</option>
+        </select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="predict-upload">
+    <p>finds trained objects from uploaded</p>
+</script>
+
+<!-- setter -->
+<script type="text/x-red" data-template-name="predict-camera">
+    <div class="form-row">
+        <label for="node-input-imagerieconfig"><i class="fa fa-link" aria-hidden="true"></i> Host:Port</label>
+        <select id="node-input-imagerieconfig" ></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-project"><i class="fa fa-registered" aria-hidden="true"></i> Project</label>
+        <select type="text" id="node-input-project" >
+          <option>Set your host:port/path to load projects</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-camera"><i class="fa fa-registered" aria-hidden="true"></i> Camera</label>
+        <select type="text" id="node-input-camera" >
+          <option>Set your host:port/path to load cameras</option>
+        </select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="predict-camera">
+    <p>finds trained objects from selected camera stream</p>
+</script>
+
+
+<script type="text/javascript">
+(function() {
+    const PopulateProjects = function() {
+      var host = $('#node-input-imagerieconfig option:selected').text();
+      if (host.indexOf('http') !== 0) {
+        console.log("Select a server host");
+        return false;
+      }
+      var url = host + '/project';
+
+      // TODO: display preloader
+      $('#node-input-project').html('<option>Please Wait. Loading projects...</options>');
+
+      $.ajax({
+        url: url,
+        dataType: "json"
+      }).done(function (data) {
+        console.log("FOUND PROJECTS at " + host, data);
+        $('#node-input-project').html('');
+        for (var d=0; d < data.length; d++) {
+            $('<option/>',{
+                'value': data[d].id,
+                'text': data[d].name
+            }).appendTo('#node-input-project');
+        }
+        PopulateCameras();
+      }).error(function(err){
+        $('#node-input-project').html('Error loading projects');
+        console.log(err);
+      });
+    }
+
+    const PopulateCameras = function() {
+      var host = $('#node-input-imagerieconfig option:selected').text();
+      if (host.indexOf('http') !== 0) {
+        return false;
+      }
+      var url = host + '/camera';
+
+      // TODO: display preloader
+      $('#node-input-camera').html('<option>Please Wait. Loading cameras...</options>');
+
+      $.ajax({
+        url: url,
+        dataType: "json"
+      }).done(function (data) {
+        console.log("FOUND CAMERAS at " + host, data);
+        $('#node-input-camera').html('');
+        for (var d=0; d < data.length; d++) {
+            $('<option/>',{
+                'value': data[d].index,
+                'text': data[d].name
+            }).appendTo('#node-input-camera');
+        }
+      }).error(function(err){
+        $('#node-input-project').html('Error loading cameras');
+        console.log(err);
+      });
+    }
+
+    RED.nodes.registerType('imagerie-settings',{
+        category: 'config',
+        defaults: {
+            host: {value:"http://35.232.117.223:80/api/capture",required:true},
+        },
+        inputs:0,
+        outputs:0,
+        label: function() {
+            return this.host;
+        },
+        oneditsave: function() {
+          PopulateProjects();
+        }
+    });
+
+    RED.nodes.registerType('predict-upload',{
+        category: 'FlexibleAssembly',
+        color: '#c26bcc',
+        defaults: {
+            project: {value:"",required:true},
+            imagerieconfig: {type:"imagerie-settings",required:true}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "outline-visibility-24px.svg",
+        label: function() {
+          return this.name || "predict " + this.project;
+        },
+        oneditprepare: function(e) {
+          PopulateProjects();
+        }
+    });
+
+    RED.nodes.registerType('predict-camera',{
+        category: 'FlexibleAssembly',
+        color: '#ffdb20',
+        defaults: {
+            project: {value:"",required:true},
+            camera: {value:"",required:true},
+            imagerieconfig: {type:"imagerie-settings",required:true},
+        },
+        inputs:1,
+        outputs:1,
+        icon: "outline-videocam-24px.svg",
+        label: function() {
+          return this.name || "predict " + this.project + ":" + this.camera;
+        },
+        oneditprepare: function() {
+          PopulateProjects();
+
+          $('#node-input-project').change(function() {
+              // get cameras!
+              console.log($(this).val())
+          });
+        }
+    });
+})();
+</script>

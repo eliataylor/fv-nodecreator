@@ -5,6 +5,7 @@ MAINTAINER Eli Taylor eli@taylormadetraffic.com
 WORKDIR /usr/src/nodecreator
 
 
+COPY extra_packages ./
 COPY package*.json ./
 # COPY settings.json ./
 
