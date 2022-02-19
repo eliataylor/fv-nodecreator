@@ -14,8 +14,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "Flexible Assembly",
   "dependencies": {
+    "@node-red-contrib-themes/theme-collection": "^2.2.0",
     "node-red": "^2.2.0",
     "node-red-contrib-barcode": "0.0.3",
     "node-red-contrib-fv-detection-nodes": "~1.0.3",
