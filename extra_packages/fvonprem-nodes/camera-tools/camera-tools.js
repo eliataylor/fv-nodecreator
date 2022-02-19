@@ -59,10 +59,13 @@ module.exports = function (RED) {
             node.status({fill:"red",shape:"dot",text:"node-red:common.status.not-connected"});
         }
 
-        const HandleResponse = function(data) {
+        const HandleResponse = function(data, url) {
             node.send({
                 topic: 'cam-config-set',
-                payload: data
+                payload: {
+                    data:data,
+                    url:url
+                }
             });
         }
 
@@ -89,7 +92,7 @@ module.exports = function (RED) {
                     HandleResponse(data);
                 });
             });
-            req.setTimeout(2000, (e) => {
+            req.setTimeout(15000, (e) => {
                 HandleFailures(`timeout: ${url}`);
             });
 
@@ -98,7 +101,7 @@ module.exports = function (RED) {
             });
 
             req.end(data => {
-                HandleResponse(data);
+                HandleResponse(data, url);
             });
 
         });
