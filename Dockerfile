@@ -2,14 +2,16 @@ FROM node:16
 
 MAINTAINER Eli Taylor eli@taylormadetraffic.com
 
-WORKDIR /
+WORKDIR /usr/src/nodecreator
 
-COPY ../node-red-contrib-refined-motion ./nodecreator/extra_packages
 
 COPY package*.json ./
-COPY settings.json ./
+# COPY settings.json ./
 
 RUN npm install
+
+COPY . .
+
 EXPOSE 1881
 
 CMD ["npm", "start"]
