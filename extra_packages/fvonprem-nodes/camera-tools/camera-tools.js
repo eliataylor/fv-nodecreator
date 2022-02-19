@@ -89,10 +89,12 @@ module.exports = function (RED) {
                 console.log(`STATUS: ${res.statusCode}`);
                 console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
                 res.setEncoding('utf8');
-                let data = ''
+                let rawData = ''
                 res.on('data', (chunk) => {
-                    console.log(`BODY: ${chunk}`);
-                    data += chunk;
+                    rawData += chunk;
+                });
+                res.on('end', () => {
+                    HandleResponse(rawData, url);
                 });
             });
             req.setTimeout(15000, (e) => {
@@ -102,7 +104,7 @@ module.exports = function (RED) {
                 HandleFailures(e.message, url);
             });
             req.end(data => {
-                HandleResponse(data, url);
+                console.log(data, url);
             });
 
         });
