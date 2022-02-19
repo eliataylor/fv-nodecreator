@@ -69,7 +69,7 @@ module.exports = function (RED) {
         node.on('input', function (msg) {
             console.log(getContext(node))
 
-            const url = node.host + '/vision/configureCamera/' + node.camId + '/' + encodeURIComponent(node.camProp) + '/' + encodeURIComponent(node.propVal);
+            const url = node.host + '/api/vision/vision/configureCamera/' + node.camId + '/' + encodeURIComponent(node.camProp) + '/' + encodeURIComponent(node.propVal);
             console.log("POST to " + url);
             node.status({fill:"green",shape:"dot",text:url})
 
