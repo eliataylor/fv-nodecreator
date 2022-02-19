@@ -18,6 +18,6 @@ PORT=3080 node-red ~/flexibleassembly/RobotCommNode/motioncell-flow.json -s ~/fl
 
 ### on stage
 - `sudo docker build -t visioncell/nodecreator .`
-- `sudo docker stop fvonpremn_nodes && docker rm fvonpremn_nodes`
+- `sudo docker stop fvonpremn_nodes && sudo docker rm fvonpremn_nodes`
 - `sudo docker run --name fvonpremn_nodes -p 1881:1881 -d visioncell/nodecreator`
 - `sudo docker exec -it fvonpremn_nodes /bin/bash`
