@@ -163,9 +163,9 @@ class CameraController {
         }
 
 
-        var url = this.host + '/api/vision/vision/configTree/' + this.cam;
+        var url = this.host + '/api/vision/vision/configTree/' + this.camId;
         if (document.location.port === new URL(this.host).port) {
-            url = "resources/fvonprem-nodes/api/configTree.json?camId=" + this.cam;
+            url = "resources/fvonprem-nodes/api/configTree.json?camId=" + this.camId;
         }
 
         this.$(this.camPropSelector).addClass('loading').attr('disabled', true);
