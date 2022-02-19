@@ -1,7 +1,7 @@
 ### Eli's Localhost
-- `docker build -t elitaylor/nodecreator .`
+- `docker build -t ${whoami}/nodecreator .`
 - `docker stop nodecreator && docker rm nodecreator`
-- `docker run --name nodecreator -p 1881:1881 -d elitaylor/nodecreator`
+- `docker run --name nodecreator -p 1881:1881 -d ${whoami}/nodecreator`
 - `sudo docker exec -it nodecreator /bin/bash`
 
 
