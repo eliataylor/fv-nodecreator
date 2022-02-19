@@ -374,7 +374,7 @@
         "y": 560,
         "wires": [
             [
-                "ca1f3ae4635b04d5"
+                "58163978efd9c314"
             ]
         ]
     },
@@ -403,7 +403,7 @@
         "y": 640,
         "wires": [
             [
-                "1e802378a067a475"
+                "1e6e85594225af9b"
             ]
         ]
     },
@@ -466,42 +466,14 @@
         ]
     },
     {
-        "id": "ca1f3ae4635b04d5",
-        "type": "set-camera-property",
-        "z": "e583048378e103aa",
-        "camlocation": "425904c32524013a",
-        "camId": "142120208749",
-        "camProp": "Device Model Name",
-        "propVal": "Testing Demo Name",
-        "x": 730,
-        "y": 560,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "1e802378a067a475",
-        "type": "set-camera-property",
-        "z": "e583048378e103aa",
-        "camlocation": "425904c32524013a",
-        "camId": "142121710143",
-        "camProp": "Device TL Version Sub Minor",
-        "propVal": "4",
-        "x": 690,
-        "y": 640,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "972ffc632cb89250",
         "type": "set-camera-property",
         "z": "e583048378e103aa",
         "camlocation": "48b8c1b86a590714",
         "camId": "142121710143",
-        "camProp": "",
-        "propVal": "",
-        "x": 650,
+        "camProp": "Device Family Name",
+        "propVal": "23",
+        "x": 670,
         "y": 720,
         "wires": [
             []
@@ -513,6 +485,34 @@
         "z": "e583048378e103aa",
         "x": 650,
         "y": 800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "58163978efd9c314",
+        "type": "set-camera-property",
+        "z": "e583048378e103aa",
+        "camlocation": "48b8c1b86a590714",
+        "camId": "142121710143",
+        "camProp": "Device Manufacturer Info",
+        "propVal": "test",
+        "x": 690,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1e6e85594225af9b",
+        "type": "set-camera-property",
+        "z": "e583048378e103aa",
+        "camlocation": "48b8c1b86a590714",
+        "camId": "142121710143",
+        "camProp": "Device Version",
+        "propVal": "233",
+        "x": 660,
+        "y": 640,
         "wires": [
             []
         ]
