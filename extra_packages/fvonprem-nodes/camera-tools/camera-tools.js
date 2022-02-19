@@ -3,6 +3,7 @@ module.exports = function (RED) {
 
     // const fs = require("fs");
     const http = require('http');
+    // const fetch = require('fetch');
     const cors = require('cors');
 
     function RemoteServerNode(n) {
@@ -41,7 +42,7 @@ module.exports = function (RED) {
             node.status({fill:"red",shape:"dot",text:"node-red:common.status.not-connected"});
         }
 
-        const HandleReponse = function(data) {
+        const HandleResponse = function(data) {
             node.send({
                 topic: 'cam-config-set',
                 payload: data
@@ -49,17 +50,37 @@ module.exports = function (RED) {
         }
 
         node.on('input', function (msg) {
-            console.log("HANDLE MSG", msg);
-            node.status({fill:"red",shape:"dot",text:msg})
             node.debug(node)
             const url = node.host + '/vision/configureCamera/' + node.camId + '/' + encodeURIComponent(node.camProp) + '/' + encodeURIComponent(node.propVal);
             console.log("POST Image to " + url);
-            node.status({fill:"red",shape:"dot",text:url})
+            node.status({fill:"green",shape:"dot",text:url})
 
-            const options = {method: "POST", url: url, dataType: "json"};
+            const options = {method: 'POST', timeout:2000, headers: {'Content-Type': 'application/json'}};
 
-            http.get(options, HandleReponse, HandleFailures).on('error', (e) => {
-                console.error(`http error: ${e.message}`);
+            const req = http.request(url, options, (res) => {
+                console.log(`STATUS: ${res.statusCode}`);
+                console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
+                res.setEncoding('utf8');
+                let data = ''
+                res.on('data', (chunk) => {
+                    console.log(`BODY: ${chunk}`);
+                    data += chunk;
+                });
+                res.on('end', () => {
+                    console.log('No more data in response.', data);
+                    HandleResponse(data);
+                });
+            });
+            req.setTimeout(2000, (e) => {
+                HandleFailures(`timeout: ${url}`);
+            });
+
+            req.on('error', (e) => {
+                HandleFailures(`problem with request: ${e.message}`);
+            });
+
+            req.end(data => {
+                HandleResponse(data);
             });
 
         });
