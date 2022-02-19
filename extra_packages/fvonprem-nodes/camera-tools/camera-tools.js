@@ -52,10 +52,17 @@ module.exports = function (RED) {
 
         console.log("SetCameraConfig2", getContext(node));
 
-        const HandleFailures = function (msg) {
+        const HandleFailures = function (msg, url) {
             // TODO: use RED.settings.logging.console.level to control debug / error messages
             node.error(msg);
             console.error(msg);
+            node.send({
+                topic: 'cam-config-error',
+                payload: {
+                    msg:msg,
+                    url:url
+                }
+            });
             node.status({fill:"red",shape:"dot",text:"node-red:common.status.not-connected"});
         }
 
@@ -82,24 +89,13 @@ module.exports = function (RED) {
                 console.log(`STATUS: ${res.statusCode}`);
                 console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
                 res.setEncoding('utf8');
-                let data = ''
-                res.on('data', (chunk) => {
-                    console.log(`BODY: ${chunk}`);
-                    data += chunk;
-                });
-                res.on('end', () => {
-                    console.log('No more data in response.', data);
-                    HandleResponse(data);
-                });
             });
             req.setTimeout(15000, (e) => {
-                HandleFailures(`timeout: ${url}`);
+                HandleFailures('timeout', url);
             });
-
             req.on('error', (e) => {
-                HandleFailures(`problem with request: ${e.message}`);
+                HandleFailures(e.message, url);
             });
-
             req.end(data => {
                 HandleResponse(data, url);
             });
