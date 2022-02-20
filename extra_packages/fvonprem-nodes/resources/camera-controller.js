@@ -35,17 +35,29 @@ class CameraController {
     }
 
     startListeners() {
-        this.$(this.camServerSelector).change((e) => {
+        this.$(this.camServerSelector).on('change', (e) => {
+            if (e.currentTarget.value !== this.camlocation) {
+                this.$(this.camSelector).val('').trigger('change');
+            }
             this.syncToForm();
             this.loadCameras();
         })
 
-        this.$(this.camSelector).change((e) => {
+        this.$(this.camSelector).on('change', (e) => {
+            if (e.currentTarget.value !== this.camId) {
+                this.camProp = '';
+                this.camProperty = {};
+                this.$(this.camPropSelector).val('').trigger('change');
+            }
             this.syncToForm();
             this.loadCamConfigs();
         });
 
-        this.$(this.camPropSelector).change((e) => {
+        this.$(this.camPropSelector).on('change', (e) => {
+            if (e.currentTarget.value !== this.camProp) {
+                this.$(this.camPropValSelector).val('')
+                this.propVal = '';
+            }
             this.syncToForm();
             this.buildPropValField()
         });
@@ -189,31 +201,32 @@ class CameraController {
     renderCamProps() {
         let allTypes = {}
         this.$(this.camPropSelector).html('<option value="">Select a Property</option>');
-        let parents = {};
         for (let parent in this.camSettings) {
-            if (!parents[parent]) {
-                this.$('<option/>', {
-                    'text': parent,
-                    'disabled': true
-                }).appendTo(this.camPropSelector);
-                parents[parent] = true;
-            }
-            for (let selector in this.camSettings[parent]) {
-                allTypes[this.camSettings[parent][selector].type] = selector;
+
+            this.$('<option/>', {
+                'text': parent,
+                'disabled': true
+            }).appendTo(this.camPropSelector);
+
+            for (let label in this.camSettings[parent]) {
+                const setting = this.camSettings[parent][label];
+                // allTypes[setting.type] = label;
                 var toPass = {}
                 toPass['data-parent'] = parent;
-                toPass.value = selector;
-                toPass.text = selector;
-                if (this.camSettings[parent][selector].type === 'null') {
+                toPass['data-label'] = label;
+                toPass.value = setting.node_name;
+                toPass.text = label;
+                if (setting.type === 'null') {
                     toPass.disabled = true;
                 }
-                if (this.camProp === selector) {
+                if (this.camProp === label) {
                     toPass.selected = true;
                 }
                 this.$('<option/>', toPass).appendTo(this.camPropSelector);
             }
         }
         this.$(this.camPropSelector).removeClass('loading').prop('disabled', false);
+        this.syncToForm();
         this.buildPropValField()
         // console.info(allTypes);
     }
@@ -241,7 +254,6 @@ class CameraController {
         }
 
         this.$(this.camPropValSelector).attr('type', config.type);
-        this.$(this.camPropValSelector).val(this.propVal)
 
         if (this.camProperty.options) {
             this.$(this.camPropValSelector).html('');
@@ -254,33 +266,27 @@ class CameraController {
             })
         }
 
-        this.$(this.camPropValSelector).change((e) => {
+        this.$(this.camPropValSelector).val(this.propVal)
+        this.$(this.camPropValSelector).on('change', (e) => {
             this.syncToForm();
-            // this.propVal = this.$(this.camPropValSelector).val();
         });
 
-        // console.log("buildPropValField " + this.propVal);
-
         this.getToolTip()
-
     }
 
     releaseCamera() {
-        //
+        // TODO: when access_mode === "READ_ONLY"
     }
 
-    setProperty(parent, selector) {
-        if (!this.camSettings[parent] || !this.camSettings[parent][selector]) {
+    setProperty(parent, label) {
+        if (!this.camSettings[parent] || !this.camSettings[parent][label]) {
+            console.log("INVALID CAM PROP!!!", parent, label, this.camSettings)
             return false;
         }
-        this.camProperty = this.camSettings[parent][selector];
+        this.camProperty = this.camSettings[parent][label];
         this.camProperty.parent = parent;
-        this.camProperty.selector = selector;
-        this.camProp = selector;
-    }
-
-    setHost(host) {
-        this.host = host;
+        this.camProperty.label = label;
+        this.camProp = this.camProperty.node_name;
     }
 
     setCam(cam) {
@@ -317,12 +323,21 @@ class CameraController {
         }
 
         check = this.$(this.camPropSelector + ' option:selected')
-        if (check && check.length > 0) {
-            this.setProperty(check.attr('data-parent'), check.attr('value'))
+        if (check && check.length > 0 && check.attr('data-parent')) {
+            this.setProperty(check.attr('data-parent'), check.attr('data-label'))
             defaults.camProperty = this.camProperty;
-            defaults.camProp = check.attr('value')
-        } else if (defaults.camProp && defaults.camProp) {
-            this.$(this.camPropSelector).val(defaults.camProp)
+            defaults.camProp = this.camProp;
+        } else if (defaults.camProp && defaults.camProp.length > 0) {
+            for(let j in this.camSettings) {
+                outer: for(let i in this.camSettings[j]) {
+                    if (this.camSettings[j][i].node_name === defaults.camProp) {
+                        this.setProperty(j, i);
+                        defaults.camProperty = this.camSettings[j][i];
+                        break outer;
+                    }
+                }
+            }
+            this.$(this.camPropSelector).val(defaults.camProp);
         }
 
         check = this.$(this.camPropValSelector).val()
@@ -343,7 +358,7 @@ class CameraController {
     getToolTip() {
         let html = JSON.stringify(this.camProperty, null, 2);
         let ctx = JSON.stringify(this.getContext(), null, 2);
-        this.$('#camPropertyDesc').html(`<h3>Selected Property</h3><div>${html}</div><h3>Context</h3><div>${ctx}</div>`)
+        this.$('#camPropertyDesc').html(`<h3>Selected Property</h3><pre>${html}</pre><h3>Context</h3><pre>${ctx}</pre>`)
     }
 
     getContext() {
@@ -356,7 +371,13 @@ class CameraController {
             propVal: this.$(this.camPropValSelector).val()
         }
         if (form.camProp && form.camProp.length > 0) {
-            form.camProperty = this.camSettings[prop.attr('data-parent')][form.camProp]
+            const group = this.camSettings[prop.attr('data-parent')];
+            for(let i in group) {
+                if (group[i].node_name === form.camProp) {
+                    form.camProperty = group[i];
+                    break;
+                }
+            }
         }
 
         const ctx = {
