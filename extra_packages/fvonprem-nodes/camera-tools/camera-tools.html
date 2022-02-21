@@ -1,7 +1,4 @@
 <script type="text/javascript" src="resources/fvonprem-nodes/camera-controller.js" />
-<style type="text/css">
-    .red-ui-editor .form-row, .red-ui-editor-dialog .form-row { display: flex!important; align-content: center!important; }
-</style>
 
 <script type="text/html" data-template-name="remote-server">
     <div class="form-row">
@@ -26,6 +23,7 @@
 </script>
 
 <script type="text/html" data-template-name="set-camera-property">
+    <link rel="stylesheet" href="resources/fvonprem-nodes/camera-controller.css" />
     <div id="fvCamForm">
     <div class="form-row">
         <label for="node-input-camlocation"><i class="fa fa-link" ></i> Cam Location</label>
@@ -34,12 +32,13 @@
     <div class="form-row">
         <label for="node-input-camera"><i class="fa fa-camera" ></i> Target Cam</label>
         <select id="node-input-camera" ></select>
+        <button type="button" class="red-ui-button" id="allCamRefreshBtn">Refresh</button>
     </div>
     <div class="form-row">
         <label for="node-input-camprop"><i class="fa fa-tag" ></i> Cam Property</label>
         <select id="node-input-camprop" ></select>
     </div>
-    <div class="form-row">
+    <div class="form-row" id="fvPropValRow">
         <label for="node-input-propval"><i class="fa fa-outdent" ></i> Property Value</label>
         <select id="node-input-propval" ></select>
     </div>
@@ -50,6 +49,21 @@
 <script type="text/html" data-help-name="set-camera-property">
     <p>Camera Property Options</p>
     <div id="camPropertyHelp"></div>
+</script>
+
+<script type="text/html" data-template-name="release-camera">
+    <link rel="stylesheet" href="resources/fvonprem-nodes/camera-controller.css" />
+    <div id="fvCamForm">
+        <div class="form-row">
+            <label for="node-input-camlocation"><i class="fa fa-link" ></i> Cam Location</label>
+            <select id="node-input-camlocation" ></select>
+        </div>
+        <div class="form-row">
+            <label for="node-input-camera"><i class="fa fa-camera" ></i> Target Cam</label>
+            <select id="node-input-camera" ></select>
+            <button type="button" class="red-ui-button" id="allCamRefreshBtn">Refresh</button>
+        </div>
+    </div>
 </script>
 
 <script type="text/javascript">
@@ -87,18 +101,18 @@
                 camlocation: {type: "camera-server", required: true},
                 camId: {value: "", required: true},
                 camProp: {value: "", required: true},
-                propVal: {value: "", required: true}
+                propVal: {value: "", required: true},
+                access_mode: {value: "", required: false, hidden:true}
             },
             inputs: 1,
             outputs: 1,
-            icon: "outline-visibility-24px.svg",
+            icon: "baseline_video_settings_black_24dp.png",
             label: function () {
                 let parts = [];
-                if (this.camProp && this.camProp.length > 0) parts.push(this.camProp);
-                if (this.propVal && this.propVal.length > 0) parts.push(this.propVal);
+                if (this.camProp && this.camProp.length > 0) parts.push(this.camProp.length > 20 ? this.camProp.substring(0, 20) + '...' : this.camProp);
+                if (this.propVal && String(this.propVal).length > 0) parts.push(String(this.propVal).length > 20 ? String(this.propVal).substring(0, 20) + '...' : this.propVal);
                 if (parts.length === 0) parts.unshift(this._def.paletteLabel);
                 else if (parts.length === 1) parts.unshift("Config");
-                // console.log("cam-label", parts, this);
                 return parts.join(' - ');
             },
             /*
@@ -136,10 +150,52 @@
                         this.camId = e.detail.camId
                         this.camProp = e.detail.camProp
                         this.propVal = e.detail.propVal
+                        this.access_mode = e.detail.access_mode;
                     },
                     {capture:false}
                 );
             }
         });
+
+
+        RED.nodes.registerType('release-camera', {
+            category: 'Flexible Vision',
+            paletteLabel:'Release Camera',
+            color: '#ad5858',
+            defaults: {
+                camlocation: {type: "camera-server", required: true},
+                camId: {value: "", required: true}
+            },
+            inputs: 1,
+            outputs: 1,
+            icon: "baseline_videocam_off_black_24dp.png",
+            label: function () {
+                if (this.camId && this.camId.length > 0) {
+                    return 'Release ' + this.camId;
+                } else {
+                    return this._def.paletteLabel;
+                }
+            },
+            oneditprepare: function() {
+                const camController = new CameraController($, {
+                    camlocation: this.camlocation,
+                    camId:this.camId
+                })
+                camController.startListeners();
+
+                document.getElementById("fvCamForm").addEventListener('updateToolContext',
+                    (e) => {
+                        console.log("updateToolContext", e.detail);
+                        this.camlocation = e.detail.host
+                        this.camId = e.detail.camId
+                        this.camProp = e.detail.camProp
+                        this.propVal = e.detail.propVal
+                        this.access_mode = e.detail.access_mode;
+                    },
+                    {capture:false}
+                );
+            }
+        });
+
     })();
 </script>

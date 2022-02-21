@@ -1,9 +1,7 @@
 module.exports = function (RED) {
     "use strict";
 
-    // const fs = require("fs");
     const http = require('http');
-    // const fetch = require('fetch');
     const cors = require('cors');
 
     function RemoteServerNode(n) {
@@ -19,24 +17,10 @@ module.exports = function (RED) {
         this.camlocation = n.camlocation;
     }
 
-    function SetCameraConfig(n) {
+    function ReleaseCameraNode(n) {
         RED.nodes.createNode(this, n);
         const node = this;
         const hostConfig = RED.nodes.getNode(n.camlocation || n.host);
-
-        const getContext = function(p) {
-            return {
-                camlocation: p.camlocation,
-                host: p.host,
-                camId: p.camId,
-                camProp: p.camProp,
-                propVal: p.propVal,
-                camProperty: p.camProperty
-            };
-        }
-
-        console.log("SetCameraConfig1", getContext(n));
-
         node.camlocation = n.camlocation;
         node.host = n.host;
         if (hostConfig && hostConfig.camlocation && hostConfig.camlocation.indexOf('http') > -1) {
@@ -47,39 +31,11 @@ module.exports = function (RED) {
             node.host = n.host;
         }
         node.camId = n.camId;
-        node.camProp = n.camProp;
-        node.propVal = n.propVal;
-
-        console.log("SetCameraConfig2", getContext(node));
-
-        const HandleFailures = function (msg, url) {
-            // TODO: use RED.settings.logging.console.level to control debug / error messages
-            node.error(msg);
-            console.error(msg);
-            node.send({
-                topic: 'cam-config-error',
-                payload: {
-                    msg:msg,
-                    url:url
-                }
-            });
-            node.status({fill:"red",shape:"dot",text:"node-red:common.status.not-connected"});
-        }
-
-        const HandleResponse = function(data, url) {
-            node.send({
-                topic: 'cam-config-set',
-                payload: {
-                    data:data,
-                    url:url
-                }
-            });
-        }
 
         node.on('input', function (msg) {
-            console.log(getContext(node))
+            node.debug(JSON.stringify(getContext(node)))
 
-            const url = node.host + '/api/vision/vision/configureCamera/' + node.camId + '/' + encodeURIComponent(node.camProp) + '/' + encodeURIComponent(node.propVal);
+            const url = node.host + '/api/vision/vision/camera/release/' + node.camId;
             console.log("POST to " + url);
             node.status({fill:"green",shape:"dot",text:url})
 
@@ -108,6 +64,102 @@ module.exports = function (RED) {
             });
 
         });
+
+    }
+
+    function SetCameraConfig(n) {
+        RED.nodes.createNode(this, n);
+        const node = this;
+        const hostConfig = RED.nodes.getNode(n.camlocation || n.host);
+
+        const getContext = function(p) {
+            return {
+                camlocation: p.camlocation,
+                host: p.host,
+                camId: p.camId,
+                camProp: p.camProp,
+                propVal: p.propVal,
+                camProperty: p.camProperty,
+                access_mode: p.access_mode,
+            };
+        }
+
+        console.log("SetCameraConfig1", getContext(n));
+
+        node.camlocation = n.camlocation;
+        node.host = n.host;
+        if (hostConfig && hostConfig.camlocation && hostConfig.camlocation.indexOf('http') > -1) {
+            node.host = hostConfig.camlocation
+        } else if (n.camlocation && n.camlocation.indexOf('http') > -1) {
+            node.host = n.camlocation
+        } else if (n.host && n.host.indexOf('http') > -1) {
+            node.host = n.host;
+        }
+        node.camId = n.camId;
+        node.camProp = n.camProp;
+        node.propVal = n.propVal;
+        node.access_mode = n.access_mode;
+
+        console.log("SetCameraConfig2", getContext(node));
+
+        const HandleFailures = function (msg) {
+            // TODO: use RED.settings.logging.console.level to control debug / error messages
+            msg.topic = 'cam-config-error';
+            node.error(msg);
+            node.send(msg);
+            node.status({fill:"red",shape:"dot",text:"node-red:common.status.not-connected"});
+        }
+
+        const HandleResponse = function(msg) {
+            msg.topic = 'cam-config-set';
+            node.status({fill:"green",shape:"dot",text:"node-red:common.status.config-set"});
+            node.send(msg);
+        }
+
+        node.on('input', function (msg) {
+            node.debug(JSON.stringify(getContext(node)))
+
+            let url = node.host + '/api/vision/vision/';
+            const options = {timeout:15000, headers: {'Content-Type': 'application/json'}};
+            if (node.access_mode && node.access_mode.toUpperCase() === 'READ ONLY') {
+                options.method = 'GET';
+                url += 'configureCamera/' + node.camId + '/' + encodeURIComponent(node.camProp);
+            } else {
+                options.method = 'POST';
+                url += 'configureCamera/' + node.camId + '/' + encodeURIComponent(node.camProp) + '/' + encodeURIComponent(node.propVal);
+            }
+            msg.url = url;
+
+            console.log("POST to " + url);
+            node.status({fill:"yellow",shape:"dot",text:url})
+
+            const req = http.request(url, options, (res) => {
+                console.log(`STATUS: ${res.statusCode}`);
+                console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
+                res.setEncoding('utf8');
+                let rawData = ''
+                res.on('data', (chunk) => {
+                    rawData += chunk;
+                });
+                res.on('end', () => {
+                    msg.payload = rawData;
+                    HandleResponse(msg);
+                });
+            });
+            req.setTimeout(15000, (e) => {
+                msg.payload = 'timeout';
+                HandleFailures(msg);
+            });
+            req.on('error', (e) => {
+                msg.payload = e.message;
+                msg.url = url;
+                HandleFailures(msg);
+            });
+            req.end(data => {
+                console.log(data, url);
+            });
+
+        });
     }
 
 
@@ -122,5 +174,6 @@ module.exports = function (RED) {
     RED.nodes.registerType("remote-server",RemoteServerNode);
     RED.nodes.registerType("camera-server", CameraLocationNode);
     RED.nodes.registerType("set-camera-property", SetCameraConfig);
+    RED.nodes.registerType("release-camera", ReleaseCameraNode);
 
 }

@@ -323,6 +323,18 @@ module.exports = {
      * for all available options.
      */
     editorTheme: {
+        header: {
+            title: "FlexVision NodeCreator Dashbaord",
+//            image: "/absolute/path/to/header/image", // or null to remove image
+            url: "https://flexiblevision.com"
+        },
+
+        page: {
+            title: "FlexVision",
+            css: "/extra_packages/fvonprem-nodes/resources/fv-branding.css",
+            url: "https://flexiblevision.com"
+        },
+
         /** The following property can be used to set a custom theme for the editor.
          * See https://github.com/node-red-contrib-themes/theme-collection for
          * a collection of themes to chose from.

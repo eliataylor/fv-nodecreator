@@ -14,7 +14,7 @@ class CameraController {
             'Integer': {type: 'number', nodeName: 'input'},
             'Float': {type: 'number', nodeName: 'input'},
             'Command': {type: 'textarea', nodeName: 'textarea'},
-            'Bool': {type: 'checkbox', nodeName: 'checkbox'}
+            'Bool': {type: 'checkbox', nodeName: 'select'} // only because configTree provides True/False `options`
         };
         this.camSettings = {};
         this.allCameras = [];
@@ -35,6 +35,11 @@ class CameraController {
     }
 
     startListeners() {
+        document.getElementById('allCamRefreshBtn').onclick = () => {
+            console.log('refreshing cameras!')
+            this.loadCameras(true);
+        }
+
         this.$(this.camServerSelector).on('change', (e) => {
             if (e.currentTarget.value !== this.camlocation) {
                 this.$(this.camSelector).val('').trigger('change');
@@ -55,6 +60,7 @@ class CameraController {
 
         this.$(this.camPropSelector).on('change', (e) => {
             if (e.currentTarget.value !== this.camProp) {
+                // get default!
                 this.$(this.camPropValSelector).val('')
                 this.propVal = '';
             }
@@ -114,7 +120,8 @@ class CameraController {
             }
             this.$('<option/>', toPass).appendTo(this.camSelector);
         })
-        this.$(this.camSelector).removeClass('loading').prop('disabled', false)
+        this.$('#allCamRefreshBtn').prop('disabled', false)
+        this.togglePreloader(this.camSelector, false);
         this.getToolTip();
     }
 
@@ -133,7 +140,9 @@ class CameraController {
             return false;
         }
 
-        this.$(this.camSelector).addClass('loading').prop('disabled', true)
+
+        this.$('#allCamRefreshBtn').prop('disabled', true)
+        this.togglePreloader(this.camSelector, true)
         var url = this.host + '/api/vision/vision/cameras';
         if (document.location.port === new URL(this.host).port) {
             url = "resources/fvonprem-nodes/api/cameras.json";
@@ -147,11 +156,11 @@ class CameraController {
             this.allCameras = cameras;
             this.saveToLocalStorage();
             this.allCamerasCallback(cameras);
-        }).error((err) => {
+        }).fail((err) => {
             console.error("LOAD CAM FAILED", err);
-            this.$(this.camSelector).removeClass('loading').prop('disabled', false)
-            return err; // TODO: dispatch event to display
-        });
+            this.$('#allCamRefreshBtn').prop('disabled', false)
+            this.togglePreloader(this.camSelector, false)
+        })
     }
 
     allCamerasCallback(cameras) {
@@ -181,7 +190,7 @@ class CameraController {
             url = "resources/fvonprem-nodes/api/configTree.json?camId=" + this.camId;
         }
 
-        this.$(this.camPropSelector).addClass('loading').attr('disabled', true);
+        this.togglePreloader(this.camPropSelector, true)
 
         this.$.ajax({
             url: url,
@@ -191,9 +200,9 @@ class CameraController {
             this.camSettings = data;
             this.renderCamProps();
             this.saveToLocalStorage();
-        }).error(err => {
+        }).fail(err => {
             this.camSettings = {};
-            this.$(this.camPropSelector).removeClass('loading').prop('disabled', false);
+            this.togglePreloader(this.camPropSelector, false);
             console.error("LOAD CAM CONFIG FAILED", err);
         })
     }
@@ -210,7 +219,8 @@ class CameraController {
 
             for (let label in this.camSettings[parent]) {
                 const setting = this.camSettings[parent][label];
-                // allTypes[setting.type] = label;
+                allTypes[setting.type] = label;
+                allTypes[setting.access_mode] = label;
                 var toPass = {}
                 toPass['data-parent'] = parent;
                 toPass['data-label'] = label;
@@ -225,10 +235,10 @@ class CameraController {
                 this.$('<option/>', toPass).appendTo(this.camPropSelector);
             }
         }
-        this.$(this.camPropSelector).removeClass('loading').prop('disabled', false);
+        this.togglePreloader(this.camPropSelector, false)
         this.syncToForm();
         this.buildPropValField()
-        // console.info(allTypes);
+        console.info(allTypes);
     }
 
     buildPropValField() {
@@ -240,17 +250,19 @@ class CameraController {
         let config = this.typeMap[this.camProperty.type];
 
         if (this.$(this.camPropValSelector).prop('nodeName').toLowerCase() !== config.nodeName) {
-            // replace element with correct HTML5 element
             const newEl = document.createElement(config.nodeName);
             newEl.setAttribute('type', config.type);
             newEl.id = this.camPropValSelector.substring(1); // strip hash
-
             this.$(this.camPropValSelector).replaceWith(newEl)
-            // TODO: if checkbox > add label
         }
 
-        if (this.camProperty.min) {
-            // TODO: VALIDATION
+        const atts = {min:'min', max:'max', inc:'step'};
+        for(let att in atts) {
+            if (this.camProperty[att]) {
+                this.$(this.camPropValSelector).attr(atts[att], this.camProperty[att])
+            } else {
+                this.$(this.camPropValSelector).removeAttr(atts[att])
+            }
         }
 
         this.$(this.camPropValSelector).attr('type', config.type);
@@ -267,6 +279,7 @@ class CameraController {
         }
 
         this.$(this.camPropValSelector).val(this.propVal)
+
         this.$(this.camPropValSelector).on('change', (e) => {
             this.syncToForm();
         });
@@ -304,18 +317,19 @@ class CameraController {
             propVal: this.propVal
         };
         let check = this.$(this.camServerSelector + ' option:selected').text()
-        try {
-            let test = new URL(check);
-            if (check && check.length > 0) {
+        if (check.length > 0) {
+            try {
+                new URL(check);
                 defaults.host = check;
                 this.host = check;
                 this.camlocation = this.$(this.camServerSelector + ' option:selected').val()
+            } catch (e) {
+                console.error('invalid host url', e.messsage)
             }
-        } catch (e) {
         }
 
         check = this.$(this.camSelector + ' option:selected')
-        if (check && check.length > 0) {
+        if (check.length > 0) {
             defaults.camId = check.attr('value');
             this.setCam(check.attr('value'))
         } else if (defaults.camId) {
@@ -323,21 +337,30 @@ class CameraController {
         }
 
         check = this.$(this.camPropSelector + ' option:selected')
-        if (check && check.length > 0 && check.attr('data-parent')) {
+        if (check.length > 0 && check.attr('data-parent')) {
             this.setProperty(check.attr('data-parent'), check.attr('data-label'))
             defaults.camProperty = this.camProperty;
             defaults.camProp = this.camProp;
-        } else if (defaults.camProp && defaults.camProp.length > 0) {
-            for(let j in this.camSettings) {
-                outer: for(let i in this.camSettings[j]) {
+        } else if (defaults.camProp.length > 0) {
+            outer: for(let j in this.camSettings) {
+                for(let i in this.camSettings[j]) {
                     if (this.camSettings[j][i].node_name === defaults.camProp) {
                         this.setProperty(j, i);
-                        defaults.camProperty = this.camSettings[j][i];
+                        defaults.camProperty = this.camProperty;
                         break outer;
                     }
                 }
             }
             this.$(this.camPropSelector).val(defaults.camProp);
+        }
+
+        if (defaults.camProperty && defaults.camProperty.access_mode) {
+            defaults.access_mode = defaults.camProperty.access_mode;
+            if (defaults.access_mode.toUpperCase() === 'READ ONLY') {
+                this.$('#fvPropValRow').hide();
+            } else {
+                this.$('#fvPropValRow').show();
+            }
         }
 
         check = this.$(this.camPropValSelector).val()
@@ -347,8 +370,12 @@ class CameraController {
         } else if (defaults.propVal) {
             this.$(this.camPropValSelector).val(defaults.propVal)
         }
-        console.log('synced form', defaults);
+        if (this.propVal === '' && this.camProperty.value) {
+            this.propVal = this.camProperty.value;
+            this.$(this.camPropValSelector).val(this.camProperty.value)
+        }
 
+        // console.log('synced form', defaults);
         const event = new CustomEvent('updateToolContext', {detail: defaults});
         document.getElementById("fvCamForm").dispatchEvent(event);
 
@@ -359,6 +386,17 @@ class CameraController {
         let html = JSON.stringify(this.camProperty, null, 2);
         let ctx = JSON.stringify(this.getContext(), null, 2);
         this.$('#camPropertyDesc').html(`<h3>Selected Property</h3><pre>${html}</pre><h3>Context</h3><pre>${ctx}</pre>`)
+    }
+
+    togglePreloader(sel, show) {
+        let parent = this.$(sel).parent();
+        if (show === true) {
+            parent.addClass('loading')
+            this.$(sel).prop('disabled', true)
+        } else {
+            parent.removeClass('loading')
+            this.$(sel).prop('disabled', false)
+        }
     }
 
     getContext() {
