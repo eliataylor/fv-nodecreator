@@ -598,5 +598,48 @@
         "x": 590,
         "y": 620,
         "wires": []
+    },
+    {
+        "id": "9af7e6601d2bcbda",
+        "type": "release-camera",
+        "z": "e583048378e103aa",
+        "camlocation": "48b8c1b86a590714",
+        "camId": "142120208749",
+        "x": 370,
+        "y": 740,
+        "wires": [
+            [
+                "814468df4bcfa559"
+            ]
+        ]
+    },
+    {
+        "id": "37658252febe5c2b",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 740,
+        "wires": [
+            [
+                "9af7e6601d2bcbda"
+            ]
+        ]
     }
 ]

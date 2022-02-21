@@ -487,9 +487,10 @@
         "z": "e583048378e103aa",
         "camlocation": "425904c32524013a",
         "camId": "142121710143",
-        "camProp": "TimestampLatch",
-        "propVal": "test",
-        "x": 360,
+        "camProp": "TimestampLatchValue",
+        "propVal": "",
+        "access_mode": "Read Only",
+        "x": 390,
         "y": 620,
         "wires": [
             [
@@ -501,11 +502,12 @@
         "id": "58163978efd9c314",
         "type": "set-camera-property",
         "z": "e583048378e103aa",
-        "camlocation": "48b8c1b86a590714",
+        "camlocation": "425904c32524013a",
         "camId": "142121710143",
-        "camProp": "DeviceManufacturerInfo",
-        "propVal": "test",
-        "x": 390,
+        "camProp": "DeviceVendorName",
+        "propVal": "",
+        "access_mode": "Read Only",
+        "x": 380,
         "y": 380,
         "wires": [
             [
@@ -596,5 +598,48 @@
         "x": 590,
         "y": 620,
         "wires": []
+    },
+    {
+        "id": "9af7e6601d2bcbda",
+        "type": "release-camera",
+        "z": "e583048378e103aa",
+        "camlocation": "425904c32524013a",
+        "camId": "142120208749",
+        "x": 370,
+        "y": 740,
+        "wires": [
+            [
+                "814468df4bcfa559"
+            ]
+        ]
+    },
+    {
+        "id": "37658252febe5c2b",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 740,
+        "wires": [
+            [
+                "9af7e6601d2bcbda"
+            ]
+        ]
     }
 ]

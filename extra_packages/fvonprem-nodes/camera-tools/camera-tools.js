@@ -41,7 +41,7 @@ module.exports = function (RED) {
 
         const HandleResponse = function(msg) {
             msg.topic = 'cam-released';
-            node.status({fill:"green",shape:"dot",text:"node-red:common.status.config-set"});
+            node.status({fill:"green",shape:"dot",text:"node-red:common.status.cam-released"});
             node.send(msg);
         }
 
