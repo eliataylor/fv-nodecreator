@@ -32,14 +32,26 @@ module.exports = function (RED) {
         }
         node.camId = n.camId;
 
-        node.on('input', function (msg) {
-            node.debug(JSON.stringify(getContext(node)))
+        const HandleFailures = function (msg) {
+            msg.topic = 'cam-release-error';
+            node.error(msg);
+            node.send(msg);
+            node.status({fill:"red",shape:"dot",text:"node-red:common.status.not-connected"});
+        }
 
-            const url = node.host + '/api/vision/vision/camera/release/' + node.camId;
-            console.log("POST to " + url);
+        const HandleResponse = function(msg) {
+            msg.topic = 'cam-released';
+            node.status({fill:"green",shape:"dot",text:"node-red:common.status.config-set"});
+            node.send(msg);
+        }
+
+        node.on('input', function (msg) {
+
+            const url = node.host + '/api/vision/vision/release/' + node.camId;
+            console.log("GET to " + url);
             node.status({fill:"green",shape:"dot",text:url})
 
-            const options = {method: 'POST', timeout:2000, headers: {'Content-Type': 'application/json'}};
+            const options = {method: 'GET', timeout:15000, headers: {'Content-Type': 'application/json'}};
 
             const req = http.request(url, options, (res) => {
                 console.log(`STATUS: ${res.statusCode}`);
@@ -50,14 +62,18 @@ module.exports = function (RED) {
                     rawData += chunk;
                 });
                 res.on('end', () => {
-                    HandleResponse(rawData, url);
+                    msg.payload = rawData;
+                    HandleResponse(msg);
                 });
             });
             req.setTimeout(15000, (e) => {
-                HandleFailures('timeout', url);
+                msg.payload = 'timeout';
+                HandleFailures(msg);
             });
             req.on('error', (e) => {
-                HandleFailures(e.message, url);
+                msg.payload = e.message;
+                msg.url = url;
+                HandleFailures(msg);
             });
             req.end(data => {
                 console.log(data, url);
@@ -84,7 +100,7 @@ module.exports = function (RED) {
             };
         }
 
-        console.log("SetCameraConfig1", getContext(n));
+        // console.log("SetCameraConfig1", getContext(n));
 
         node.camlocation = n.camlocation;
         node.host = n.host;
@@ -100,7 +116,7 @@ module.exports = function (RED) {
         node.propVal = n.propVal;
         node.access_mode = n.access_mode;
 
-        console.log("SetCameraConfig2", getContext(node));
+        // console.log("SetCameraConfig2", getContext(node));
 
         const HandleFailures = function (msg) {
             // TODO: use RED.settings.logging.console.level to control debug / error messages
