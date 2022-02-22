@@ -114,7 +114,10 @@ class CameraController {
     renderCameras() {
         this.$(this.camSelector).html('<option value="">Select a Camera</option>');
         this.allCameras.forEach(o => {
-            const toPass = {'value': o.id, 'text': o.user_defined_name}
+            const toPass = {
+                'value': o.serial_number,
+                'text': [o.user_defined_name, o.serial_number].join(' - ')
+            }
             if (o.id === this.camId) {
                 toPass.selected = true;
             }
