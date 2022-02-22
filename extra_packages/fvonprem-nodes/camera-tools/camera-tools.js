@@ -116,6 +116,7 @@ module.exports = function (RED) {
         node.camProp = n.camProp;
         node.propVal = n.propVal;
         node.access_mode = n.access_mode;
+        node.node_type = n.node_type;
 
         // console.log("SetCameraConfig2", getContext(node));
 
