@@ -28,6 +28,7 @@ class CameraController {
         this.camProp = p.camProp || "";
         this.camProperty = {};
         this.propVal = p.propVal || "";
+        this.restoreFromLocalStorage();
 
         this.syncToForm();
         console.log('CTR INITIALIZED', this.getContext());
