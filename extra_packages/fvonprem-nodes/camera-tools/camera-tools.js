@@ -139,7 +139,7 @@ module.exports = function (RED) {
             const options = {timeout:15000, headers: {'Content-Type': 'application/json'}};
             if (node.access_mode && node.access_mode.toUpperCase() === 'READ ONLY') {
                 options.method = 'GET';
-                url += 'configureCamera/' + node.camId + '/' + encodeURIComponent(node.camProp);
+                url += 'readConfig/' + node.camId + '/' + encodeURIComponent(node.camProp);
             } else {
                 options.method = 'POST';
                 // url += 'configureCamera/' + node.camId + '/' + encodeURIComponent(node.camProp) + '/' + encodeURIComponent(node.propVal);

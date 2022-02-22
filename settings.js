@@ -324,7 +324,7 @@ module.exports = {
      */
     editorTheme: {
         header: {
-            title: "FlexVision NodeCreator Dashbaord",
+            title: "FlexVision NodeCreator Dashboard",
 //            image: "/absolute/path/to/header/image", // or null to remove image
             url: "https://flexiblevision.com"
         },
