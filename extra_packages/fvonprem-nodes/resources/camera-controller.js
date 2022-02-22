@@ -69,7 +69,7 @@ class CameraController {
             this.buildPropValField()
         });
 
-        this.loadCameras();
+        this.loadCameras(true);
     }
 
     restoreFromLocalStorage() {
@@ -358,7 +358,8 @@ class CameraController {
             this.$(this.camPropSelector).val(defaults.camProp);
         }
 
-        if (defaults.camProperty && defaults.camProperty.access_mode) {
+        if (defaults.camProperty) {
+            defaults.node_type = defaults.camProperty.node_type;
             defaults.access_mode = defaults.camProperty.access_mode;
             if (defaults.access_mode.toUpperCase() === 'READ ONLY') {
                 this.$('#fvPropValRow').hide();
@@ -412,7 +413,7 @@ class CameraController {
             camProp: prop.val(),
             propVal: this.$(this.camPropValSelector).val()
         }
-        if (form.camProp && form.camProp.length > 0) {
+        if (prop.length > 0) {
             const group = this.camSettings[prop.attr('data-parent')];
             for(let i in group) {
                 if (group[i].node_name === form.camProp) {
@@ -432,7 +433,7 @@ class CameraController {
         };
 
         if (JSON.stringify(ctx) !== JSON.stringify(form)) {
-            console.warn("OUT OF SYNC!", ctx, form)
+            console.warn("OUT OF SYNC?", ctx, form)
         }
 
         return {form: form, ctx: ctx}

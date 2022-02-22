@@ -97,6 +97,7 @@ module.exports = function (RED) {
                 propVal: p.propVal,
                 camProperty: p.camProperty,
                 access_mode: p.access_mode,
+                node_type: p.node_type,
             };
         }
 
@@ -146,7 +147,7 @@ module.exports = function (RED) {
                 url += 'setVal/' + node.camId;
                 options.body = {
                     node_name:node.camProp,
-                    node_type:'Float',
+                    node_type:node.node_type,
                     value:node.propVal
                 }
             }
