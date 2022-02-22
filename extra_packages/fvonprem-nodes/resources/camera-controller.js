@@ -118,7 +118,7 @@ class CameraController {
                 'value': o.serial_number,
                 'text': [o.user_defined_name, o.serial_number].join(' - ')
             }
-            if (o.id === this.camId) {
+            if (o.serial_number === this.camId) {
                 toPass.selected = true;
             }
             this.$('<option/>', toPass).appendTo(this.camSelector);
@@ -134,7 +134,7 @@ class CameraController {
             if (this.allCameras && this.allCameras.length > 0) {
                 if (this.camId === '') {
                     return this.allCamerasCallback(this.allCameras);
-                } else if (this.camId && this.allCameras.findIndex(c => c.id === this.camId) > -1) {
+                } else if (this.camId && this.allCameras.findIndex(c => c.serial_number === this.camId) > -1) {
                     return this.allCamerasCallback(this.allCameras);
                 }
             }
@@ -171,7 +171,7 @@ class CameraController {
         if (!this.camId) {
             return false;
         }
-        let camera = cameras.find(c => c.id === this.camId);
+        let camera = cameras.find(c => c.serial_number === this.camId);
         if (!camera) {
             return console.warn("THIS CAMERA IS NO LONGER CONNECTED", this.camId)
         }
