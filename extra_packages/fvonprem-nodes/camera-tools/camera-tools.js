@@ -48,10 +48,11 @@ module.exports = function (RED) {
         node.on('input', function (msg) {
 
             const url = node.host + '/api/vision/vision/release/' + node.camId;
-            console.log("GET to " + url);
             node.status({fill:"green",shape:"dot",text:url})
 
             const options = {method: 'GET', timeout:15000, headers: {'Content-Type': 'application/json'}};
+
+            node.debug(url);
 
             const req = http.request(url, options, (res) => {
                 console.log(`STATUS: ${res.statusCode}`);
@@ -154,7 +155,8 @@ module.exports = function (RED) {
             }
             msg.url = url;
 
-            console.log("POST to " + url);
+            node.debug(url);
+            node.debug(JSON.stringify(options));
             node.status({fill:"yellow",shape:"dot",text:url})
 
             const req = http.request(url, options, (res) => {
