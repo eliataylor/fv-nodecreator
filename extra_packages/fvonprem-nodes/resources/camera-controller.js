@@ -359,7 +359,7 @@ class CameraController {
         }
 
         if (defaults.camProperty) {
-            defaults.node_type = defaults.camProperty.node_type;
+            defaults.node_type = defaults.camProperty.type;
             defaults.access_mode = defaults.camProperty.access_mode;
             if (defaults.access_mode.toUpperCase() === 'READ ONLY') {
                 this.$('#fvPropValRow').hide();

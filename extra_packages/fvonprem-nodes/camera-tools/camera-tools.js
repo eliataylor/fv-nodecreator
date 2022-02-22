@@ -145,7 +145,6 @@ module.exports = function (RED) {
                 url += 'readConfig/' + node.camId + '/' + encodeURIComponent(node.camProp);
             } else {
                 options.method = 'POST';
-                // url += 'configureCamera/' + node.camId + '/' + encodeURIComponent(node.camProp) + '/' + encodeURIComponent(node.propVal);
                 url += 'setVal/' + node.camId;
                 options.body = {
                     node_name:node.camProp,
