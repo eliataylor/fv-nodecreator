@@ -76,9 +76,7 @@ module.exports = function (RED) {
                 msg.url = url;
                 HandleFailures(msg);
             });
-            req.end(data => {
-                console.log(data, url);
-            });
+            req.end();
 
         });
 
@@ -156,6 +154,7 @@ module.exports = function (RED) {
 
             node.debug(url);
             node.debug(JSON.stringify(options));
+
             node.status({fill:"yellow",shape:"dot",text:url})
 
             const req = http.request(url, options, (res) => {
@@ -180,9 +179,7 @@ module.exports = function (RED) {
                 msg.url = url;
                 HandleFailures(msg);
             });
-            req.end(data => {
-                console.log(data, url);
-            });
+            req.end();
 
         });
     }

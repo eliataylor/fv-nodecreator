@@ -381,8 +381,12 @@ class CameraController {
         }
 
         // console.log('synced form', defaults);
-        const event = new CustomEvent('updateToolContext', {detail: defaults});
-        document.getElementById("fvCamForm").dispatchEvent(event);
+        if (document.getElementById("fvCamForm")) {
+            const event = new CustomEvent('updateToolContext', {detail: defaults});
+            document.getElementById("fvCamForm").dispatchEvent(event);
+        } else {
+            console.warn('Form not in DOM', defaults);
+        }
 
         return defaults;
     }
