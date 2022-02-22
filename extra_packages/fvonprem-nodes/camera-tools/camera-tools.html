@@ -102,7 +102,8 @@
                 camId: {value: "", required: true},
                 camProp: {value: "", required: true},
                 propVal: {value: "", required: true},
-                access_mode: {value: "", required: false, hidden:true}
+                access_mode: {value: "", required: false, hidden:true},
+                node_type: {value: "", required: false, hidden:true}
             },
             inputs: 1,
             outputs: 1,
@@ -151,6 +152,7 @@
                         this.camProp = e.detail.camProp
                         this.propVal = e.detail.propVal
                         this.access_mode = e.detail.access_mode;
+                        this.node_type = e.detail.node_type;
                     },
                     {capture:false}
                 );
@@ -191,6 +193,7 @@
                         this.camProp = e.detail.camProp
                         this.propVal = e.detail.propVal
                         this.access_mode = e.detail.access_mode;
+                        this.node_type = e.detail.node_type;
                     },
                     {capture:false}
                 );
