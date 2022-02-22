@@ -142,7 +142,13 @@ module.exports = function (RED) {
                 url += 'configureCamera/' + node.camId + '/' + encodeURIComponent(node.camProp);
             } else {
                 options.method = 'POST';
-                url += 'configureCamera/' + node.camId + '/' + encodeURIComponent(node.camProp) + '/' + encodeURIComponent(node.propVal);
+                // url += 'configureCamera/' + node.camId + '/' + encodeURIComponent(node.camProp) + '/' + encodeURIComponent(node.propVal);
+                url += 'setVal/' + node.camId;
+                options.body = {
+                    node_name:node.camProp,
+                    node_type:'Float',
+                    value:node.propVal
+                }
             }
             msg.url = url;
 
