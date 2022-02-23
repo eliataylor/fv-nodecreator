@@ -162,7 +162,7 @@ module.exports = function (RED) {
 
             node.status({fill:"yellow",shape:"dot",text:url})
 
-            const req = http.request(options, (res) => {
+            const req = http.request(url, options, (res) => {
                 console.log(`STATUS: ${res.statusCode}`);
                 console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
                 res.setEncoding('utf8');
