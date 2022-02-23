@@ -53,8 +53,26 @@ module.exports = function (RED) {
             node.status({fill:"green",shape:"dot",text:url})
 
             const options = {method: 'GET', timeout:15000, headers: {'Content-Type': 'application/json'}};
+            options.url = url;
             node.debug(url);
 
+            request(options, (error, response, body) => {
+                console.log(error, body)
+                if (!error) {
+                    try {
+                        let data = JSON.parse(body);
+                        msg.payload = data;
+                        return HandleResponse(msg);
+                    } catch (e) {
+
+                    }
+                }
+                msg.payload = error;
+                msg.url = url;
+                HandleFailures(msg);
+            });
+
+            /*
             const req = http.request(url, options, (res) => {
                 console.log(`STATUS: ${res.statusCode}`);
                 console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
@@ -78,6 +96,7 @@ module.exports = function (RED) {
                 HandleFailures(msg);
             });
             req.end();
+             */
 
 
         });
@@ -160,7 +179,7 @@ module.exports = function (RED) {
 
             node.status({fill:"yellow",shape:"dot",text:url})
 
-            request(options, function(error, response, body){
+            request(options, (error, response, body) => {
                 console.log(error, body)
                 if (!error) {
                     try {
