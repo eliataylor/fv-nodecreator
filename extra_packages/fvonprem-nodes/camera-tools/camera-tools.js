@@ -160,8 +160,8 @@ module.exports = function (RED) {
 
             node.status({fill:"yellow",shape:"dot",text:url})
 
-            request.post(options, function(error, response, body){
-                console.log(error, response, body)
+            request(options, function(error, response, body){
+                console.log(error, body)
                 if (!error) {
                     try {
                         let data = JSON.parse(body);
