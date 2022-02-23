@@ -144,11 +144,11 @@ module.exports = function (RED) {
             } else {
                 options.method = 'POST';
                 url += 'setVal/' + node.camId;
-                options.body = {
+                options.body = JSON.stringify({
                     node_name:node.camProp,
                     node_type:node.node_type,
                     value:node.propVal
-                }
+                })
             }
             msg.url = url;
 
