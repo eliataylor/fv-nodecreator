@@ -51,7 +51,6 @@ module.exports = function (RED) {
             node.status({fill:"green",shape:"dot",text:url})
 
             const options = {method: 'GET', timeout:15000, headers: {'Content-Type': 'application/json'}};
-
             node.debug(url);
 
             const req = http.request(url, options, (res) => {
@@ -136,6 +135,7 @@ module.exports = function (RED) {
         node.on('input', function (msg) {
             node.debug(JSON.stringify(getContext(node)))
 
+
             let url = node.host + '/api/vision/vision/';
             const options = {timeout:15000, headers: {'Content-Type': 'application/json'}};
             if (node.access_mode && node.access_mode.toUpperCase() === 'READ ONLY') {
@@ -157,11 +157,16 @@ module.exports = function (RED) {
 
             node.status({fill:"yellow",shape:"dot",text:url})
 
-            const req = http.request(url, options, (res) => {
+            const pUrl = new URL(url);
+            options.hostname = pUrl.hostname;
+            options.port = pUrl.port;
+            options.pathname = pUrl.pathname;
+
+            const req = http.request(options, (res) => {
                 console.log(`STATUS: ${res.statusCode}`);
                 console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
                 res.setEncoding('utf8');
-                let rawData = ''
+                let rawData = '';
                 res.on('data', (chunk) => {
                     rawData += chunk;
                 });

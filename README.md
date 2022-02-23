@@ -6,12 +6,12 @@
 
 
 ## Teamviewer Dev Env
-- `git pull origin master && sudo docker stop fvonpremn_nodes && sudo docker rm fvonpremn_nodes && sudo docker build -t visioncell/nodecreator . && sudo docker run --name fvonpremn_nodes -p 1881:1881 -d visioncell/nodecreator`
+- `git pull origin master && sudo docker stop fvonprem_nodes && sudo docker rm fvonprem_nodes && sudo docker build -t visioncell/nodecreator . && sudo docker run --name fvonprem_nodes -p 1881:1881 -d visioncell/nodecreator`
 
 - `sudo docker build -t visioncell/nodecreator .`
-- `sudo docker stop fvonpremn_nodes && sudo docker rm fvonpremn_nodes`
-- `sudo docker run --name fvonpremn_nodes -p 1881:1881 -d visioncell/nodecreator`
-- `sudo docker exec -it fvonpremn_nodes /bin/bash`
+- `sudo docker stop fvonprem_nodes && sudo docker rm fvonprem_nodes`
+- `sudo docker run --name fvonprem_nodes -p 1881:1881 -d visioncell/nodecreator`
+- `sudo docker exec -it fvonprem_nodes /bin/bash`
 
 
 ## Testing Environment
