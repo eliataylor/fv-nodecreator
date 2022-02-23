@@ -13,7 +13,9 @@
     }
   },
   "keywords": [],
-  "author": "",
+  "author": {
+    "name": "Flexible Vision"
+  },
   "license": "Flexible Assembly",
   "dependencies": {
     "@node-red-contrib-themes/theme-collection": "^2.2.0",

@@ -360,11 +360,13 @@ class CameraController {
 
         if (defaults.camProperty) {
             defaults.node_type = defaults.camProperty.type;
-            defaults.access_mode = defaults.camProperty.access_mode;
-            if (defaults.access_mode.toUpperCase() === 'READ ONLY') {
-                this.$('#fvPropValRow').hide();
-            } else {
-                this.$('#fvPropValRow').show();
+            if (defaults.camProperty.access_mode) {
+                defaults.access_mode = defaults.camProperty.access_mode;
+                if (defaults.access_mode.toUpperCase() === 'READ ONLY') {
+                    this.$('#fvPropValRow').hide();
+                } else {
+                    this.$('#fvPropValRow').show();
+                }
             }
         }
 
