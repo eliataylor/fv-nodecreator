@@ -161,15 +161,19 @@ module.exports = function (RED) {
             node.status({fill:"yellow",shape:"dot",text:url})
 
             request.post(options, function(error, response, body){
+                console.log(error, response, body)
                 if (!error) {
-                    let data = JSON.parse(body);
-                    msg.payload = data;
-                    HandleResponse(msg);
-                } else {
-                    msg.payload = error;
-                    msg.url = url;
-                    HandleFailures(msg);
+                    try {
+                        let data = JSON.parse(body);
+                        msg.payload = data;
+                        return HandleResponse(msg);
+                    } catch (e) {
+
+                    }
                 }
+                msg.payload = error;
+                msg.url = url;
+                HandleFailures(msg);
             });
 
             /*
