@@ -1,7 +1,9 @@
+const http = require("http");
 module.exports = function (RED) {
     "use strict";
 
     const http = require('http');
+    const request = require('request');
     const cors = require('cors');
 
     function RemoteServerNode(n) {
@@ -77,6 +79,7 @@ module.exports = function (RED) {
             });
             req.end();
 
+
         });
 
     }
@@ -135,7 +138,6 @@ module.exports = function (RED) {
         node.on('input', function (msg) {
             node.debug(JSON.stringify(getContext(node)))
 
-
             let url = node.host + '/api/vision/vision/';
             const options = {timeout:15000, headers: {'Content-Type': 'application/json'}};
             if (node.access_mode && node.access_mode.toUpperCase() === 'READ ONLY') {
@@ -152,16 +154,38 @@ module.exports = function (RED) {
             }
             msg.url = url;
 
-            const pUrl = new URL(url);
-            options.hostname = pUrl.hostname;
-            options.port = pUrl.port;
-            options.pathname = pUrl.pathname;
-
             node.debug(url);
             node.debug(JSON.stringify(options));
 
             node.status({fill:"yellow",shape:"dot",text:url})
 
+            request.post(options, function(error, response, body){
+                if (!error) {
+                    let data = JSON.parse(body);
+                    msg.payload = data;
+                    HandleResponse(msg);
+                } else {
+                    msg.payload = error;
+                    msg.url = url;
+                    HandleFailures(msg);
+                }
+            });
+
+            /*
+            fetch(url, options)
+            .then(response => response.json())
+            .then(data => {
+                msg.payload = data;
+                HandleResponse(msg);
+            })
+            .catch((e) => {
+                msg.payload = e.message;
+                msg.url = url;
+                HandleFailures(msg);
+            });
+             */
+
+            /*
             const req = http.request(url, options, (res) => {
                 console.log(`STATUS: ${res.statusCode}`);
                 console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
@@ -185,6 +209,8 @@ module.exports = function (RED) {
                 HandleFailures(msg);
             });
             req.end();
+
+             */
 
         });
     }

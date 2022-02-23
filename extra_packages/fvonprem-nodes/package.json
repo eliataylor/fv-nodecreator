@@ -6,8 +6,7 @@
     "license": "Flexible Assembly",
     "node-red": {
         "nodes": {
-            "camera-tools": "camera-tools/camera-tools.js",
-            "imagerie-tools": "imagerie-tools/imagerie-tools.js"
+            "camera-tools": "camera-tools/camera-tools.js"
         }
     },
     "dependencies": {

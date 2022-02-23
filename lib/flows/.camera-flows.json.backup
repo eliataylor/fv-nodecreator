@@ -176,10 +176,11 @@
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "false",
+        "complete": "true",
+        "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 750,
+        "x": 730,
         "y": 140,
         "wires": []
     },
@@ -243,10 +244,11 @@
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "false",
+        "complete": "true",
+        "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 750,
+        "x": 730,
         "y": 220,
         "wires": []
     },
@@ -326,10 +328,11 @@
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "false",
+        "complete": "true",
+        "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 750,
+        "x": 730,
         "y": 300,
         "wires": []
     },
@@ -371,7 +374,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 120,
-        "y": 380,
+        "y": 460,
         "wires": [
             [
                 "58163978efd9c314"
@@ -400,7 +403,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 120,
-        "y": 460,
+        "y": 540,
         "wires": [
             [
                 "1e6e85594225af9b"
@@ -429,7 +432,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 120,
-        "y": 540,
+        "y": 620,
         "wires": [
             [
                 "972ffc632cb89250"
@@ -458,7 +461,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 120,
-        "y": 620,
+        "y": 700,
         "wires": [
             [
                 "ce911d44d4a63a98"
@@ -471,10 +474,11 @@
         "z": "e583048378e103aa",
         "camlocation": "48b8c1b86a590714",
         "camId": "142121710143",
-        "camProp": "DeviceFamilyName",
-        "propVal": "23",
-        "x": 370,
-        "y": 540,
+        "camProp": "ExposureTime",
+        "propVal": "7900",
+        "access_mode": "Read and Write",
+        "x": 360,
+        "y": 620,
         "wires": [
             [
                 "caf576a4ca1271a3"
@@ -485,13 +489,13 @@
         "id": "ce911d44d4a63a98",
         "type": "set-camera-property",
         "z": "e583048378e103aa",
-        "camlocation": "425904c32524013a",
+        "camlocation": "48b8c1b86a590714",
         "camId": "142121710143",
-        "camProp": "TimestampLatchValue",
-        "propVal": "",
-        "access_mode": "Read Only",
-        "x": 390,
-        "y": 620,
+        "camProp": "UserSetSave",
+        "propVal": "test",
+        "access_mode": "Not available",
+        "x": 350,
+        "y": 700,
         "wires": [
             [
                 "814468df4bcfa559"
@@ -504,11 +508,12 @@
         "z": "e583048378e103aa",
         "camlocation": "425904c32524013a",
         "camId": "142121710143",
-        "camProp": "DeviceVendorName",
-        "propVal": "",
-        "access_mode": "Read Only",
-        "x": 380,
-        "y": 380,
+        "camProp": "ExposureTime",
+        "propVal": "9700",
+        "access_mode": "Read and Write",
+        "node_type": "Float",
+        "x": 360,
+        "y": 460,
         "wires": [
             [
                 "595fd0e25a23de7a"
@@ -521,10 +526,11 @@
         "z": "e583048378e103aa",
         "camlocation": "48b8c1b86a590714",
         "camId": "142121710143",
-        "camProp": "DeviceVersion",
-        "propVal": "233",
-        "x": 360,
-        "y": 460,
+        "camProp": "DeviceUserID",
+        "propVal": "Camera01",
+        "access_mode": "Read and Write",
+        "x": 380,
+        "y": 540,
         "wires": [
             [
                 "8d529e734524ca86"
@@ -545,7 +551,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 650,
-        "y": 380,
+        "y": 460,
         "wires": []
     },
     {
@@ -562,7 +568,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 590,
-        "y": 460,
+        "y": 540,
         "wires": []
     },
     {
@@ -579,7 +585,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 610,
-        "y": 540,
+        "y": 620,
         "wires": []
     },
     {
@@ -596,17 +602,17 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 590,
-        "y": 620,
+        "y": 700,
         "wires": []
     },
     {
         "id": "9af7e6601d2bcbda",
         "type": "release-camera",
         "z": "e583048378e103aa",
-        "camlocation": "48b8c1b86a590714",
+        "camlocation": "http://172.17.0.1:5555",
         "camId": "142120208749",
         "x": 370,
-        "y": 740,
+        "y": 820,
         "wires": [
             [
                 "814468df4bcfa559"
@@ -635,11 +641,79 @@
         "payload": "",
         "payloadType": "date",
         "x": 120,
-        "y": 740,
+        "y": 820,
         "wires": [
             [
                 "9af7e6601d2bcbda"
             ]
         ]
+    },
+    {
+        "id": "e7ce47efe6478ca9",
+        "type": "http request",
+        "z": "e583048378e103aa",
+        "name": "SetVal: Exporsure Time",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "body",
+        "url": "http://172.17.0.1:5555/api/vision/vision/setVal/142121710143",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 470,
+        "y": 380,
+        "wires": [
+            [
+                "0e67f0fb5464bda1"
+            ]
+        ]
+    },
+    {
+        "id": "027332e59d55140d",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 380,
+        "wires": [
+            [
+                "e7ce47efe6478ca9"
+            ]
+        ]
+    },
+    {
+        "id": "0e67f0fb5464bda1",
+        "type": "debug",
+        "z": "e583048378e103aa",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 730,
+        "y": 380,
+        "wires": []
     }
 ]
