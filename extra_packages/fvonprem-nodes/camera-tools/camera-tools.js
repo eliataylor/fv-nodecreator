@@ -152,6 +152,7 @@ module.exports = function (RED) {
                     value:node.propVal
                 })
             }
+            options.url = url;
             msg.url = url;
 
             node.debug(url);
