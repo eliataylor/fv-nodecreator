@@ -152,15 +152,15 @@ module.exports = function (RED) {
             }
             msg.url = url;
 
-            node.debug(url);
-            node.debug(JSON.stringify(options));
-
-            node.status({fill:"yellow",shape:"dot",text:url})
-
             const pUrl = new URL(url);
             options.hostname = pUrl.hostname;
             options.port = pUrl.port;
             options.pathname = pUrl.pathname;
+
+            node.debug(url);
+            node.debug(JSON.stringify(options));
+
+            node.status({fill:"yellow",shape:"dot",text:url})
 
             const req = http.request(options, (res) => {
                 console.log(`STATUS: ${res.statusCode}`);
