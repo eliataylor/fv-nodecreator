@@ -16,7 +16,7 @@ class CameraController {
             'Command': {type: 'textarea', nodeName: 'textarea'},
             'Bool': {type: 'checkbox', nodeName: 'select'} // only because configTree provides True/False `options`
         };
-        this.camSettings = {};
+        this.camSettings = false;
         this.allCameras = [];
 
         this.host = "";
@@ -44,9 +44,9 @@ class CameraController {
         this.$(this.camServerSelector).on('change', (e) => {
             if (e.currentTarget.value !== this.camlocation) {
                 this.$(this.camSelector).val('').trigger('change');
+                this.syncToForm();
+                this.loadCameras();
             }
-            this.syncToForm();
-            this.loadCameras();
         })
 
         this.$(this.camSelector).on('change', (e) => {
@@ -87,8 +87,9 @@ class CameraController {
         if (this.camId && env.allSettings && env.allSettings[this.camId]) {
             this.camSettings = env.allSettings[this.camId];
         } else {
-            this.camSettings = {}
+            this.camSettings = false;
         }
+
         console.log("restored " + key, env)
         return env;
     }
@@ -105,7 +106,7 @@ class CameraController {
         if (this.allCameras && this.allCameras.length > 0) {
             env.allCameras = this.allCameras;
         }
-        if (this.camId) {
+        if (this.camId && this.camSettings) {
             env.allSettings[this.camId] = this.camSettings;
         }
         console.log("saved " + key, env);
@@ -143,7 +144,6 @@ class CameraController {
         if (this.host === "") {
             return false;
         }
-
 
         this.$('#allCamRefreshBtn').prop('disabled', true)
         this.togglePreloader(this.camSelector, true)
@@ -188,7 +188,6 @@ class CameraController {
             }
         }
 
-
         var url = this.host + '/api/vision/vision/configTree/' + this.camId;
         if (document.location.port === new URL(this.host).port) {
             url = "resources/fvonprem-nodes/api/configTree.json?camId=" + this.camId;
@@ -205,14 +204,18 @@ class CameraController {
             this.renderCamProps();
             this.saveToLocalStorage();
         }).fail(err => {
-            this.camSettings = {};
+            this.camSettings = false;
             this.togglePreloader(this.camPropSelector, false);
             console.error("LOAD CAM CONFIG FAILED", err);
         })
     }
 
     renderCamProps() {
-        let allTypes = {}
+        // let allTypes = {}
+        if (!this.camSettings) {
+            this.$(this.camPropSelector).html('<option value="">No available settings. Try refreshing the camera list.</option>');
+            return true;
+        }
         this.$(this.camPropSelector).html('<option value="">Select a Property</option>');
         for (let parent in this.camSettings) {
 
@@ -223,8 +226,8 @@ class CameraController {
 
             for (let label in this.camSettings[parent]) {
                 const setting = this.camSettings[parent][label];
-                allTypes[setting.type] = label;
-                allTypes[setting.access_mode] = label;
+                // allTypes[setting.type] = label;
+                // allTypes[setting.access_mode] = label;
                 var toPass = {}
                 toPass['data-parent'] = parent;
                 toPass['data-label'] = label;
@@ -241,8 +244,8 @@ class CameraController {
         }
         this.togglePreloader(this.camPropSelector, false)
         this.syncToForm();
-        this.buildPropValField()
-        console.info(allTypes);
+        this.buildPropValField();
+        // console.info(allTypes);
     }
 
     buildPropValField() {
@@ -296,7 +299,7 @@ class CameraController {
     }
 
     setProperty(parent, label) {
-        if (!this.camSettings[parent] || !this.camSettings[parent][label]) {
+        if (!this.camSettings || !this.camSettings[parent] || !this.camSettings[parent][label]) {
             console.log("INVALID CAM PROP!!!", parent, label, this.camSettings)
             return false;
         }
@@ -345,7 +348,7 @@ class CameraController {
             this.setProperty(check.attr('data-parent'), check.attr('data-label'))
             defaults.camProperty = this.camProperty;
             defaults.camProp = this.camProp;
-        } else if (defaults.camProp.length > 0) {
+        } else if (defaults.camProp.length > 0 && this.camSettings) {
             outer: for(let j in this.camSettings) {
                 for(let i in this.camSettings[j]) {
                     if (this.camSettings[j][i].node_name === defaults.camProp) {
