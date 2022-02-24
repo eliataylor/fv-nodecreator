@@ -103,7 +103,8 @@
                 camProp: {value: "", required: true},
                 propVal: {value: "", required: true},
                 access_mode: {value: "", required: false, hidden:true},
-                node_type: {value: "", required: false, hidden:true}
+                node_type: {value: "", required: false, hidden:true},
+                camProperty: {value: {}, required: false, hidden:true}
             },
             inputs: 1,
             outputs: 1,
@@ -153,6 +154,9 @@
                         this.propVal = e.detail.propVal
                         this.access_mode = e.detail.access_mode;
                         this.node_type = e.detail.node_type;
+                        this.camProperty = e.detail.camProperty;
+
+                        context.set("myData", e.detail);
                     },
                     {capture:false}
                 );
@@ -187,13 +191,9 @@
 
                 document.getElementById("fvCamForm").addEventListener('updateToolContext',
                     (e) => {
-                        console.log("updateToolContext", e.detail);
+                        console.log("updateCamReleaseContext", e.detail);
                         this.camlocation = e.detail.host
                         this.camId = e.detail.camId
-                        this.camProp = e.detail.camProp
-                        this.propVal = e.detail.propVal
-                        this.access_mode = e.detail.access_mode;
-                        this.node_type = e.detail.node_type;
                     },
                     {capture:false}
                 );

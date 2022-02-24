@@ -8,14 +8,14 @@
         "env": []
     },
     {
-        "id": "425904c32524013a",
-        "type": "camera-server",
-        "camlocation": "http://127.0.0.1:1880"
-    },
-    {
         "id": "48b8c1b86a590714",
         "type": "camera-server",
         "camlocation": "http://172.17.0.1:5555"
+    },
+    {
+        "id": "425904c32524013a",
+        "type": "camera-server",
+        "camlocation": "http://127.0.0.1:1880"
     },
     {
         "id": "cfc5bba0e14882c9",

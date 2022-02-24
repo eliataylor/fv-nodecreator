@@ -28,11 +28,7 @@ class CameraController {
         this.camProp = p.camProp || "";
         this.camProperty = {};
         this.propVal = p.propVal || "";
-        this.restoreFromLocalStorage();
-
-        this.syncToForm();
         console.log('CTR INITIALIZED', this.getContext());
-
     }
 
     startListeners() {
@@ -265,7 +261,7 @@ class CameraController {
 
         const atts = {min:'min', max:'max', inc:'step'};
         for(let att in atts) {
-            if (this.camProperty[att]) {
+            if (typeof this.camProperty[att] !== 'undefined') {
                 this.$(this.camPropValSelector).attr(atts[att], this.camProperty[att])
             } else {
                 this.$(this.camPropValSelector).removeAttr(atts[att])
@@ -331,7 +327,7 @@ class CameraController {
                 this.host = check;
                 this.camlocation = this.$(this.camServerSelector + ' option:selected').val()
             } catch (e) {
-                console.error('invalid host url', e.messsage)
+                console.error('invalid host url', e.message)
             }
         }
 
@@ -345,18 +341,22 @@ class CameraController {
 
         check = this.$(this.camPropSelector + ' option:selected')
         if (check.length > 0 && check.attr('data-parent')) {
-            this.setProperty(check.attr('data-parent'), check.attr('data-label'))
+            this.setProperty(check.attr('data-parent'), check.attr('data-label'));
             defaults.camProperty = this.camProperty;
             defaults.camProp = this.camProp;
-        } else if (defaults.camProp.length > 0 && this.camSettings) {
-            outer: for(let j in this.camSettings) {
-                for(let i in this.camSettings[j]) {
-                    if (this.camSettings[j][i].node_name === defaults.camProp) {
-                        this.setProperty(j, i);
-                        defaults.camProperty = this.camProperty;
-                        break outer;
+        } else if (defaults.camProp.length > 0) {
+            if (this.camSettings) {
+                outer: for(let j in this.camSettings) {
+                    for(let i in this.camSettings[j]) {
+                        if (this.camSettings[j][i].node_name === defaults.camProp) {
+                            this.setProperty(j, i);
+                            defaults.camProperty = this.camProperty;
+                            break outer;
+                        }
                     }
                 }
+            } else {
+                console.warn("MISSING CAM SETTINGS??", defaults)
             }
             this.$(this.camPropSelector).val(defaults.camProp);
         }
@@ -381,6 +381,7 @@ class CameraController {
             this.$(this.camPropValSelector).val(defaults.propVal)
         }
         if (this.propVal === '' && this.camProperty.value) {
+            defaults.propVal = this.propVal;
             this.propVal = this.camProperty.value;
             this.$(this.camPropValSelector).val(this.camProperty.value)
         }
