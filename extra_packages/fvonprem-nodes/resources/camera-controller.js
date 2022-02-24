@@ -166,13 +166,14 @@ class CameraController {
 
     allCamerasCallback(cameras) {
         this.renderCameras();
-        if (!this.camId) {
+        if (!this.camId || this.camId === '') {
             return false;
         }
         let camera = cameras.find(c => c.serial_number === this.camId);
         if (!camera) {
             return console.warn("THIS CAMERA IS NO LONGER CONNECTED", this.camId)
         }
+
         this.loadCamConfigs();
     }
 
