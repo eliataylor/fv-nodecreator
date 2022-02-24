@@ -22,12 +22,12 @@ class CameraController {
         this.host = "";
         this.camlocation = p.camlocation || '';
         if (p.camlocation) {
-            this.host = this.$(this.camServerSelector + ' option:selected').text();
+            this.host = this.$(this.camServerSelector + '[value="'+this.camlocation+'"]').text();
         }
         this.camId = p.camId || '';
-        this.camProp = p.camProp || "";
-        this.camProperty = {};
         this.propVal = p.propVal || "";
+        this.camProp = p.camProp || "";
+        this.camProperty = p.camProperty || {};
         console.log('CTR INITIALIZED', p, this.getContext());
     }
 
