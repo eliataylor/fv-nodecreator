@@ -506,13 +506,11 @@
         "id": "58163978efd9c314",
         "type": "set-camera-property",
         "z": "e583048378e103aa",
-        "camlocation": "425904c32524013a",
-        "camId": "142121710143",
-        "camProp": "ExposureTime",
+        "camlocation": "48b8c1b86a590714",
+        "camId": "",
+        "camProp": "",
         "propVal": "9700",
-        "access_mode": "Read and Write",
-        "node_type": "Float",
-        "x": 360,
+        "x": 340,
         "y": 460,
         "wires": [
             [
@@ -601,8 +599,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 590,
-        "y": 700,
+        "x": 650,
+        "y": 880,
         "wires": []
     },
     {
@@ -715,5 +713,148 @@
         "x": 730,
         "y": 380,
         "wires": []
+    },
+    {
+        "id": "56ec6de42227e5e7",
+        "type": "set-camera-property",
+        "z": "e583048378e103aa",
+        "camlocation": "48b8c1b86a590714",
+        "camId": "142121710143",
+        "camProp": "ExposureTime",
+        "propVal": "29850",
+        "access_mode": "Read and Write",
+        "node_type": "Float",
+        "x": 360,
+        "y": 980,
+        "wires": [
+            [
+                "814468df4bcfa559"
+            ]
+        ]
+    },
+    {
+        "id": "69c9b0ea45041360",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 1000,
+        "wires": [
+            [
+                "56ec6de42227e5e7",
+                "86c9a3c39dbf01c6"
+            ]
+        ]
+    },
+    {
+        "id": "86c9a3c39dbf01c6",
+        "type": "set-camera-property",
+        "z": "e583048378e103aa",
+        "camlocation": "425904c32524013a",
+        "camId": "142120208749",
+        "camProp": "ExposureMode",
+        "propVal": "Off",
+        "access_mode": "Read and Write",
+        "node_type": "Enumerate",
+        "x": 360,
+        "y": 1060,
+        "wires": [
+            [
+                "814468df4bcfa559"
+            ]
+        ]
+    },
+    {
+        "id": "4b3663b285f2170a",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 1080,
+        "wires": [
+            [
+                "86c9a3c39dbf01c6"
+            ]
+        ]
+    },
+    {
+        "id": "198df66e0c6873c7",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 920,
+        "wires": [
+            [
+                "56ec6de42227e5e7",
+                "d024f14ad6abd967"
+            ]
+        ]
+    },
+    {
+        "id": "d024f14ad6abd967",
+        "type": "set-camera-property",
+        "z": "e583048378e103aa",
+        "camlocation": "48b8c1b86a590714",
+        "camId": "142120208749",
+        "camProp": "TriggerEventTest",
+        "propVal": "[test cmd]",
+        "access_mode": "Write Only",
+        "node_type": "Command",
+        "x": 380,
+        "y": 920,
+        "wires": [
+            [
+                "814468df4bcfa559"
+            ]
+        ]
     }
 ]
