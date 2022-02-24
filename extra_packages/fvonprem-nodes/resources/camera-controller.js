@@ -69,7 +69,7 @@ class CameraController {
             this.buildPropValField()
         });
 
-        this.loadCameras(true);
+        this.loadCameras();
     }
 
     restoreFromLocalStorage() {
