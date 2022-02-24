@@ -391,7 +391,7 @@ class CameraController {
             this.$(this.camPropValSelector).val(this.camProperty.value)
         }
 
-        console.log('synced form', defaults);
+        // console.log('synced form', defaults);
         if (document.getElementById("fvCamForm")) {
             const event = new CustomEvent('updateToolContext', {detail: defaults});
             document.getElementById("fvCamForm").dispatchEvent(event);
