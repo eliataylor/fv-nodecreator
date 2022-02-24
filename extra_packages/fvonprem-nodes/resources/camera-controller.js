@@ -243,12 +243,14 @@ class CameraController {
         }
         this.togglePreloader(this.camPropSelector, false)
         this.syncToForm();
+
         this.buildPropValField();
         // console.info(allTypes);
     }
 
     buildPropValField() {
         if (!this.camProperty || !this.camProperty.type) {
+            this.getToolTip();
             console.log('missing camProperty', this.getContext())
             return;
         }
