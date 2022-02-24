@@ -235,7 +235,7 @@ class CameraController {
                 if (setting.type === 'null') {
                     toPass.disabled = true;
                 }
-                if (this.camProp === label) {
+                if (this.camProp === setting.node_name) {
                     toPass.selected = true;
                 }
                 this.$('<option/>', toPass).appendTo(this.camPropSelector);
