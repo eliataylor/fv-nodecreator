@@ -59,13 +59,8 @@ module.exports = function (RED) {
             request(options, (error, response, body) => {
                 console.log(error, body)
                 if (!error) {
-                    try {
-                        let data = JSON.parse(body);
-                        msg.payload = data;
-                        return HandleResponse(msg);
-                    } catch (e) {
-                        error = e.message;
-                    }
+                    msg.payload = body;
+                    return HandleResponse(msg);
                 }
                 msg.payload = error;
                 msg.url = url;
@@ -156,13 +151,8 @@ module.exports = function (RED) {
             request(options, (error, response, body) => {
                 console.log(error, body)
                 if (!error) {
-                    try {
-                        let data = JSON.parse(body);
-                        msg.payload = data;
-                        return HandleResponse(msg);
-                    } catch (e) {
-                        error = e.message;
-                    }
+                    msg.payload = body;
+                    return HandleResponse(msg);
                 }
                 msg.payload = error;
                 msg.url = url;
