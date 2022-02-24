@@ -64,39 +64,13 @@ module.exports = function (RED) {
                         msg.payload = data;
                         return HandleResponse(msg);
                     } catch (e) {
-
+                        error = e.message;
                     }
                 }
                 msg.payload = error;
                 msg.url = url;
                 HandleFailures(msg);
             });
-
-            /*
-            const req = http.request(url, options, (res) => {
-                console.log(`STATUS: ${res.statusCode}`);
-                console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
-                res.setEncoding('utf8');
-                let rawData = ''
-                res.on('data', (chunk) => {
-                    rawData += chunk;
-                });
-                res.on('end', () => {
-                    msg.payload = rawData;
-                    HandleResponse(msg);
-                });
-            });
-            req.setTimeout(15000, (e) => {
-                msg.payload = 'timeout';
-                HandleFailures(msg);
-            });
-            req.on('error', (e) => {
-                msg.payload = e.message;
-                msg.url = url;
-                HandleFailures(msg);
-            });
-            req.end();
-             */
 
 
         });
@@ -187,55 +161,13 @@ module.exports = function (RED) {
                         msg.payload = data;
                         return HandleResponse(msg);
                     } catch (e) {
-
+                        error = e.message;
                     }
                 }
                 msg.payload = error;
                 msg.url = url;
                 HandleFailures(msg);
             });
-
-            /*
-            fetch(url, options)
-            .then(response => response.json())
-            .then(data => {
-                msg.payload = data;
-                HandleResponse(msg);
-            })
-            .catch((e) => {
-                msg.payload = e.message;
-                msg.url = url;
-                HandleFailures(msg);
-            });
-             */
-
-            /*
-            const req = http.request(url, options, (res) => {
-                console.log(`STATUS: ${res.statusCode}`);
-                console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
-                res.setEncoding('utf8');
-                let rawData = '';
-                res.on('data', (chunk) => {
-                    rawData += chunk;
-                });
-                res.on('end', () => {
-                    msg.payload = rawData;
-                    HandleResponse(msg);
-                });
-            });
-            req.setTimeout(15000, (e) => {
-                msg.payload = 'timeout';
-                HandleFailures(msg);
-            });
-            req.on('error', (e) => {
-                msg.payload = e.message;
-                msg.url = url;
-                HandleFailures(msg);
-            });
-            req.end();
-
-             */
-
         });
     }
 
