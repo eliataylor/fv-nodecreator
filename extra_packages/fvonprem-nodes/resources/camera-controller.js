@@ -28,7 +28,7 @@ class CameraController {
         this.camProp = p.camProp || "";
         this.camProperty = {};
         this.propVal = p.propVal || "";
-        console.log('CTR INITIALIZED', this.getContext());
+        console.log('CTR INITIALIZED', p, this.getContext());
     }
 
     startListeners() {
@@ -158,8 +158,9 @@ class CameraController {
             this.allCamerasCallback(cameras);
         }).fail((err) => {
             console.error("LOAD CAM FAILED", err);
-            this.$('#allCamRefreshBtn').prop('disabled', false)
-            this.togglePreloader(this.camSelector, false)
+            this.$('#allCamRefreshBtn').prop('disabled', false);
+            this.togglePreloader(this.camSelector, false);
+            this.getToolTip();
         })
     }
 
@@ -203,6 +204,7 @@ class CameraController {
             this.camSettings = false;
             this.togglePreloader(this.camPropSelector, false);
             console.error("LOAD CAM CONFIG FAILED", err);
+            this.getToolTip();
         })
     }
 

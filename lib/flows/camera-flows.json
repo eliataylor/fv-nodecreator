@@ -31,8 +31,8 @@
         "proxy": "",
         "authType": "",
         "senderr": false,
-        "x": 330,
-        "y": 60,
+        "x": 350,
+        "y": 1140,
         "wires": [
             [
                 "360d68bf5cb74e80"
@@ -51,8 +51,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 750,
-        "y": 60,
+        "x": 770,
+        "y": 1140,
         "wires": []
     },
     {
@@ -76,8 +76,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 120,
-        "y": 60,
+        "x": 140,
+        "y": 1140,
         "wires": [
             [
                 "cfc5bba0e14882c9"
@@ -92,8 +92,8 @@
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 590,
-        "y": 60,
+        "x": 610,
+        "y": 1140,
         "wires": [
             [
                 "16325bd41334fa7d"
@@ -114,8 +114,8 @@
         "proxy": "",
         "authType": "",
         "senderr": false,
-        "x": 350,
-        "y": 140,
+        "x": 370,
+        "y": 1220,
         "wires": [
             [
                 "48af1cfbc885cd77"
@@ -143,8 +143,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 120,
-        "y": 140,
+        "x": 140,
+        "y": 1220,
         "wires": [
             [
                 "af38eff819915b90"
@@ -159,8 +159,8 @@
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 590,
-        "y": 140,
+        "x": 610,
+        "y": 1220,
         "wires": [
             [
                 "738bb8ec231dff6b"
@@ -180,8 +180,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 730,
-        "y": 140,
+        "x": 750,
+        "y": 1220,
         "wires": []
     },
     {
@@ -198,8 +198,8 @@
         "proxy": "",
         "authType": "",
         "senderr": false,
-        "x": 370,
-        "y": 220,
+        "x": 390,
+        "y": 1300,
         "wires": [
             [
                 "2f4d4bf455043661"
@@ -227,8 +227,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 120,
-        "y": 220,
+        "x": 140,
+        "y": 1300,
         "wires": [
             [
                 "2ddcfc05db778bfc"
@@ -248,8 +248,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 730,
-        "y": 220,
+        "x": 750,
+        "y": 1300,
         "wires": []
     },
     {
@@ -260,8 +260,8 @@
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 590,
-        "y": 220,
+        "x": 610,
+        "y": 1300,
         "wires": [
             [
                 "054d985bd452b6d5"
@@ -282,8 +282,8 @@
         "proxy": "",
         "authType": "",
         "senderr": false,
-        "x": 380,
-        "y": 300,
+        "x": 400,
+        "y": 1380,
         "wires": [
             [
                 "bbe8ebd4e7727f43"
@@ -311,8 +311,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 120,
-        "y": 300,
+        "x": 140,
+        "y": 1380,
         "wires": [
             [
                 "355d49faeb81cb91"
@@ -332,8 +332,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 730,
-        "y": 300,
+        "x": 750,
+        "y": 1380,
         "wires": []
     },
     {
@@ -344,8 +344,8 @@
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 590,
-        "y": 300,
+        "x": 610,
+        "y": 1380,
         "wires": [
             [
                 "17e650abb383392a"
@@ -374,7 +374,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 120,
-        "y": 460,
+        "y": 60,
         "wires": [
             [
                 "58163978efd9c314"
@@ -403,7 +403,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 120,
-        "y": 540,
+        "y": 140,
         "wires": [
             [
                 "1e6e85594225af9b"
@@ -432,7 +432,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 120,
-        "y": 620,
+        "y": 220,
         "wires": [
             [
                 "972ffc632cb89250"
@@ -461,7 +461,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 120,
-        "y": 700,
+        "y": 300,
         "wires": [
             [
                 "ce911d44d4a63a98"
@@ -478,10 +478,10 @@
         "propVal": "7900",
         "access_mode": "Read and Write",
         "x": 360,
-        "y": 620,
+        "y": 220,
         "wires": [
             [
-                "caf576a4ca1271a3"
+                "814468df4bcfa559"
             ]
         ]
     },
@@ -495,7 +495,7 @@
         "propVal": "test",
         "access_mode": "Not available",
         "x": 350,
-        "y": 700,
+        "y": 300,
         "wires": [
             [
                 "814468df4bcfa559"
@@ -511,10 +511,10 @@
         "camProp": "",
         "propVal": "9700",
         "x": 340,
-        "y": 460,
+        "y": 60,
         "wires": [
             [
-                "595fd0e25a23de7a"
+                "814468df4bcfa559"
             ]
         ]
     },
@@ -527,64 +527,13 @@
         "camProp": "DeviceUserID",
         "propVal": "Camera01",
         "access_mode": "Read and Write",
-        "x": 380,
-        "y": 540,
+        "x": 370,
+        "y": 140,
         "wires": [
             [
-                "8d529e734524ca86"
+                "814468df4bcfa559"
             ]
         ]
-    },
-    {
-        "id": "595fd0e25a23de7a",
-        "type": "debug",
-        "z": "e583048378e103aa",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 650,
-        "y": 460,
-        "wires": []
-    },
-    {
-        "id": "8d529e734524ca86",
-        "type": "debug",
-        "z": "e583048378e103aa",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 590,
-        "y": 540,
-        "wires": []
-    },
-    {
-        "id": "caf576a4ca1271a3",
-        "type": "debug",
-        "z": "e583048378e103aa",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 610,
-        "y": 620,
-        "wires": []
     },
     {
         "id": "814468df4bcfa559",
@@ -599,8 +548,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 650,
-        "y": 880,
+        "x": 670,
+        "y": 60,
         "wires": []
     },
     {
@@ -610,7 +559,7 @@
         "camlocation": "http://172.17.0.1:5555",
         "camId": "142120208749",
         "x": 370,
-        "y": 820,
+        "y": 380,
         "wires": [
             [
                 "814468df4bcfa559"
@@ -639,7 +588,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 120,
-        "y": 820,
+        "y": 380,
         "wires": [
             [
                 "9af7e6601d2bcbda"
@@ -660,8 +609,8 @@
         "proxy": "",
         "authType": "",
         "senderr": false,
-        "x": 470,
-        "y": 380,
+        "x": 490,
+        "y": 1460,
         "wires": [
             [
                 "0e67f0fb5464bda1"
@@ -689,8 +638,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 120,
-        "y": 380,
+        "x": 140,
+        "y": 1460,
         "wires": [
             [
                 "e7ce47efe6478ca9"
@@ -710,8 +659,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 730,
-        "y": 380,
+        "x": 750,
+        "y": 1460,
         "wires": []
     },
     {
@@ -725,7 +674,7 @@
         "access_mode": "Read and Write",
         "node_type": "Float",
         "x": 360,
-        "y": 980,
+        "y": 540,
         "wires": [
             [
                 "814468df4bcfa559"
@@ -753,8 +702,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 140,
-        "y": 1000,
+        "x": 120,
+        "y": 540,
         "wires": [
             [
                 "56ec6de42227e5e7",
@@ -773,7 +722,7 @@
         "access_mode": "Read and Write",
         "node_type": "Enumerate",
         "x": 360,
-        "y": 1060,
+        "y": 620,
         "wires": [
             [
                 "814468df4bcfa559"
@@ -801,8 +750,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 140,
-        "y": 1080,
+        "x": 120,
+        "y": 620,
         "wires": [
             [
                 "86c9a3c39dbf01c6"
@@ -830,8 +779,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 140,
-        "y": 920,
+        "x": 120,
+        "y": 460,
         "wires": [
             [
                 "d024f14ad6abd967"
@@ -849,7 +798,7 @@
         "access_mode": "Write Only",
         "node_type": "Command",
         "x": 380,
-        "y": 920,
+        "y": 460,
         "wires": [
             [
                 "814468df4bcfa559"
