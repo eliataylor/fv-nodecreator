@@ -123,7 +123,7 @@ class CameraController {
         })
         this.$('#allCamRefreshBtn').prop('disabled', false)
         this.togglePreloader(this.camSelector, false);
-        this.getToolTip();
+        this.syncToForm();
     }
 
     loadCameras(forceReload) {
@@ -292,7 +292,7 @@ class CameraController {
             this.syncToForm();
         });
 
-        this.getToolTip()
+        this.syncToForm('buildPropValField')
     }
 
     releaseCamera() {
@@ -398,6 +398,7 @@ class CameraController {
         } else {
             console.warn('Form not in DOM', defaults);
         }
+        this.getToolTip('syncToForm');
 
         return defaults;
     }
