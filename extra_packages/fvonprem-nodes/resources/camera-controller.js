@@ -28,7 +28,7 @@ class CameraController {
         this.propVal = p.propVal || "";
         this.camProp = p.camProp || "";
         this.camProperty = p.camProperty || {};
-        console.log('CTR INITIALIZED', p, this.getContext());
+        console.log('CTR INITIALIZED', p, this.getContext('init'));
     }
 
     startListeners() {
@@ -70,7 +70,7 @@ class CameraController {
 
     restoreFromLocalStorage() {
         if (this.host === "") {
-            console.warn("Restore missing host", this.getContext())
+            console.warn(this.getContext('missing host at restore'))
             return {};
         }
         let key = 'fvenv' + this.host;
@@ -251,7 +251,7 @@ class CameraController {
     buildPropValField() {
         if (!this.camProperty || !this.camProperty.type) {
             this.getToolTip();
-            console.log('missing camProperty', this.getContext())
+            console.log(this.getContext('missing camProperty'))
             return;
         }
 
@@ -391,7 +391,7 @@ class CameraController {
             this.$(this.camPropValSelector).val(this.camProperty.value)
         }
 
-        // console.log('synced form', defaults);
+        console.log('synced form', defaults);
         if (document.getElementById("fvCamForm")) {
             const event = new CustomEvent('updateToolContext', {detail: defaults});
             document.getElementById("fvCamForm").dispatchEvent(event);
@@ -404,7 +404,7 @@ class CameraController {
 
     getToolTip() {
         let html = JSON.stringify(this.camProperty, null, 2);
-        let ctx = JSON.stringify(this.getContext(), null, 2);
+        let ctx = JSON.stringify(this.getContext('tooltip'), null, 2);
         this.$('#camPropertyDesc').html(`<h3>Selected Property</h3><pre>${html}</pre><h3>Context</h3><pre>${ctx}</pre>`)
     }
 
@@ -419,7 +419,7 @@ class CameraController {
         }
     }
 
-    getContext() {
+    getContext(src) {
         const prop = this.$(this.camPropSelector + ' option:selected');
         let form = {
             camlocation:this.$(this.camServerSelector + ' option:selected').val(),
@@ -448,7 +448,7 @@ class CameraController {
         };
 
         if (JSON.stringify(ctx) !== JSON.stringify(form)) {
-            console.warn("OUT OF SYNC?", ctx, form)
+            console.warn("OUT OF SYNC: " + src, ctx, form)
         }
 
         return {form: form, ctx: ctx}
