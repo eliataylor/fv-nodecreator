@@ -22,7 +22,7 @@ class CameraController {
         this.host = "";
         this.camlocation = p.camlocation || '';
         if (p.camlocation) {
-            this.host = this.$(this.camServerSelector + '[value="'+this.camlocation+'"]').text();
+            this.host = this.$(this.camServerSelector + ' option[value="'+this.camlocation+'"]').text();
         }
         this.camId = p.camId || '';
         this.propVal = p.propVal || "";
