@@ -117,14 +117,37 @@
                 else if (parts.length === 1) parts.unshift("Config");
                 return parts.join(' - ');
             },
+            oneditsave: function() {
+                // document.getElementById("fvCamForm").removeEventListener('updateToolContext', this.setFVContext);
+                const node = this;
+                let url = node.host + '/api/vision/vision/';
+                const options = {timeout:15000, headers: {'Content-Type': 'application/json'}};
+                if (node.access_mode && node.access_mode.toUpperCase() === 'READ ONLY') {
+                    options.method = 'GET';
+                    url += 'readConfig/' + node.camId + '/' + encodeURIComponent(node.camProp);
+                } else {
+                    options.method = 'POST';
+                    url += 'setVal/' + node.camId;
+                    options.body = JSON.stringify({
+                        node_name:node.camProp,
+                        node_type:node.node_type,
+                        value:node.propVal
+                    })
+                }
+                fetch(url, options)
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch((error) => {
+                    alert(error);
+                    console.error ('Error:', error);
+                });
+            },
             /*
             onpaletteremove: function() {
                 document.getElementById("fvCamForm").removeEventListener('updateToolContext', this.setFVContext);
             },
             oneditcancel: function() {
-                document.getElementById("fvCamForm").removeEventListener('updateToolContext', this.setFVContext);
-            },
-            oneditsave: function() {
                 document.getElementById("fvCamForm").removeEventListener('updateToolContext', this.setFVContext);
             },
             setFVContext: function(e) {
