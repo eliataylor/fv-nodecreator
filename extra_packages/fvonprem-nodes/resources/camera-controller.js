@@ -289,6 +289,7 @@ class CameraController {
         this.$(this.camPropValSelector).val(this.propVal)
 
         this.$(this.camPropValSelector).on('change', (e) => {
+            this.propVal = e.currentTarget.value;
             this.syncToForm('propValChange');
         });
 
@@ -378,17 +379,10 @@ class CameraController {
             }
         }
 
-        check = this.$(this.camPropValSelector).val()
-        if (check && check.length > 0) {
-            defaults.propVal = check;
-            this.propVal = check;
-        } else if (defaults.propVal !== '') {
-            this.$(this.camPropValSelector).val(defaults.propVal)
-        }
         if (this.propVal === '' && this.camProperty.value) {
             this.propVal = this.camProperty.value;
             defaults.propVal = this.propVal;
-           this.$(this.camPropValSelector).val(this.camProperty.value)
+            this.$(this.camPropValSelector).val(this.camProperty.value)
         }
 
         // console.log('synced form', defaults);

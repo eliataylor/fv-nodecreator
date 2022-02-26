@@ -168,8 +168,8 @@
                     node_type: this.node_type,
                     camProperty: this.camProperty,
                 })
-                window.camController = camController;
                 camController.startListeners();
+                window.camController = camController;
 
                 document.getElementById("fvCamForm").addEventListener('updateToolContext',
 //                    (e) => this.setFVContext(e),
