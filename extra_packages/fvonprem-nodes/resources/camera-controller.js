@@ -382,7 +382,7 @@ class CameraController {
         if (check && check.length > 0) {
             defaults.propVal = check;
             this.propVal = check;
-        } else if (defaults.propVal) {
+        } else if (defaults.propVal !== '') {
             this.$(this.camPropValSelector).val(defaults.propVal)
         }
         if (this.propVal === '' && this.camProperty.value) {
@@ -398,6 +398,7 @@ class CameraController {
         } else {
             console.warn('Form not in DOM', defaults);
         }
+
         this.getToolTip('syncToForm');
 
         return defaults;

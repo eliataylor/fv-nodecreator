@@ -170,9 +170,6 @@
                 })
                 window.camController = camController;
                 camController.startListeners();
-                setTimeout(() => {
-                    camController.syncToForm();
-                }, 3000)
 
                 document.getElementById("fvCamForm").addEventListener('updateToolContext',
 //                    (e) => this.setFVContext(e),
