@@ -160,7 +160,7 @@ class CameraController {
             console.error("LOAD CAM FAILED", err);
             this.$('#allCamRefreshBtn').prop('disabled', false);
             this.togglePreloader(this.camSelector, false);
-            this.getToolTip();
+            this.getToolTip('loadCamFailed');
         })
     }
 
@@ -205,7 +205,7 @@ class CameraController {
             this.camSettings = false;
             this.togglePreloader(this.camPropSelector, false);
             console.error("LOAD CAM CONFIG FAILED", err);
-            this.getToolTip();
+            this.getToolTip('loadCamConfigFailed');
         })
     }
 
@@ -250,7 +250,7 @@ class CameraController {
 
     buildPropValField() {
         if (!this.camProperty || !this.camProperty.type) {
-            this.getToolTip();
+            this.getToolTip('buildPropValField: no camProperty');
             console.log(this.getContext('missing camProperty'))
             return;
         }
@@ -403,9 +403,9 @@ class CameraController {
         return defaults;
     }
 
-    getToolTip() {
+    getToolTip(src) {
         let html = JSON.stringify(this.camProperty, null, 2);
-        let ctx = JSON.stringify(this.getContext('tooltip'), null, 2);
+        let ctx = JSON.stringify(this.getContext(src), null, 2);
         this.$('#camPropertyDesc').html(`<h3>Selected Property</h3><pre>${html}</pre><h3>Context</h3><pre>${ctx}</pre>`)
     }
 
