@@ -40,7 +40,7 @@ class CameraController {
         this.$(this.camServerSelector).on('change', (e) => {
             if (e.currentTarget.value !== this.camlocation) {
                 this.$(this.camSelector).val('').trigger('change');
-                this.syncToForm();
+                this.syncToForm('serverChange');
                 this.loadCameras();
             }
         })
@@ -51,7 +51,7 @@ class CameraController {
                 this.camProperty = {};
                 this.$(this.camPropSelector).val('').trigger('change');
             }
-            this.syncToForm();
+            this.syncToForm('camChange');
             this.loadCamConfigs();
         });
 
@@ -61,7 +61,7 @@ class CameraController {
                 this.$(this.camPropValSelector).val('')
                 this.propVal = '';
             }
-            this.syncToForm();
+            this.syncToForm('camPropChange');
             this.buildPropValField()
         });
 
@@ -123,7 +123,7 @@ class CameraController {
         })
         this.$('#allCamRefreshBtn').prop('disabled', false)
         this.togglePreloader(this.camSelector, false);
-        this.syncToForm();
+        this.syncToForm('renderCameras');
     }
 
     loadCameras(forceReload) {
@@ -242,7 +242,7 @@ class CameraController {
             }
         }
         this.togglePreloader(this.camPropSelector, false)
-        this.syncToForm();
+        this.syncToForm('renderProps');
 
         this.buildPropValField();
         // console.info(allTypes);
@@ -289,7 +289,7 @@ class CameraController {
         this.$(this.camPropValSelector).val(this.propVal)
 
         this.$(this.camPropValSelector).on('change', (e) => {
-            this.syncToForm();
+            this.syncToForm('propValChange');
         });
 
         this.syncToForm('buildPropValField')
@@ -315,7 +315,7 @@ class CameraController {
     }
 
     // like ComponentDidUpdate in react.js
-    syncToForm() {
+    syncToForm(src) {
         let defaults = {
             camlocation : this.camlocation,
             host: this.host,
@@ -399,7 +399,7 @@ class CameraController {
             console.warn('Form not in DOM', defaults);
         }
 
-        this.getToolTip('syncToForm');
+        this.getToolTip('syncToForm: ' + src);
 
         return defaults;
     }
