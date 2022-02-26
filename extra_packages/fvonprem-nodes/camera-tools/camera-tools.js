@@ -1,8 +1,6 @@
-const http = require("http");
 module.exports = function (RED) {
     "use strict";
 
-    const http = require('http');
     const request = require('request');
     const cors = require('cors');
 

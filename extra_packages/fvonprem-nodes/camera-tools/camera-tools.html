@@ -169,6 +169,9 @@
                     camProperty: this.camProperty,
                 })
                 camController.startListeners();
+                if (!window.camController) {
+                    debugger;
+                }
                 window.camController = camController;
 
                 document.getElementById("fvCamForm").addEventListener('updateToolContext',
