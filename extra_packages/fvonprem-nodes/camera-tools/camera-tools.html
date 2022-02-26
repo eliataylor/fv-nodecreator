@@ -163,9 +163,15 @@
                     camlocation: this.camlocation,
                     camId:this.camId,
                     camProp:this.camProp,
-                    propVal:this.propVal
+                    propVal:this.propVal,
+                    access_mode: this.access_mode,
+                    node_type: this.node_type,
+                    camProperty: this.camProperty,
                 })
                 camController.startListeners();
+                setTimeout(() => {
+                    camController.syncToForm();
+                }, 3000)
 
                 document.getElementById("fvCamForm").addEventListener('updateToolContext',
 //                    (e) => this.setFVContext(e),
