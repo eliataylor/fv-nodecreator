@@ -386,9 +386,9 @@ class CameraController {
             this.$(this.camPropValSelector).val(defaults.propVal)
         }
         if (this.propVal === '' && this.camProperty.value) {
-            defaults.propVal = this.propVal;
             this.propVal = this.camProperty.value;
-            this.$(this.camPropValSelector).val(this.camProperty.value)
+            defaults.propVal = this.propVal;
+           this.$(this.camPropValSelector).val(this.camProperty.value)
         }
 
         // console.log('synced form', defaults);
