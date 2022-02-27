@@ -172,8 +172,9 @@ class CameraController {
         if (this.camId === '') {
             return false;
         }
-        if (cameras.findIndex(c => c.serial_number == this.camId) < 0) {
-            return console.warn("THIS CAMERA IS NO LONGER CONNECTED", this.camId)
+        const index = cameras.findIndex(c => c.serial_number == this.camId);
+        if (index < -1) {
+            return console.warn(index+ " - THIS CAMERA IS NO LONGER CONNECTED" + this.camId, cameras)
         }
 
         this.loadCamConfigs();
