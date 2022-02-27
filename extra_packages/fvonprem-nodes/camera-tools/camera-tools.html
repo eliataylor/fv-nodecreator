@@ -102,6 +102,7 @@
                 camId: {value: "", required: true},
                 camProp: {value: "", required: true},
                 propVal: {value: "", required: true},
+                host: {value: "", required: false, hidden:true},
                 access_mode: {value: "", required: false, hidden:true},
                 node_type: {value: "", required: false, hidden:true},
                 camProperty: {value: {}, required: false, hidden:true}
@@ -162,6 +163,7 @@
             oneditprepare: function() {
                 const camController = new CameraController($, {
                     camlocation: this.camlocation,
+                    host: this.host,
                     camId:this.camId,
                     camProp:this.camProp,
                     propVal:this.propVal,
@@ -170,13 +172,14 @@
                     camProperty: this.camProperty,
                 })
                 camController.startListeners();
-                window.camController = camController;
+                window.camController = camController;  // debugging
 
                 document.getElementById("fvCamForm").addEventListener('updateToolContext',
 //                    (e) => this.setFVContext(e),
                     (e) => {
                         console.log("updateToolContext", e.detail);
-                        this.camlocation = e.detail.host
+                        this.camlocation = e.detail.camlocation
+                        this.host = e.detail.host
                         this.camId = e.detail.camId
                         this.camProp = e.detail.camProp
                         this.propVal = e.detail.propVal
@@ -216,6 +219,7 @@
                     camId:this.camId
                 })
                 camController.startListeners();
+                window.camController = camController; // debugging
 
                 document.getElementById("fvCamForm").addEventListener('updateToolContext',
                     (e) => {
