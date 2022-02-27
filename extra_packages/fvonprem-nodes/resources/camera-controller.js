@@ -116,7 +116,7 @@ class CameraController {
                 'value': o.serial_number,
                 'text': [o.user_defined_name, o.serial_number].join(' - ')
             }
-            if (o.serial_number === this.camId) {
+            if (o.serial_number == this.camId) {
                 toPass.selected = true;
             }
             this.$('<option/>', toPass).appendTo(this.camSelector);
@@ -172,8 +172,7 @@ class CameraController {
         if (this.camId === '') {
             return false;
         }
-        let camera = cameras.find(c => c.serial_number === this.camId);
-        if (!camera) {
+        if (cameras.findIndex(c => c.serial_number == this.camId) < 0) {
             return console.warn("THIS CAMERA IS NO LONGER CONNECTED", this.camId)
         }
 
@@ -284,7 +283,7 @@ class CameraController {
                 this.$('<option/>', {
                     text: o,
                     value: o,
-                    selected: o === this.propVal
+                    selected: o == this.propVal
                 }).appendTo(this.camPropValSelector)
             })
         }
