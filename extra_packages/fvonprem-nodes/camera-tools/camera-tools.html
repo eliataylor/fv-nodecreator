@@ -120,6 +120,7 @@
             oneditsave: function() {
                 // document.getElementById("fvCamForm").removeEventListener('updateToolContext', this.setFVContext);
                 const node = this;
+                debugger;
                 let url = node.host + '/api/vision/vision/';
                 const options = {timeout:15000, headers: {'Content-Type': 'application/json'}};
                 if (node.access_mode && node.access_mode.toUpperCase() === 'READ ONLY') {

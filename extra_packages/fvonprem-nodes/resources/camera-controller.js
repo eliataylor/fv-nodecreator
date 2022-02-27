@@ -57,7 +57,7 @@ class CameraController {
 
         this.$(this.camPropSelector).on('change', (e) => {
             if (e.currentTarget.value !== this.camProp) {
-                // get default!
+                this.setCam(e.currentTarget.value)
                 this.$(this.camPropValSelector).val('')
                 this.propVal = '';
             }
@@ -132,12 +132,15 @@ class CameraController {
             if (this.allCameras && this.allCameras.length > 0) {
                 if (this.camId === '') {
                     return this.allCamerasCallback(this.allCameras);
-                } else if (this.camId && this.allCameras.findIndex(c => c.serial_number === this.camId) > -1) {
+                } else if (this.allCameras.findIndex(c => c.serial_number === this.camId) > -1) {
                     return this.allCamerasCallback(this.allCameras);
+                } else {
+                    console.warn("selected camera missing: " + this.camId)
                 }
             }
         }
         if (this.host === "") {
+            console.log("cannot load cameras with host")
             return false;
         }
 
@@ -152,7 +155,7 @@ class CameraController {
             url: url,
             dataType: "json"
         }).done(async (cameras) => {
-            console.log("Got Cameras ", cameras);
+            console.log("Got Cameras from Server ", cameras);
             this.allCameras = cameras;
             this.saveToLocalStorage();
             this.allCamerasCallback(cameras);
@@ -166,7 +169,7 @@ class CameraController {
 
     allCamerasCallback(cameras) {
         this.renderCameras();
-        if (!this.camId || this.camId === '') {
+        if (this.camId === '') {
             return false;
         }
         let camera = cameras.find(c => c.serial_number === this.camId);
