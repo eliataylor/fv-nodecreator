@@ -103,7 +103,8 @@
                 host: {value: "", required: false, hidden:true},
                 access_mode: {value: "", required: false, hidden:true},
                 node_type: {value: "", required: false, hidden:true},
-                camProperty: {value: {}, required: false, hidden:true}
+                camProperty: {value: {}, required: false, hidden:true},
+                lastUpdated: {value: 0, required: false, hidden:true},
             },
             inputs: 1,
             outputs: 1,
@@ -183,6 +184,7 @@
                         this.access_mode = e.detail.access_mode;
                         this.node_type = e.detail.node_type;
                         this.camProperty = e.detail.camProperty;
+                        this.lastUpdated = new Date().getTime()
                     },
                     {capture:false}
                 );

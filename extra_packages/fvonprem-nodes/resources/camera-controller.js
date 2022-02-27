@@ -180,15 +180,7 @@ class CameraController {
         this.loadCamConfigs();
     }
 
-    loadCamConfigs(forceReload) {
-
-        if (forceReload !== true) {
-            let env = this.restoreFromLocalStorage();
-            if (env.allSettings && env.allSettings[this.camId]) {
-                return this.renderCamProps();
-            }
-        }
-
+    loadCamConfigs() {
         var url = this.host + '/api/vision/vision/configTree/' + this.camId;
         if (document.location.port === new URL(this.host).port) {
             url = "resources/fvonprem-nodes/api/configTree.json?camId=" + this.camId;
