@@ -96,7 +96,7 @@
         RED.nodes.registerType('set-camera-property', {
             category: 'Flexible Vision',
             paletteLabel:'Configure Camera',
-            color: '#de7f7f',
+            color: '#59b947',
             defaults: {
                 camlocation: {type: "camera-server", required: true},
                 camId: {value: "", required: true},
@@ -121,7 +121,6 @@
             oneditsave: function() {
                 // document.getElementById("fvCamForm").removeEventListener('updateToolContext', this.setFVContext);
                 const node = this;
-                console.log("ONEDITSAVE", node)
                 let url = node.host + '/api/vision/vision/';
                 const options = {timeout:15000, headers: {'Content-Type': 'application/json'}};
                 if (node.access_mode && node.access_mode.toUpperCase() === 'READ ONLY') {
@@ -145,10 +144,10 @@
                     console.error ('Error:', error);
                 });
             },
+            /*
             oneditcancel: function() {
                 console.log("ONEDITCANCEL!", this);
             },
-            /*
             onpaletteremove: function() {
                 document.getElementById("fvCamForm").removeEventListener('updateToolContext', this.setFVContext);
             },
@@ -186,8 +185,6 @@
                         this.access_mode = e.detail.access_mode;
                         this.node_type = e.detail.node_type;
                         this.camProperty = e.detail.camProperty;
-
-                        // this.context.set("myData", e.detail);
                     },
                     {capture:false}
                 );
@@ -198,7 +195,7 @@
         RED.nodes.registerType('release-camera', {
             category: 'Flexible Vision',
             paletteLabel:'Release Camera',
-            color: '#ad5858',
+            color: '#1a7c15',
             defaults: {
                 camlocation: {type: "camera-server", required: true},
                 camId: {value: "", required: true}

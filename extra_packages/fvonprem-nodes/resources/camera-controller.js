@@ -19,9 +19,9 @@ class CameraController {
         this.camSettings = false;
         this.allCameras = [];
 
-        this.host = "";
+        this.host = p.host || "";
         this.camlocation = p.camlocation || '';
-        if (p.camlocation) {
+        if (p.camlocation != '') {
             this.host = this.$(this.camServerSelector + ' option[value="'+this.camlocation+'"]').text();
         }
         this.camId = p.camId || '';
