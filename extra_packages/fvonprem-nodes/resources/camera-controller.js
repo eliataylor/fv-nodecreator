@@ -342,8 +342,8 @@ class CameraController {
 
         check = this.$(this.camSelector).val()
         if (check && check !== '') {
-            defaults.camId = check.attr('value');
-            this.setCam(check.attr('value'))
+            defaults.camId = check;
+            this.setCam(check)
         } else if (defaults.camId) {
             this.$(this.camSelector).val(defaults.camId);
         }
