@@ -135,7 +135,7 @@ class CameraController {
                 } else if (this.allCameras.findIndex(c => c.serial_number === this.camId) > -1) {
                     return this.allCamerasCallback(this.allCameras);
                 } else {
-                    console.warn("selected camera missing: " + this.camId)
+                    console.warn("selected camera missing: " + this.camId, this.allCameras)
                 }
             }
         }
