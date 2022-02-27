@@ -120,7 +120,7 @@
             oneditsave: function() {
                 // document.getElementById("fvCamForm").removeEventListener('updateToolContext', this.setFVContext);
                 const node = this;
-                debugger;
+                console.log("ONEDITSAVE", node)
                 let url = node.host + '/api/vision/vision/';
                 const options = {timeout:15000, headers: {'Content-Type': 'application/json'}};
                 if (node.access_mode && node.access_mode.toUpperCase() === 'READ ONLY') {
@@ -144,11 +144,11 @@
                     console.error ('Error:', error);
                 });
             },
+            oneditcancel: function() {
+                console.log("ONEDITCANCEL!", this);
+            },
             /*
             onpaletteremove: function() {
-                document.getElementById("fvCamForm").removeEventListener('updateToolContext', this.setFVContext);
-            },
-            oneditcancel: function() {
                 document.getElementById("fvCamForm").removeEventListener('updateToolContext', this.setFVContext);
             },
             setFVContext: function(e) {
@@ -170,9 +170,6 @@
                     camProperty: this.camProperty,
                 })
                 camController.startListeners();
-                if (!window.camController) {
-                    debugger;
-                }
                 window.camController = camController;
 
                 document.getElementById("fvCamForm").addEventListener('updateToolContext',
