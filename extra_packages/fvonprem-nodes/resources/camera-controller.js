@@ -139,8 +139,13 @@ class CameraController {
                 }
             }
         }
-        if (this.host === "") {
-            console.log("cannot load cameras with host")
+        try {
+            if (this.host === "" || !new URL(this.host)) {
+                console.log("cannot load cameras with host")
+                return false;
+            }
+        } catch(e) {
+            console.log("invalid cam host", e)
             return false;
         }
 
@@ -323,12 +328,13 @@ class CameraController {
         let check = this.$(this.camServerSelector + ' option:selected').text()
         if (check.length > 0) {
             try {
-                new URL(check);
-                defaults.host = check;
-                this.host = check;
-                this.camlocation = this.$(this.camServerSelector + ' option:selected').val()
+                if (new URL(check)) {
+                    defaults.host = check;
+                    this.host = check;
+                    this.camlocation = this.$(this.camServerSelector + ' option:selected').val()
+                }
             } catch (e) {
-                console.error('invalid host url', e.message)
+                console.error('invalid host url' + check, e.message)
             }
         }
 
