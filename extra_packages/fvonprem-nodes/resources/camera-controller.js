@@ -141,7 +141,7 @@ class CameraController {
         }
         try {
             if (this.host === "" || !new URL(this.host)) {
-                console.log("cannot load cameras with host")
+                console.warn("cannot load cameras with host: " + this.host)
                 return false;
             }
         } catch(e) {
@@ -192,7 +192,7 @@ class CameraController {
                 url = "resources/fvonprem-nodes/api/configTree.json?camId=" + this.camId;
             }
         } catch (e) {
-            return console.error('invalid host url: ' + this.host, e.message)
+            return console.warn('invalid host url: ' + this.host, e.message)
         }
 
         this.togglePreloader(this.camPropSelector, true)
@@ -338,7 +338,7 @@ class CameraController {
                     this.camlocation = this.$(this.camServerSelector + ' option:selected').val()
                 }
             } catch (e) {
-                console.error('invalid host url' + check, e.message)
+                console.warn('invalid host url' + check, e.message)
             }
         }
 
