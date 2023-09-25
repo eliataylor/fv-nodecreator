@@ -319,7 +319,7 @@ class CameraController {
         this.camId = cam;
     }
 
-    // like ComponentDidUpdate in react.js
+    // like ComponentDidUpdate() in ReactJS
     syncToForm(src) {
         let defaults = {
             camlocation : this.camlocation,

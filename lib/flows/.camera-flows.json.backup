@@ -8,349 +8,14 @@
         "env": []
     },
     {
-        "id": "425904c32524013a",
-        "type": "camera-server",
-        "camlocation": "http://127.0.0.1:1880"
-    },
-    {
         "id": "48b8c1b86a590714",
         "type": "camera-server",
         "camlocation": "http://172.17.0.1:5555"
     },
     {
-        "id": "cfc5bba0e14882c9",
-        "type": "http request",
-        "z": "e583048378e103aa",
-        "name": "List Cameras",
-        "method": "GET",
-        "ret": "txt",
-        "paytoqs": "ignore",
-        "url": "http://172.17.0.1:5555/api/vision/vision/cameras",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "senderr": false,
-        "x": 330,
-        "y": 60,
-        "wires": [
-            [
-                "360d68bf5cb74e80"
-            ]
-        ]
-    },
-    {
-        "id": "16325bd41334fa7d",
-        "type": "debug",
-        "z": "e583048378e103aa",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 750,
-        "y": 60,
-        "wires": []
-    },
-    {
-        "id": "ac06bcc66037e711",
-        "type": "inject",
-        "z": "e583048378e103aa",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 120,
-        "y": 60,
-        "wires": [
-            [
-                "cfc5bba0e14882c9"
-            ]
-        ]
-    },
-    {
-        "id": "360d68bf5cb74e80",
-        "type": "json",
-        "z": "e583048378e103aa",
-        "name": "",
-        "property": "payload",
-        "action": "",
-        "pretty": false,
-        "x": 590,
-        "y": 60,
-        "wires": [
-            [
-                "16325bd41334fa7d"
-            ]
-        ]
-    },
-    {
-        "id": "af38eff819915b90",
-        "type": "http request",
-        "z": "e583048378e103aa",
-        "name": "Camera Config List",
-        "method": "GET",
-        "ret": "txt",
-        "paytoqs": "ignore",
-        "url": "http://172.17.0.1:5555/api/vision/vision/configTree/142121710143",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "senderr": false,
-        "x": 350,
-        "y": 140,
-        "wires": [
-            [
-                "48af1cfbc885cd77"
-            ]
-        ]
-    },
-    {
-        "id": "8b348b979914d36f",
-        "type": "inject",
-        "z": "e583048378e103aa",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 120,
-        "y": 140,
-        "wires": [
-            [
-                "af38eff819915b90"
-            ]
-        ]
-    },
-    {
-        "id": "48af1cfbc885cd77",
-        "type": "json",
-        "z": "e583048378e103aa",
-        "name": "",
-        "property": "payload",
-        "action": "",
-        "pretty": false,
-        "x": 590,
-        "y": 140,
-        "wires": [
-            [
-                "738bb8ec231dff6b"
-            ]
-        ]
-    },
-    {
-        "id": "738bb8ec231dff6b",
-        "type": "debug",
-        "z": "e583048378e103aa",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 730,
-        "y": 140,
-        "wires": []
-    },
-    {
-        "id": "2ddcfc05db778bfc",
-        "type": "http request",
-        "z": "e583048378e103aa",
-        "name": "Release Single Camera",
-        "method": "GET",
-        "ret": "txt",
-        "paytoqs": "ignore",
-        "url": "http://172.17.0.1:5555/api/vision/vision/release/142121710143",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "senderr": false,
-        "x": 370,
-        "y": 220,
-        "wires": [
-            [
-                "2f4d4bf455043661"
-            ]
-        ]
-    },
-    {
-        "id": "9761744557772628",
-        "type": "inject",
-        "z": "e583048378e103aa",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 120,
-        "y": 220,
-        "wires": [
-            [
-                "2ddcfc05db778bfc"
-            ]
-        ]
-    },
-    {
-        "id": "054d985bd452b6d5",
-        "type": "debug",
-        "z": "e583048378e103aa",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 730,
-        "y": 220,
-        "wires": []
-    },
-    {
-        "id": "2f4d4bf455043661",
-        "type": "json",
-        "z": "e583048378e103aa",
-        "name": "",
-        "property": "payload",
-        "action": "",
-        "pretty": false,
-        "x": 590,
-        "y": 220,
-        "wires": [
-            [
-                "054d985bd452b6d5"
-            ]
-        ]
-    },
-    {
-        "id": "355d49faeb81cb91",
-        "type": "http request",
-        "z": "e583048378e103aa",
-        "name": "Update Camera Resolution",
-        "method": "POST",
-        "ret": "txt",
-        "paytoqs": "ignore",
-        "url": "http://172.17.0.1:5555/api/vision/vision/resolution/142121710143/640/480",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "senderr": false,
-        "x": 380,
-        "y": 300,
-        "wires": [
-            [
-                "bbe8ebd4e7727f43"
-            ]
-        ]
-    },
-    {
-        "id": "85cbef71f22e860f",
-        "type": "inject",
-        "z": "e583048378e103aa",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 120,
-        "y": 300,
-        "wires": [
-            [
-                "355d49faeb81cb91"
-            ]
-        ]
-    },
-    {
-        "id": "17e650abb383392a",
-        "type": "debug",
-        "z": "e583048378e103aa",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 730,
-        "y": 300,
-        "wires": []
-    },
-    {
-        "id": "bbe8ebd4e7727f43",
-        "type": "json",
-        "z": "e583048378e103aa",
-        "name": "",
-        "property": "payload",
-        "action": "",
-        "pretty": false,
-        "x": 590,
-        "y": 300,
-        "wires": [
-            [
-                "17e650abb383392a"
-            ]
-        ]
+        "id": "425904c32524013a",
+        "type": "camera-server",
+        "camlocation": "http://127.0.0.1:1880"
     },
     {
         "id": "cd2fe1d9cad7e57e",
@@ -374,11 +39,9 @@
         "payload": "",
         "payloadType": "date",
         "x": 120,
-        "y": 460,
+        "y": 60,
         "wires": [
-            [
-                "58163978efd9c314"
-            ]
+            []
         ]
     },
     {
@@ -403,7 +66,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 120,
-        "y": 540,
+        "y": 140,
         "wires": [
             [
                 "1e6e85594225af9b"
@@ -432,7 +95,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 120,
-        "y": 620,
+        "y": 220,
         "wires": [
             [
                 "972ffc632cb89250"
@@ -461,7 +124,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 120,
-        "y": 700,
+        "y": 300,
         "wires": [
             [
                 "ce911d44d4a63a98"
@@ -478,10 +141,10 @@
         "propVal": "7900",
         "access_mode": "Read and Write",
         "x": 360,
-        "y": 620,
+        "y": 220,
         "wires": [
             [
-                "caf576a4ca1271a3"
+                "814468df4bcfa559"
             ]
         ]
     },
@@ -495,28 +158,10 @@
         "propVal": "test",
         "access_mode": "Not available",
         "x": 350,
-        "y": 700,
+        "y": 300,
         "wires": [
             [
                 "814468df4bcfa559"
-            ]
-        ]
-    },
-    {
-        "id": "58163978efd9c314",
-        "type": "set-camera-property",
-        "z": "e583048378e103aa",
-        "camlocation": "425904c32524013a",
-        "camId": "142121710143",
-        "camProp": "ExposureTime",
-        "propVal": "9700",
-        "access_mode": "Read and Write",
-        "node_type": "Float",
-        "x": 360,
-        "y": 460,
-        "wires": [
-            [
-                "595fd0e25a23de7a"
             ]
         ]
     },
@@ -529,64 +174,13 @@
         "camProp": "DeviceUserID",
         "propVal": "Camera01",
         "access_mode": "Read and Write",
-        "x": 380,
-        "y": 540,
+        "x": 370,
+        "y": 140,
         "wires": [
             [
-                "8d529e734524ca86"
+                "814468df4bcfa559"
             ]
         ]
-    },
-    {
-        "id": "595fd0e25a23de7a",
-        "type": "debug",
-        "z": "e583048378e103aa",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 650,
-        "y": 460,
-        "wires": []
-    },
-    {
-        "id": "8d529e734524ca86",
-        "type": "debug",
-        "z": "e583048378e103aa",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 590,
-        "y": 540,
-        "wires": []
-    },
-    {
-        "id": "caf576a4ca1271a3",
-        "type": "debug",
-        "z": "e583048378e103aa",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 610,
-        "y": 620,
-        "wires": []
     },
     {
         "id": "814468df4bcfa559",
@@ -601,23 +195,9 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 590,
-        "y": 700,
+        "x": 670,
+        "y": 60,
         "wires": []
-    },
-    {
-        "id": "9af7e6601d2bcbda",
-        "type": "release-camera",
-        "z": "e583048378e103aa",
-        "camlocation": "http://172.17.0.1:5555",
-        "camId": "142120208749",
-        "x": 370,
-        "y": 820,
-        "wires": [
-            [
-                "814468df4bcfa559"
-            ]
-        ]
     },
     {
         "id": "37658252febe5c2b",
@@ -641,7 +221,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 120,
-        "y": 820,
+        "y": 380,
         "wires": [
             [
                 "9af7e6601d2bcbda"
@@ -649,29 +229,25 @@
         ]
     },
     {
-        "id": "e7ce47efe6478ca9",
-        "type": "http request",
+        "id": "56ec6de42227e5e7",
+        "type": "set-camera-property",
         "z": "e583048378e103aa",
-        "name": "SetVal: Exporsure Time",
-        "method": "POST",
-        "ret": "obj",
-        "paytoqs": "body",
-        "url": "http://172.17.0.1:5555/api/vision/vision/setVal/142121710143",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "senderr": false,
-        "x": 470,
-        "y": 380,
+        "camlocation": "48b8c1b86a590714",
+        "camId": "142121710143",
+        "camProp": "ExposureTime",
+        "propVal": "29850",
+        "access_mode": "Read and Write",
+        "node_type": "Float",
+        "x": 360,
+        "y": 540,
         "wires": [
             [
-                "0e67f0fb5464bda1"
+                "814468df4bcfa559"
             ]
         ]
     },
     {
-        "id": "027332e59d55140d",
+        "id": "69c9b0ea45041360",
         "type": "inject",
         "z": "e583048378e103aa",
         "name": "",
@@ -692,28 +268,187 @@
         "payload": "",
         "payloadType": "date",
         "x": 120,
-        "y": 380,
+        "y": 540,
         "wires": [
             [
-                "e7ce47efe6478ca9"
+                "56ec6de42227e5e7",
+                "d024f14ad6abd967"
             ]
         ]
     },
     {
-        "id": "0e67f0fb5464bda1",
-        "type": "debug",
+        "id": "86c9a3c39dbf01c6",
+        "type": "set-camera-property",
+        "z": "e583048378e103aa",
+        "camlocation": "425904c32524013a",
+        "camId": "142120208749",
+        "camProp": "ExposureMode",
+        "propVal": "Off",
+        "access_mode": "Read and Write",
+        "node_type": "Enumerate",
+        "x": 360,
+        "y": 620,
+        "wires": [
+            [
+                "814468df4bcfa559"
+            ]
+        ]
+    },
+    {
+        "id": "4b3663b285f2170a",
+        "type": "inject",
         "z": "e583048378e103aa",
         "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 730,
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 620,
+        "wires": [
+            [
+                "86c9a3c39dbf01c6"
+            ]
+        ]
+    },
+    {
+        "id": "198df66e0c6873c7",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 460,
+        "wires": [
+            [
+                "d024f14ad6abd967"
+            ]
+        ]
+    },
+    {
+        "id": "d024f14ad6abd967",
+        "type": "set-camera-property",
+        "z": "e583048378e103aa",
+        "camlocation": "48b8c1b86a590714",
+        "camId": "142120208749",
+        "camProp": "TriggerEventTest",
+        "propVal": "[test cmd]",
+        "access_mode": "Write Only",
+        "node_type": "Command",
+        "x": 380,
+        "y": 460,
+        "wires": [
+            [
+                "814468df4bcfa559"
+            ]
+        ]
+    },
+    {
+        "id": "5d16ae27fd2b1294",
+        "type": "motion-detection",
+        "z": "e583048378e103aa",
+        "camId": "",
+        "threshold": 0,
+        "mask": [
+            0,
+            0,
+            100,
+            100
+        ],
+        "x": 350,
+        "y": 800,
+        "wires": [
+            [
+                "814468df4bcfa559",
+                "c3eef14b1466fc65"
+            ]
+        ]
+    },
+    {
+        "id": "96f3bfd76a8b1be0",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 800,
+        "wires": [
+            [
+                "5d16ae27fd2b1294"
+            ]
+        ]
+    },
+    {
+        "id": "9af7e6601d2bcbda",
+        "type": "release-camera",
+        "z": "e583048378e103aa",
+        "camlocation": "http://172.17.0.1:5555",
+        "camId": "142120208749",
+        "x": 370,
         "y": 380,
-        "wires": []
+        "wires": [
+            [
+                "814468df4bcfa559"
+            ]
+        ]
+    },
+    {
+        "id": "c3eef14b1466fc65",
+        "type": "template",
+        "z": "e583048378e103aa",
+        "name": "Display Image",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<img ng-src=\"{{msg.payload.base64}}\" width=\"300\" height=\"200\" alt=\"Remote Image\" />\n\n<img src=\"{{msg.payload.base64}}\" width=\"300\" height=\"200\" alt=\"Remote Image\" />",
+        "output": "str",
+        "x": 340,
+        "y": 860,
+        "wires": [
+            []
+        ]
     }
 ]

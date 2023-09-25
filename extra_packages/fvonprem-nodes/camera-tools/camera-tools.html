@@ -191,43 +191,5 @@
             }
         });
 
-
-        RED.nodes.registerType('release-camera', {
-            category: 'Flexible Vision',
-            paletteLabel:'Release Camera',
-            color: '#1a7c15',
-            defaults: {
-                camlocation: {type: "camera-server", required: true},
-                camId: {value: "", required: true}
-            },
-            inputs: 1,
-            outputs: 1,
-            icon: "baseline_videocam_off_black_24dp.png",
-            label: function () {
-                if (this.camId && this.camId.length > 0) {
-                    return 'Release ' + this.camId;
-                } else {
-                    return this._def.paletteLabel;
-                }
-            },
-            oneditprepare: function() {
-                const camController = new CameraController($, {
-                    camlocation: this.camlocation,
-                    camId:this.camId
-                })
-                camController.startListeners();
-                window.camController = camController; // debugging
-
-                document.getElementById("fvCamForm").addEventListener('updateToolContext',
-                    (e) => {
-                        console.log("updateCamReleaseContext", e.detail);
-                        this.camlocation = e.detail.host
-                        this.camId = e.detail.camId
-                    },
-                    {capture:false}
-                );
-            }
-        });
-
     })();
 </script>

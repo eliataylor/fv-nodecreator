@@ -1,0 +1,27 @@
+
+<script type="text/html" data-template-name="motion-detection">
+    <div class="form-row">
+        <label for="node-input-threshold"><i class="fa fa-link"></i>Threshold</label>
+        <input type="text" id="node-input-threshold" placeholder="Enter change threshold (0-100%)">
+    </div>
+</script>
+
+<script type="text/javascript">
+    (function () {
+
+        RED.nodes.registerType('motion-detection', {
+            category: 'Flexible Vision',
+            paletteLabel:'Detect Motion',
+            color: '#1a7c15',
+            defaults: {
+                camId: {value: "", required: true},
+                threshold: {value: 0, required: true},
+                mask: {value: [0, 0, 100, 100]},
+            },
+            inputs: 1,
+            outputs: 1,
+            icon: "baseline_videocam_off_black_24dp.png",
+        });
+
+    })();
+</script>

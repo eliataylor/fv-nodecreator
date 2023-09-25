@@ -18,8 +18,7 @@
 - in settings.js edit `editorTheme.theme` can be any [theme](https://github.com/node-red-contrib-themes/theme-collection), currently dark, dracula, midnight-red, oled, solarized-dark, solarized-light  
 - `npm start`
 
-
-### Notes
+#### Notes
 
 #### Detected Access Modes: "Example"
 

@@ -375,7 +375,7 @@
         "type": "motion-detection",
         "z": "e583048378e103aa",
         "camId": "",
-        "threshold": 0,
+        "threshold": "60",
         "mask": [
             0,
             0,
@@ -386,8 +386,8 @@
         "y": 800,
         "wires": [
             [
-                "814468df4bcfa559",
-                "c3eef14b1466fc65"
+                "ea32d7a233c26953",
+                "bd23b6da33ecdfbf"
             ]
         ]
     },
@@ -435,20 +435,36 @@
         ]
     },
     {
-        "id": "c3eef14b1466fc65",
-        "type": "template",
+        "id": "ea32d7a233c26953",
+        "type": "image",
         "z": "e583048378e103aa",
-        "name": "Display Image",
-        "field": "payload",
-        "fieldType": "msg",
-        "format": "handlebars",
-        "syntax": "mustache",
-        "template": "<img ng-src=\"{{msg.payload.base64}}\" width=\"300\" height=\"200\" alt=\"Remote Image\" />\n\n<img src=\"{{msg.payload.base64}}\" width=\"300\" height=\"200\" alt=\"Remote Image\" />",
-        "output": "str",
-        "x": 240,
-        "y": 960,
-        "wires": [
-            []
-        ]
+        "name": "",
+        "width": 160,
+        "data": "payload.base64",
+        "dataType": "msg",
+        "thumbnail": false,
+        "active": true,
+        "pass": false,
+        "outputs": 0,
+        "x": 620,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "bd23b6da33ecdfbf",
+        "type": "debug",
+        "z": "e583048378e103aa",
+        "name": "debug 1",
+        "active": false,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 580,
+        "y": 660,
+        "wires": []
     }
 ]

@@ -6,7 +6,7 @@
     "license": "Flexible Assembly",
     "node-red": {
         "nodes": {
-            "camera-tools": "camera-tools/camera-tools.js"
+            "motion-detection": "motion-detection/motion-detection.js"
         }
     },
     "dependencies": {
