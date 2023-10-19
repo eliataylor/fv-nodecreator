@@ -1,0 +1,102 @@
+[
+    {
+        "id": "3fcba4be.c7525c",
+        "type": "inject",
+        "z": "dbed9a85.13e278",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "60",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 130,
+        "y": 140,
+        "wires": [
+            [
+                "20e65868.257208"
+            ]
+        ]
+    },
+    {
+        "id": "20e65868.257208",
+        "type": "camerapi-takephoto",
+        "z": "dbed9a85.13e278",
+        "filemode": "1",
+        "filename": "image.jpg",
+        "filedefpath": "1",
+        "filepath": "",
+        "fileformat": "jpeg",
+        "resolution": "10",
+        "rotation": "0",
+        "fliph": "0",
+        "flipv": "0",
+        "brightness": "50",
+        "contrast": "0",
+        "sharpness": "0",
+        "quality": "80",
+        "imageeffect": "none",
+        "exposuremode": "auto",
+        "iso": "0",
+        "agcwait": "1.0",
+        "led": "0",
+        "awb": "auto",
+        "name": "",
+        "x": 300,
+        "y": 140,
+        "wires": [
+            [
+                "98730e7f.472a3"
+            ]
+        ]
+    },
+    {
+        "id": "98730e7f.472a3",
+        "type": "file in",
+        "z": "dbed9a85.13e278",
+        "name": "Save Image",
+        "filename": "/home/pi/Pictures/image.jpg",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 470,
+        "y": 140,
+        "wires": [
+            [
+                "89060b2d.967d38"
+            ]
+        ]
+    },
+    {
+        "id": "89060b2d.967d38",
+        "type": "cloud-upload",
+        "z": "dbed9a85.13e278",
+        "username": "",
+        "password": "",
+        "project": "",
+        "auth": "",
+        "x": 770,
+        "y": 140,
+        "wires": [
+            [
+                "934e64b.c25f298"
+            ]
+        ]
+    },
+    {
+        "id": "934e64b.c25f298",
+        "type": "debug",
+        "z": "dbed9a85.13e278",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 1090,
+        "y": 140,
+        "wires": []
+    }
+]

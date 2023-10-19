@@ -1,8 +1,8 @@
-## Eli's Localhost
+## Docker Environment
 - `docker build -t ${whoami}/nodecreator .`
 - `docker stop nodecreator && docker rm nodecreator`
 - `docker run --name nodecreator -p 1881:1881 -d ${whoami}/nodecreator`
-- `sudo docker exec -it nodecreator /bin/bash`
+- CLI: `sudo docker exec -it nodecreator /bin/bash`
 
 
 ## Teamviewer Dev Env
@@ -13,8 +13,7 @@
 - `sudo docker run --name fvonprem_nodes -p 1881:1881 -d visioncell/nodecreator`
 - `sudo docker exec -it fvonprem_nodes /bin/bash`
 
-
-## Testing Environment
+## Local Dev Environment
 - in settings.js edit `editorTheme.theme` can be any [theme](https://github.com/node-red-contrib-themes/theme-collection), currently dark, dracula, midnight-red, oled, solarized-dark, solarized-light  
 - `npm start`
 
@@ -38,4 +37,24 @@
 - null: "Event Test Data"
 
 
+display image node only accepts base64 data passed to it.
+- change size of display image box
 
+Motion Detection: http://192.168.196.2:5000/api/capture/mask/get_masks
+
+Grab Image: add Mask field to fields
+
+Image Manipulation: accepts Base64
+
+
+wait on this:
+Add Data Node: post valid json to (api endpoint: /update interence object)
+
+
+Parse Results:
+after running interface results are a large json of attributes
+
+
+ROI (region of interest)
+
+zerotier uses port 1880

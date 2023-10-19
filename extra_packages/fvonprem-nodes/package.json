@@ -1,17 +1,19 @@
 {
     "name": "fvonprem-nodes",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "description": "FlexVision nodes for training and onprem configurations",
     "author": "Eli A Taylor",
     "license": "Flexible Assembly",
     "node-red": {
         "nodes": {
-            "motion-detection": "motion-detection/motion-detection.js"
+            "motion-detection": "motion-detection/motion-detection.js",
+            "display-image": "display-image/display-image.js"
         }
     },
     "dependencies": {
         "cors": "2.8.4",
         "form-data": "^2.3.3",
+        "jimp-compact": "^0.16.1-2",
         "on-headers": "1.0.1"
     }
 }

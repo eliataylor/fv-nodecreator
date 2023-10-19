@@ -1,0 +1,966 @@
+<!-- set device ip inputs -->
+<script type="text/x-red" data-template-name="server-settings">
+    <div class="form-row">
+        <label for="node-input-workstation"><i class="fa fa-desktop" aria-hidden="true"></i> workstation</label>
+        <input type="text" id="node-config-input-workstation">
+    </div>
+    <div class="form-row">
+        <label for="node-input-username"><i class="fa fa-user" aria-hidden="true"></i> Username</label>
+        <input type="text" id="node-config-input-username">
+    </div>
+    <div class="form-row">
+        <label for="node-input-password"><i class="fa fa-lock" aria-hidden="true"></i> Password</label>
+        <input type="password" id="node-config-input-password">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-host"><i class="fa fa-server" aria-hidden="true"></i> FV Server IP</label>
+        <input type="text" id="node-config-input-host" placeholder="123.45.6.7">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="server-settings">
+    <p>Flexible Vision Server Hostname</p>
+</script>
+
+<!-- fv upload inputs -->
+<script type="text/x-red" data-template-name="onprem-upload">
+    <div class="form-row">
+        <label for="node-input-fvconfig"><i class="fa fa-server" aria-hidden="true"></i> FV Server IP</label>
+        <select id="node-input-fvconfig" ></select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-preset"><i class="fa fa-sliders" aria-hidden="true"></i> Presets</label>
+      <select type="text" id="node-input-preset" class="preset-select" >
+        <option>Set your server IP</option>
+      </select>
+    </div>
+    <!-- <div class="form-row">
+        <label for="node-input-model"><i class="fa fa-folder" aria-hidden="true"></i> Models</label>
+        <select type="text" id="node-input-model" class="model-select">
+          <option>Set your server ip to load models.</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-version"><i class="fa fa-align-justify" aria-hidden="true"></i> Versions</label>
+        <select type="text" id="node-input-version" class="version-select">
+          <option>Set your server ip to load model versions.</option>
+        </select>
+    </div> -->
+</script>
+
+<script type="text/html" data-help-name="onprem-upload">
+  <p>Calls a set preset to run prediction on buffer image object.</p>
+
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+      <dt>msg.file
+          <span class="property-type">buffer object</span>
+      </dt>
+      <dd> Image as buffer object. </dd>
+      <dt>msg.did
+        <span class="property-type">String</span>
+      </dt>
+      <dd>"did" (detection ID) uniquely set detection identifier to reference via detection history.</dd>
+  </dl>
+
+  <h3>Outputs</h3>
+   <ol class="node-ports">
+       <li>Standard output
+           <dl class="message-properties">
+               <dt>payload <span class="property-type">JSON object</span></dt>
+               <dd>Predicted details in JSON format.</dd>
+           </dl>
+       </li>
+       <li>Standard error
+           <dl class="message-properties">
+               <dt>payload <span class="property-type">JSON object</span></dt>
+               <dd>Error information in JSON format.</dd>
+           </dl>
+       </li>
+   </ol>
+</script>
+<!-- fv upload inputs END -->
+
+<!-- fv snap inputs -->
+<script type="text/x-red" data-template-name="onprem-snap">
+    <div class="form-row">
+        <label for="node-input-fvconfig"><i class="fa fa-server" aria-hidden="true"></i> FV Server IP</label>
+        <select id="node-input-fvconfig" ></select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-preset"><i class="fa fa-sliders" aria-hidden="true"></i> Presets</label>
+      <select type="text" id="node-input-preset" class="preset-select" >
+        <option>Set your server IP</option>
+      </select>
+    </div>
+    <!-- <div class="form-row">
+        <label for="node-input-camera"><i class="fa fa-video-camera" aria-hidden="true"></i> Cameras</label>
+        <select type="text" id="node-input-camera" class="camera-select" >
+          <option>Set your server ip to load cameras</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-mask"><i class="fa fa-window-maximize" aria-hidden="true"></i> Masks</label>
+        <select type="text" id="node-input-mask" class="mask-select">
+          <option>Set your server ip to load masks.</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-model"><i class="fa fa-folder" aria-hidden="true"></i> Models</label>
+        <select type="text" id="node-input-model" class="model-select">
+          <option>Set your server ip to load models.</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-version"><i class="fa fa-align-justify" aria-hidden="true"></i> Versions</label>
+        <select type="text" id="node-input-version" class="version-select">
+          <option>Set your server ip to load model versions.</option>
+        </select>
+    </div> -->
+</script>
+
+<script type="text/html" data-help-name="onprem-snap">
+  <p>Calls a set preset to run prediction on buffer image object.</p>
+
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+      <dt>msg.did
+        <span class="property-type">String</span>
+      </dt>
+      <dd>"did" (detection ID) uniquely set detection identifier to reference via detection history.</dd>
+  </dl>
+
+  <h3>Outputs</h3>
+   <ol class="node-ports">
+       <li>Standard output
+           <dl class="message-properties">
+               <dt>payload <span class="property-type">JSON object</span></dt>
+               <dd>Predicted details in JSON format.</dd>
+           </dl>
+       </li>
+       <li>Standard error
+           <dl class="message-properties">
+               <dt>payload <span class="property-type">JSON object</span></dt>
+               <dd>Error information in JSON format.</dd>
+           </dl>
+       </li>
+   </ol>
+</script>
+<!-- fv snap inputs END -->
+
+
+
+
+
+
+<!-- fv cloud upload inputs -->
+<script type="text/x-red" data-template-name="cloud-upload">
+    <div class="form-row">
+        <label for="node-input-username"><i class="icon-tag"></i> Username</label>
+        <input type="text" id="node-input-username">
+    </div>
+    <div class="form-row">
+        <label for="node-input-password"><i class="icon-tag"></i> Password</label>
+        <input type="password" id="node-input-password">
+    </div>
+    <div class="form-row">
+        <label for="node-input-project"><i class="fa fa-folder" aria-hidden="true"></i> Projects</label>
+        <select type="text" id="node-input-project" class="cloud-project-select"></select>
+    </div>
+    <div class="form-row">
+        <input type="hidden" id="node-input-auth"></input>
+    </div>
+</script>
+<!-- fv cloud upload inputs END -->
+
+<script type="text/html" data-help-name="cloud-upload">
+    <p>Runs prediction on buffer image object.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">buffer object</span>
+        </dt>
+        <dd> Image as buffer object. </dd>
+    </dl>
+
+    <h3>Outputs</h3>
+     <ol class="node-ports">
+         <li>Standard output
+             <dl class="message-properties">
+                 <dt>payload <span class="property-type">JSON object</span></dt>
+                 <dd>Predicted details in JSON format.</dd>
+             </dl>
+         </li>
+         <li>Standard error
+             <dl class="message-properties">
+                 <dt>payload <span class="property-type">JSON object</span></dt>
+                 <dd>Error information in JSON format.</dd>
+             </dl>
+         </li>
+     </ol>
+</script>
+
+
+
+
+
+
+
+<script type="text/javascript">
+(function() {
+    const FV_DOMAIN = 'v1.cloud.flexiblevision.com';
+    let VERSION = null,
+        MODEL   = 'LOADING MODELS...',
+        MASK    = null,
+        CAMERA  = null
+
+    const main = function(model, version, preset){
+        VERSION  = version;
+        MODEL    = model;
+        PRESET   = preset;
+
+        var host = $('#node-input-fvconfig option:selected').text();
+        populatePresets(host);
+        // initCams(host)
+        // PopulateModels(host);
+        // $('.version-select').hide();
+        // $('.mask-select').hide();
+    }
+
+    const snapMain = function(model, version, mask, camera, preset){
+        VERSION = version;
+        MODEL   = model;
+        MASK    = mask;
+        CAMERA  = camera;
+        PRESET  = preset;
+
+        var host = $('#node-input-fvconfig option:selected').text();
+        populatePresets(host);
+        // initCams(host)
+        // PopulateModels(host);
+        // populateMasks(host);
+
+
+        // if (version) {
+        //     $('.version-select').show();
+        //     PopulateModelVersions(host)
+        // }else{
+        //     $('.version-select').hide();
+        // }
+    }
+
+    // const initCams = function(host) {
+    //     if (host && host[0] != 'A'){
+    //         PopulateCameras(host);
+    //     }else{
+    //         $('#node-input-model').html('<option>Please configure server IP</options>');
+    //     }
+    // }
+
+    // $(document).on('click change', '.model-select', function() {
+    //     var host  = $('#node-input-fvconfig option:selected').text();
+    //     var model = $('#node-input-model option:selected').text();
+
+    //     MODEL = model;
+    //     if (host && host[0] != 'A' && MODEL && MODEL[0] != '!'){
+    //         $('.version-select').show();
+    //         PopulateModelVersions(host);
+    //     }else{
+    //         $('#node-input-version').html('<option>!Could not load versions.</options>');
+    //     }
+    // });
+
+    $(document).on('click change', '.preset-select', function() {
+        var host  = $('#node-input-fvconfig option:selected').text();
+        var preset = $('#node-input-preset option:selected').text();
+
+        PRESET = preset;
+    });
+
+    // $(document).on('change', '.version-select', function() {
+    //     var host = $('#node-input-fvconfig option:selected').text();
+    //     if (host && host[0] != 'A'){
+    //         $('.camera-select').show();
+    //         PopulateCameras(host);
+    //     }else{
+    //         $('#node-input-camera').html('<option>!Could not load cameras.</options>');
+    //     }
+    // });
+
+    const populatePresets = function(host) {
+      if (host && host[0] == 'A') {
+        console.log("Select a server host");
+        return false;
+      }
+
+      var url = 'http://'+host+':5000/api/capture/io/';
+      $('#node-input-preset').html('<option>'+PRESET+'</options>');
+
+      $.ajax({
+        url: url,
+        dataType: "json"
+      }).done(function (data) {
+        $('#node-input-preset').html('');
+        for (var d=0; d < data.length; d++) {
+            var option = document.createElement("option");
+            option.text = 'Preset: '+data[d].presetId;
+            option.value = data[d].presetId;
+            if (PRESET == data[d].presetId) {
+                option.selected = true
+            }
+            var select = document.getElementById("node-input-preset");
+            select.appendChild(option);
+        }
+      }).error(function(err){
+        $('#node-input-preset').html('Error loading models');
+        console.log(err);
+      });      
+    }
+
+    // const PopulateModels = function(host) {
+    //   if (host && host[0] == 'A') {
+    //     console.log("Select a server host");
+    //     return false;
+    //   }
+
+    //   var url = 'http://'+host+':5000/api/capture/system/models';
+    //   $('#node-input-model').html('<option>'+MODEL+'</options>');
+
+    //   $.ajax({
+    //     url: url,
+    //     dataType: "json"
+    //   }).done(function (data) {
+    //     $('#node-input-model').html('');
+
+    //     for (var d=0; d < data.length; d++) {
+
+    //         var option = document.createElement("option");
+    //         option.text = data[d];
+    //         option.value = data[d];
+    //         if (MODEL == data[d]) {
+    //             option.selected = true
+    //         }
+    //         var select = document.getElementById("node-input-model");
+    //         select.appendChild(option);
+
+
+    //         // var selected = data[d] == MODEL;
+    //         // $('<option/>',{
+    //         //     'value': data[d],
+    //         //     'text': data[d],
+    //         //     'selected': selected
+    //         // }).appendTo('#node-input-model');
+    //     }
+    //   }).error(function(err){
+    //     $('#node-input-model').html('Error loading models');
+    //     console.log(err);
+    //   });
+    // }
+
+    // const PopulateModelVersions = function(host){
+    //     if (host && host[0] == 'A' && MODEL[0] == '!') {
+    //       console.log("Select a model.");
+    //       return false;
+    //     }
+
+    //     var url = 'http://'+host+':5000/api/capture/system/'+MODEL+'/versions';
+    //     $('#node-input-version').html('<option>Loading versions...</options>');
+    //     $.ajax({
+    //       url: url,
+    //       dataType: "json"
+    //     }).done(function (data) {
+    //       $('#node-input-version').html('');
+    //       for (var d=0; d < data.length; d++) {
+
+    //           var option = document.createElement("option");
+    //           option.text = data[d];
+    //           option.value = data[d];
+    //           if (VERSION == data[d]) {
+    //               option.selected = true
+    //           }
+    //           var select = document.getElementById("node-input-version");
+    //           select.appendChild(option);
+
+    //           // var selected = data[d] == VERSION;
+    //           // $('<option/>',{
+    //           //     'value': data[d],
+    //           //     'text': data[d],
+    //           //     'selected': selected
+    //           // }).appendTo('#node-input-version');
+    //       }
+    //     }).error(function(err){
+    //         console.log(err)
+    //       $('#node-input-version').html('Error loading versions');
+    //       console.log(err);
+    //     });
+    // }
+
+    // const populateMasks = function(host){
+    //     var url = 'http://'+host+':5000/api/capture/mask/get_masks';
+    //     $('#node-input-mask').html('<option>Loading masks...</option>');
+
+    //     $.ajax({
+    //       url: url,
+    //       dataType: "json"
+    //     }).done(function (data) {
+    //       $('#node-input-mask').html('');
+    //       $('<option/>',{
+    //           'value': 'false',
+    //           'text': 'No Mask'
+    //       }).appendTo('#node-input-mask');
+
+    //       for (var d=0; d < data.length; d++) {
+    //           var option = document.createElement("option");
+    //           option.text = data[d]['maskName'];
+    //           option.value = data[d]['maskId'];
+    //           if (MASK == data[d]['maskId']) {
+    //               option.selected = true
+    //           }
+    //           var select = document.getElementById("node-input-mask");
+    //           select.appendChild(option);
+
+    //           // var selected = data[d]['maskId'] == MASK;
+    //           // $('<option/>',{
+    //           //     'value': data[d]['maskId'],
+    //           //     'text': data[d]['maskName'],
+    //           //     'selected': selected
+    //           // }).appendTo('#node-input-mask');
+
+    //       }
+    //     }).error(function(err){
+    //       $('#node-input-version').html('Error loading masks');
+    //       console.log(err);
+    //     });
+    // }
+
+    // const PopulateCameras = function(host) {
+
+    //   if (host && host[0] == 'A') {
+    //     return false;
+    //   }
+
+    //   var url = 'http://'+host+':5000/api/capture/camera/';
+    //   $('#node-input-camera').html('<option>Loading cameras...</options>');
+
+    //   $.ajax({
+    //     url: url,
+    //     dataType: "json"
+    //   }).done(function (data) {
+
+    //     $('#node-input-camera').html('');
+    //     for (var d=0; d < data.length; d++) {
+
+    //         var option = document.createElement("option");
+    //         option.text = data[d].name;
+    //         option.value = data[d].index+"#"+data[d].uid;
+    //         if (CAMERA == data[d].index+"#"+data[d].uid) {
+    //             option.selected = true
+    //         }
+    //         var select = document.getElementById("node-input-camera");
+    //         select.appendChild(option);
+
+    //         // var selected = data[d].index+"#"+data[d].uid == CAMERA;
+    //         // $('<option/>',{
+    //         //     'value': data[d].index+"#"+data[d].uid,
+    //         //     'text': data[d].name,
+    //         //     'selected': selected
+    //         // }).appendTo('#node-input-camera');
+    //     }
+    //   }).error(function(err){
+    //     $('#node-input-camera').html('Error loading cameras');
+    //     console.log(err);
+    //   });
+    // }
+
+
+
+
+    // cloud node functions----------------------------------------------
+
+    function login_user(username, password){
+        // encrypt username and password before making http request
+        // var path = 'https://v1.cloud.flexiblevision.com/';
+        var path  = 'https://'+FV_DOMAIN+'/api/capture/auth/node_login';
+        var creds = JSON.stringify({username: username, password: password});
+        if (username && password){
+            var settings = {
+                method: 'POST',
+                async: false,
+                dataType: "json",
+                url: path,
+                headers: { 'content-type': 'application/json' },
+                data: creds,
+                success: function(data){
+                    if (data){
+                        var auth_token=data["access_token"];
+                        loadProjects(auth_token);
+                        $("#node-input-auth").val(auth_token);
+                    }
+
+                },
+                error: function(){
+                    loadProjects(false);
+                }
+            }
+            $.ajax(settings);
+        }
+    }
+
+    function get_token(username, password, auth_token){
+        if (auth_token){
+          if (isTokenExpired(auth_token)){
+            console.log('token expired, getting new auth token...');
+            login_user(username, password);
+          }else{
+            console.log('getting saved auth token...');
+            loadProjects(auth_token);
+            return auth_token;
+          }
+        }else{
+          console.log('getting new auth token...');
+          login_user(username, password);
+        }
+      }
+
+    function isTokenExpired(token){
+      if (token){
+        var hr_seconds = 3600;
+        const token_header = token.split('.')[1];
+        const decodedString = JSON.parse(window.atob(token_header));
+        var token_expires = decodedString.exp-hr_seconds;
+        var d = new Date();
+        var t = d.getTime()/1000;
+        return t>token_expires;
+      }else{
+        return true;
+      }
+    }
+
+    const cloudMain = function(username, password, auth_token){
+        loadProjects(auth_token);
+    }
+
+    const encryptPassword = function(){
+        $("#node-input-password").focusout(function(){
+            var password = $("#node-input-password").val();
+            try {
+                console.log(password, '<<<current password');
+                var decodedPw = window.atob(password);
+                console.log(decodedPw, ' decoded');
+                var encodedPw = window.btoa(decodedPw);
+            } catch(e) {
+                var encodedPw = window.btoa(decodedPw);
+            }
+
+            $("#node-input-password").val(encodedPw);
+            console.log(encodedPw);
+        });
+    }
+
+    const loadProjects = function(auth_token){
+        url = 'https://'+FV_DOMAIN+'/api/capture/project/';
+        if (auth_token) {
+            $.ajax({
+              method: 'GET',
+              url: url,
+              headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": "Bearer "+auth_token,
+                  "access_token": auth_token
+              }
+            }).done(function (res) {
+              $('#node-input-project').html('');
+              const data   = res.records;
+              for (var d=0; d < data.length; d++) {
+                  var option = document.createElement("option");
+                  option.text = data[d].name;
+                  option.value = data[d].id;
+                  var select = document.getElementById("node-input-project");
+                  select.appendChild(option);
+              }
+            }).error(function(err){
+              $('#node-input-project').html('Error loading projects');
+              console.log(err);
+            });
+        }else{$('#node-input-project').html('Error loading projects')}
+    }
+
+    // cloud node functions----------------------------------
+
+    RED.nodes.registerType('server-settings',{
+        category: 'config',
+        defaults: {
+            workstation: {value: "", required: true},
+            username: {value: "", required: true},
+            password: {value: "", required: true},
+            host: {value: "",required:true},
+        },
+        inputs:0,
+        outputs:0,
+        label: function() {
+            return this.host;
+        },
+        oneditsave: function() {
+          main();
+        }
+    });
+
+    RED.nodes.registerType('onprem-upload',{
+        category: 'Flexible Vision',
+        color: '#00bcd4',
+        defaults: {
+            preset: {value: this.preset, required: true},
+            // model: {value: this.model,required:true},
+            // version: {value: this.version, required:true},
+            fvconfig: {type:"server-settings",required:true}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "outline-visibility-24px.svg",
+        label: function() {
+          return "Onprem Upload - " + "PRESET: "+this.preset;
+        },
+        oneditprepare: function(e) {
+          main(this.model,  this.version, this.preset);
+        }
+    });
+
+    RED.nodes.registerType('onprem-snap',{
+        category: 'Flexible Vision',
+        color: '#ffdb20',
+        defaults: {
+            preset: {value: this.preset, required: true},
+            // model: {value: this.model,required:true},
+            // version: {value: this.version, required:true},
+            // camera: {value: this.camera, required:true},
+            // mask: {value: this.mask, required: false},
+            fvconfig: {type:"server-settings",required:true},
+        },
+        inputs:1,
+        outputs:1,
+        icon: "outline-videocam-24px.svg",
+        label: function() {
+          return "Onprem Snap - " + "PRESET: "+this.preset;
+        },
+        oneditprepare: function() {
+          snapMain(this.model,  this.version, this.mask, this.camera, this.preset);
+        }
+    });
+
+    RED.nodes.registerType('cloud-upload',{
+        category: 'Flexible Vision',
+        color: '#00bcd4',
+        defaults: {
+            username: {value:"",required:true},
+            password: {value:"",required: true},
+            project: {value:"",required:true},
+            auth: {value: ""}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "outline-videocam-24px.svg",
+        label: function() {
+          return "Cloud Upload " + this.project;
+        },
+        oneditprepare: function() {
+            //encryptPassword(this.password);
+            get_token(this.username, this.password, this.auth);
+            // cloudMain(this.username, this.password, this.auth);
+        }
+    });
+
+})();
+</script>
+
+
+
+<!-- VISION NODES -->
+<script type="text/javascript" src="resources/node-red-contrib-fv-detection-nodes/camera-controller.js" />
+
+
+<script type="text/html" data-template-name="remote-server">
+    <div class="form-row">
+        <label for="node-config-input-host"><i class="fa fa-bookmark"></i> Host</label>
+        <input type="text" id="node-config-input-host">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-port"><i class="fa fa-bookmark"></i> Port</label>
+        <input type="text" id="node-config-input-port">
+    </div>
+</script>
+
+<script type="text/html" data-template-name="camera-server">
+    <div class="form-row">
+        <label for="node-config-input-camlocation"><i class="fa fa-link" ></i> Host : Port</label>
+        <input type="text" id="node-config-input-camlocation" placeholder="http://locahost:8080">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="camera-server">
+    <p>Camera Location</p>
+</script>
+
+<script type="text/html" data-template-name="set-camera-property">
+    <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css" />
+    <div id="fvCamForm">
+    <div class="form-row">
+        <label for="node-input-camlocation"><i class="fa fa-link" ></i> Cam Location</label>
+        <select id="node-input-camlocation" ></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-camera"><i class="fa fa-camera" ></i> Target Cam</label>
+        <select id="node-input-camera" ></select>
+        <button type="button" class="red-ui-button" id="allCamRefreshBtn">Refresh</button>
+    </div>
+    <div class="form-row">
+        <label for="node-input-camprop"><i class="fa fa-tag" ></i> Cam Property</label>
+        <select id="node-input-camprop" ></select>
+    </div>
+    <div class="form-row" id="fvPropValRow">
+        <label for="node-input-propval"><i class="fa fa-outdent" ></i> Property Value</label>
+        <select id="node-input-propval" ></select>
+    </div>
+        <div id="camPropertyDesc"></div>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="set-camera-property">
+    <p>Camera Property Options</p>
+    <div id="camPropertyHelp"></div>
+</script>
+
+<script type="text/html" data-template-name="release-camera">
+    <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css" />
+    <div id="fvCamForm">
+        <div class="form-row">
+            <label for="node-input-camlocation"><i class="fa fa-link" ></i> Cam Location</label>
+            <select id="node-input-camlocation" ></select>
+        </div>
+        <div class="form-row">
+            <label for="node-input-camera"><i class="fa fa-camera" ></i> Target Cam</label>
+            <select id="node-input-camera" ></select>
+            <button type="button" class="red-ui-button" id="allCamRefreshBtn">Refresh</button>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" data-template-name="open-camera">
+    <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css" />
+    <div id="fvCamForm">
+        <div class="form-row">
+            <label for="node-input-camlocation"><i class="fa fa-link" ></i> Cam Location</label>
+            <select id="node-input-camlocation" ></select>
+        </div>
+        <div class="form-row">
+            <label for="node-input-camera"><i class="fa fa-camera" ></i> Target Cam</label>
+            <select id="node-input-camera" ></select>
+            <button type="button" class="red-ui-button" id="allCamRefreshBtn">Refresh</button>
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript">
+    (function () {
+
+        RED.nodes.registerType('remote-server', {
+            category: 'config',
+            defaults: {
+                host: {value:"172.17.0.1",required:true},
+                port: {value:1234,required:true,validate:RED.validators.number()},
+            },
+            label: function() {
+                return this.host+":"+this.port;
+            }
+        });
+
+        RED.nodes.registerType('camera-server', {
+            category: 'config',
+            paletteLabel:'Camera Server',
+            defaults: {
+                camlocation: {value: "http://172.17.0.1:5555", required: true}
+            },
+            label: function () {
+                return this.camlocation;
+            }
+        });
+
+        RED.nodes.registerType('set-camera-property', {
+            category: 'Flexible Vision',
+            paletteLabel:'Configure Camera',
+            color: '#42A5F5',
+            defaults: {
+                camlocation: {type: "camera-server", required: true},
+                camId: {value: "", required: true},
+                camProp: {value: "", required: true},
+                propVal: {value: "", required: true},
+                host: {value: "", required: false, hidden:true},
+                access_mode: {value: "", required: false, hidden:true},
+                node_type: {value: "", required: false, hidden:true},
+                camProperty: {value: {}, required: false, hidden:true},
+                lastUpdated: {value: 0, required: false, hidden:true},
+            },
+            inputs: 1,
+            outputs: 1,
+            icon: "baseline_video_settings_black_24dp.png",
+            label: function () {
+                let parts = [];
+                if (this.camProp && this.camProp.length > 0) parts.push(this.camProp.length > 20 ? this.camProp.substring(0, 20) + '...' : this.camProp);
+                if (this.propVal && String(this.propVal).length > 0) parts.push(String(this.propVal).length > 20 ? String(this.propVal).substring(0, 20) + '...' : this.propVal);
+                if (parts.length === 0) parts.unshift(this._def.paletteLabel);
+                else if (parts.length === 1) parts.unshift("Config");
+                return parts.join(' - ');
+            },
+            oneditsave: function() {
+                // document.getElementById("fvCamForm").removeEventListener('updateToolContext', this.setFVContext);
+                const node = this;
+                let url = node.host + '/api/vision/vision/';
+                const options = {timeout:15000, headers: {'Content-Type': 'application/json'}};
+                if (node.access_mode && node.access_mode.toUpperCase() === 'READ ONLY') {
+                    options.method = 'GET';
+                    url += 'readConfig/' + node.camId + '/' + encodeURIComponent(node.camProp);
+                } else {
+                    options.method = 'POST';
+                    url += 'setVal/' + node.camId;
+                    options.body = JSON.stringify({
+                        node_name:node.camProp,
+                        node_type:node.node_type,
+                        value:node.propVal
+                    })
+                }
+                fetch(url, options)
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch((error) => {
+                    alert(error);
+                    console.error ('Error:', error);
+                });
+            },
+            /*
+            oneditcancel: function() {
+                console.log("ONEDITCANCEL!", this);
+            },
+            onpaletteremove: function() {
+                document.getElementById("fvCamForm").removeEventListener('updateToolContext', this.setFVContext);
+            },
+            setFVContext: function(e) {
+                console.log("updateToolContext", e.detail);
+                this.camlocation = e.detail.host
+                this.camId = e.detail.camId
+                this.camProp = e.detail.camProp
+                this.propVal = e.detail.propVal
+            },
+             */
+            oneditprepare: function() {
+                const camController = new CameraController($, {
+                    camlocation: this.camlocation,
+                    host: this.host,
+                    camId:this.camId,
+                    camProp:this.camProp,
+                    propVal:this.propVal,
+                    access_mode: this.access_mode,
+                    node_type: this.node_type,
+                    camProperty: this.camProperty,
+                })
+                camController.startListeners();
+                window.camController = camController;  // debugging
+
+                document.getElementById("fvCamForm").addEventListener('updateToolContext',
+//                    (e) => this.setFVContext(e),
+                    (e) => {
+                        console.log("updateToolContext", e.detail);
+                        this.camlocation = e.detail.camlocation
+                        this.host = e.detail.host
+                        this.camId = e.detail.camId
+                        this.camProp = e.detail.camProp
+                        this.propVal = e.detail.propVal
+                        this.access_mode = e.detail.access_mode;
+                        this.node_type = e.detail.node_type;
+                        this.camProperty = e.detail.camProperty;
+                        this.lastUpdated = new Date().getTime()
+                    },
+                    {capture:false}
+                );
+            }
+        });
+
+
+        RED.nodes.registerType('release-camera', {
+            category: 'Flexible Vision',
+            paletteLabel:'Release Camera',
+            color: '#F44336',
+            defaults: {
+                camlocation: {type: "camera-server", required: true},
+                camId: {value: "", required: true}
+            },
+            inputs: 1,
+            outputs: 1,
+            icon: "baseline_videocam_off_black_24dp.png",
+            label: function () {
+                if (this.camId && this.camId.length > 0) {
+                    return 'Release ' + this.camId;
+                } else {
+                    return this._def.paletteLabel;
+                }
+            },
+            oneditprepare: function() {
+                const camController = new CameraController($, {
+                    camlocation: this.camlocation,
+                    camId:this.camId
+                })
+                camController.startListeners();
+                window.camController = camController; // debugging
+
+                document.getElementById("fvCamForm").addEventListener('updateToolContext',
+                    (e) => {
+                        console.log("updateCamReleaseContext", e.detail);
+                        this.camlocation = e.detail.host
+                        this.camId = e.detail.camId
+                    },
+                    {capture:false}
+                );
+            }
+        });
+
+
+
+
+        RED.nodes.registerType('open-camera', {
+            category: 'Flexible Vision',
+            paletteLabel:'Open Camera',
+            color: '#43A047',
+            defaults: {
+                camlocation: {type: "camera-server", required: true},
+                camId: {value: "", required: true}
+            },
+            inputs: 1,
+            outputs: 1,
+            icon: "outline-videocam-24px.svg",
+            label: function () {
+                if (this.camId && this.camId.length > 0) {
+                    return 'Open ' + this.camId;
+                } else {
+                    return this._def.paletteLabel;
+                }
+            },
+            oneditprepare: function() {
+                const camController = new CameraController($, {
+                    camlocation: this.camlocation,
+                    camId:this.camId
+                })
+                camController.startListeners();
+                window.camController = camController; // debugging
+
+                document.getElementById("fvCamForm").addEventListener('updateToolContext',
+                    (e) => {
+                        this.camlocation = e.detail.host
+                        this.camId = e.detail.camId
+                    },
+                    {capture:false}
+                );
+            }
+        });
+
+    })();
+</script>

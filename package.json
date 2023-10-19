@@ -1,16 +1,11 @@
 {
   "name": "flexvision",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "description": "",
   "main": "settings.js",
   "scripts": {
     "start": "node node_modules/node-red/red.js lib/flows/onprem-flows.json -v -u . -dev",
     "prod": "node node_modules/node-red/red.js -v -u ."
-  },
-  "node-red": {
-    "nodes": {
-      "motion-detection": "motion-detection/motion-detection.js"
-    }
   },
   "keywords": [],
   "author": {
@@ -18,13 +13,8 @@
   },
   "license": "Flexible Assembly",
   "dependencies": {
-    "@node-red-contrib-themes/theme-collection": "^2.2.0",
-    "fvonprem-nodes": "file:extra_packages/fvonprem-nodes",
-    "node-red": "^3.1.0",
-    "node-red-contrib-barcode": "0.1.3",
-    "node-red-contrib-fv-detection-nodes": "~1.0.9",
-    "node-red-contrib-image-output": "^0.6.4",
-    "node-red-contrib-modbus": "~5.27.2",
-    "node-red-node-serialport": "~1.0.4"
+    "@node-red-contrib-themes/theme-collection": "^3.1.4",
+    "fvonprem-nodes": "file:extra_packages/node-red-contrib-fv-detection-nodes",
+    "node-red": "^3.1.0"
   }
 }

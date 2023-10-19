@@ -1,8 +1,23 @@
-
 <script type="text/html" data-template-name="motion-detection">
+    <div class="form-row">
+        <label for="node-config-remote-server"><i class="fa fa-bookmark"></i>Server</label>
+        <input type="text" id="node-config-remote-server" ng-model="config.remote-server">
+    </div>
+    <div class="form-row">
+        <label for="node-config-camera-server"><i class="fa fa-bookmark"></i>Camera</label>
+        <input type="text" id="node-config-camera-server" ng-model="config.set-camera-property">
+    </div>
+    <div class="form-row">
+        <label for="node-input-mask"><i class="fa fa-link"></i>Mask</label>
+        <input type="text" id="node-input-mask" placeholder="Optionally select a mask of areas to ignore">
+    </div>
     <div class="form-row">
         <label for="node-input-threshold"><i class="fa fa-link"></i>Threshold</label>
         <input type="text" id="node-input-threshold" placeholder="Enter change threshold (0-100%)">
+    </div>
+    <div class="form-row">
+        <label for="node-input-debounce"><i class="fa fa-link"></i>Debounce</label>
+        <input type="text" id="node-input-debounce" placeholder="250 milliseconds">
     </div>
 </script>
 
@@ -14,13 +29,48 @@
             paletteLabel:'Detect Motion',
             color: '#1a7c15',
             defaults: {
-                camId: {value: "", required: true},
+                host: {type: "server-settings", value: "", required: false},
+                camlocation: {type: "set-camera-property", required: true},
                 threshold: {value: 0, required: true},
-                mask: {value: [0, 0, 100, 100]},
+                mask: {value: null},
+                debounce: {value: 250, required: false},
             },
             inputs: 1,
             outputs: 1,
             icon: "baseline_videocam_off_black_24dp.png",
+
+            oneditsave: function() {
+                // document.getElementById("fvCamForm").removeEventListener('updateToolContext', this.setFVContext);
+                const node = this;
+                let url = node.host + '/api/capture/mask/get_masks';
+                const options = {timeout:15000, headers: {'Content-Type': 'application/json'}};
+                options.method = 'GET';
+                url += '/' + node.camId;
+                fetch(url, options)
+                .then(data => {
+                    // populate field with options
+                    console.log('Success:', data);
+                })
+                .catch((error) => {
+                    alert(error);
+                    console.error ('Error:', error);
+                });
+            },
+            /*
+            oneditcancel: function() {
+                console.log("ONEDITCANCEL!", this);
+            },
+            onpaletteremove: function() {
+                document.getElementById("fvCamForm").removeEventListener('updateToolContext', this.setFVContext);
+            },
+            setFVContext: function(e) {
+                console.log("updateToolContext", e.detail);
+                this.camlocation = e.detail.host
+                this.camId = e.detail.camId
+                this.camProp = e.detail.camProp
+                this.propVal = e.detail.propVal
+            },
+             */
         });
 
     })();

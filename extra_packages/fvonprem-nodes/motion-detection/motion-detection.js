@@ -1,4 +1,3 @@
-const cors = require("cors");
 module.exports = function (RED) {
     "use strict";
 
@@ -65,6 +64,5 @@ module.exports = function (RED) {
     }
 
 
-    // Register the node with Node-RED
     RED.nodes.registerType('motion-detection', MotionDetection);
 };
