@@ -14,7 +14,8 @@
     "node-red": {
         "version": ">=2.0.0",
         "nodes": {
-            "flexible-vision-nodes": "flexible-vision-nodes/flexible-vision-nodes.js"
+            "flexible-vision-nodes": "flexible-vision-nodes/flexible-vision-nodes.js",
+            "display-image": "display-image/display-image.js"
         }
     },
     "keywords": [

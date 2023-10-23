@@ -11,22 +11,16 @@
         "id": "5d16ae27fd2b1294",
         "type": "motion-detection",
         "z": "e583048378e103aa",
-        "camId": "",
+        "fvconfig": "28e65808dff70419",
+        "camlocation": "8a495c7a43152ead",
+        "camId": "233630185040191",
         "threshold": "60",
-        "mask": [
-            0,
-            0,
-            100,
-            100
-        ],
+        "mask": "ea087c1a-62fa-43a6-a52d-a51976b98842",
         "debounce": "",
         "x": 290,
         "y": 180,
         "wires": [
-            [
-                "ea32d7a233c26953",
-                "bd23b6da33ecdfbf"
-            ]
+            []
         ]
     },
     {
@@ -57,5 +51,18 @@
                 "5d16ae27fd2b1294"
             ]
         ]
+    },
+    {
+        "id": "28e65808dff70419",
+        "type": "server-settings",
+        "workstation": "",
+        "username": "",
+        "password": "",
+        "host": "http://192.168.196.2:5000"
+    },
+    {
+        "id": "8a495c7a43152ead",
+        "type": "camera-server",
+        "camlocation": "http://192.168.196.2:5555"
     }
 ]

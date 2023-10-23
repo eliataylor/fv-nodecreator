@@ -1,8 +1,17 @@
+const cors = require("cors");
 module.exports = function (RED) {
     "use strict";
 
     const request = require('request');
     const cors = require('cors');
+
+    let corsHandler = function (req, res, next) {
+        next();
+    }
+    if (RED.settings.httpNodeCors) {
+        corsHandler = cors(RED.settings.httpNodeCors);
+        RED.httpNode.options("*", corsHandler);
+    }
 
     function MotionDetection(n) {
         RED.nodes.createNode(this, n);
@@ -54,15 +63,5 @@ module.exports = function (RED) {
 
         });
     }
-
-    let corsHandler = function (req, res, next) {
-        next();
-    }
-    if (RED.settings.httpNodeCors) {
-        corsHandler = cors(RED.settings.httpNodeCors);
-        RED.httpNode.options("*", corsHandler);
-    }
-
-
     RED.nodes.registerType('motion-detection', MotionDetection);
 };
