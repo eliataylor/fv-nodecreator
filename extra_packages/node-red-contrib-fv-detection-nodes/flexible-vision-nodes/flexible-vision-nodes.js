@@ -577,8 +577,8 @@ module.exports = function (RED) {
         } else if (n.host && n.host.indexOf('http') > -1) {
             node.host = n.host;
         }
-        node.efx = n.efx;
-        node.filter_value = n.filter_value;
+        node.efx_name = n.efx_name;
+        node.efx_value = n.efx_value;
 
         const HandleFailures = function (msg) {
             msg.topic = 'image manipulation failed';
@@ -601,8 +601,8 @@ module.exports = function (RED) {
             options.method = 'POST';
             options.body = JSON.stringify({
                 base64: msg.payload,
-                filter_value: node.threshold,
-                filter_name: node.efx
+                efx_value: node.threshold,
+                efx_name: node.efx_name
             })
             options.url = url;
 

@@ -670,74 +670,12 @@
             defaults: {
                 fvconfig: {type: "server-settings", required: true},
                 host: {value: "", required: false, hidden: true},
-                value: {value: 0, required: false},
-                efx: {value: false, required: true}
+                efx_value: {value: 0, required: false},
+                efx_name: {value: false, required: true}
             },
             inputs: 1,
             outputs: 1,
-            icon: "blur_on_FILL0_wght400_GRAD0_opsz24.svg",
-            oneditprepare: () => {
-                const efxs = {
-                    "Image Filters": {
-                        "Grayscale Conversion": "cv2.cvtColor() with cv2.COLOR_BGR2GRAY",
-                        "Blur Filters": {
-                            "Gaussian Blur": "cv2.GaussianBlur()",
-                            "Median Blur": "cv2.medianBlur()",
-                            "Bilateral Filter": "cv2.bilateralFilter()"
-                        },
-                        "Edge Detection Filters": {
-                            "Canny Edge Detection": "cv2.Canny()",
-                            "Sobel Filter": "cv2.Sobel()",
-                            "Laplacian Filter": "cv2.Laplacian()"
-                        },
-                        "Thresholding": {
-                            "Thresholding": "cv2.threshold()",
-                            "Adaptive Thresholding": "cv2.adaptiveThreshold()"
-                        },
-                        "Denoising": "cv2.fastNlMeansDenoising()",
-                        "Morphological Filters": {
-                            "Erosion": "cv2.erode()",
-                            "Dilation": "cv2.dilate()",
-                            "Morphology Operations": "cv2.morphologyEx()"
-                        },
-                        "Color Space Conversions": "cv2.cvtColor() with various color space conversions",
-                        "Histogram Equalization": "cv2.equalizeHist()",
-                        "Custom Kernel Convolution": "cv2.filter2D()",
-                        "Resize and Scaling": "cv2.resize()",
-                        "Rotation and Affine Transformations": {
-                            "Get Rotation Matrix": "cv2.getRotationMatrix2D()",
-                            "Warp Affine": "cv2.warpAffine()"
-                        },
-                        "Image Warping": "cv2.warpPerspective()",
-                        "Image Blending": "cv2.addWeighted()"
-                    }
-                }
-
-                const select = document.getElementById("node-input-efx");
-
-                for (const category in efxs) {
-                    if (typeof efxs[category] === "object") {
-                        // Create an optgroup for subheaders
-                        const optgroup = document.createElement("optgroup");
-                        optgroup.label = category;
-                        select.appendChild(optgroup);
-
-                        // Add options under the subheader
-                        for (const option in efxs[category]) {
-                            const optionElement = document.createElement("option");
-                            optionElement.value = efxs[category][option];
-                            optionElement.textContent = option;
-                            optgroup.appendChild(optionElement);
-                        }
-                    } else {
-                        // Add options without subheaders
-                        const optionElement = document.createElement("option");
-                        optionElement.value = efxs[category];
-                        optionElement.textContent = category;
-                        select.appendChild(optionElement);
-                    }
-                }
-            }
+            icon: "blur_on_FILL0_wght400_GRAD0_opsz24.svg"
         });
 
     })();
@@ -792,8 +730,8 @@
         <select id="node-input-fvconfig"></select>
     </div>
     <div class="form-row">
-        <label for="node-input-efx"><i class="fa fa-errcast"></i> Image Effect</label>
-        <select id="node-input-efx">
+        <label for="node-input-efx_name"><i class="fa fa-eercast"></i> Image Effect</label>
+        <select id="node-input-efx_name">
             <option value="cv2.cvtColor() with cv2.COLOR_BGR2GRAY">Grayscale Conversion</option>
             <optgroup label="Blur Filters">
                 <option value="cv2.GaussianBlur()">Gaussian Blur</option>
@@ -840,6 +778,11 @@
                 <option value="cv2.addWeighted()">Image Blending</option>
             </optgroup>
         </select>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-efx_value"><i class="fa fa-snowflake-o"></i> Effect Value</label>
+        <input type="text" id="node-input-efx_value" placeholder="value for effect">
     </div>
 </script>
 <!-- IMAGE MANIPULATION END -->
