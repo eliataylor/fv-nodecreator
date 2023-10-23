@@ -562,6 +562,68 @@ module.exports = function (RED) {
     }
 
 
+    function ImageManipulation(n) {
+        RED.nodes.createNode(this, n);
+        this.threshold = n.threshold;
+        const node = this;
+
+        const hostConfig = RED.nodes.getNode(n.camlocation || n.host);
+        node.camlocation = n.camlocation;
+        node.host = n.host;
+        if (hostConfig && hostConfig.camlocation && hostConfig.camlocation.indexOf('http') > -1) {
+            node.host = hostConfig.camlocation
+        } else if (n.camlocation && n.camlocation.indexOf('http') > -1) {
+            node.host = n.camlocation
+        } else if (n.host && n.host.indexOf('http') > -1) {
+            node.host = n.host;
+        }
+        node.efx = n.efx;
+        node.filter_value = n.filter_value;
+
+        const HandleFailures = function (msg) {
+            msg.topic = 'image manipulation failed';
+            node.error(msg);
+            node.send(msg);
+            node.status({fill: "red", shape: "dot", text: "error"});
+        }
+
+        const HandleResponse = (msg) => {
+            msg.topic = 'image manipulation returned';
+            node.status({fill: "green", shape: "dot"});
+            node.send(msg);
+        }
+
+        node.on('input', function (msg) {
+
+            var config = RED.nodes.getNode(n.fvconfig);
+            let url = 'http://localhost:5123/api/dev/test/image_manipulation';
+            const options = {timeout: 15000, headers: {'Content-Type': 'application/json'}};
+            options.method = 'POST';
+            options.body = JSON.stringify({
+                base64: msg.payload,
+                filter_value: node.threshold,
+                filter_name: node.efx
+            })
+            options.url = url;
+
+            node.debug(JSON.stringify(options));
+
+            node.status({fill: "yellow", shape: "dot", text: node.threshold + '%'})
+
+            request(options, (error, response, body) => {
+                if (!error) {
+                    msg.payload = JSON.parse(body);
+                    return HandleResponse(msg);
+                }
+                console.log("FAILED")
+                msg.payload = error;
+                return HandleFailures(msg);
+            });
+
+
+        });
+    }
+
     function MotionDetection(n) {
         RED.nodes.createNode(this, n);
         this.threshold = n.threshold;
@@ -634,6 +696,7 @@ module.exports = function (RED) {
     }
 
     RED.nodes.registerType('motion-detection', MotionDetection);
+    RED.nodes.registerType('image-manipulation', ImageManipulation);
     RED.nodes.registerType("remote-server", RemoteServerNode);
     RED.nodes.registerType("camera-server", CameraLocationNode);
     RED.nodes.registerType("set-camera-property", SetCameraConfig);

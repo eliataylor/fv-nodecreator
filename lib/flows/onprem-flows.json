@@ -53,6 +53,49 @@
         ]
     },
     {
+        "id": "33c6a17d5d9b5a0c",
+        "type": "image-manipulation",
+        "z": "e583048378e103aa",
+        "fvconfig": "28e65808dff70419",
+        "host": "",
+        "value": 0,
+        "efx": "cv2.cvtColor() with cv2.COLOR_BGR2GRAY",
+        "x": 320,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "88bcd63455d67c08",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 100,
+        "y": 280,
+        "wires": [
+            [
+                "33c6a17d5d9b5a0c"
+            ]
+        ]
+    },
+    {
         "id": "28e65808dff70419",
         "type": "server-settings",
         "workstation": "",
