@@ -8,6 +8,19 @@
         "env": []
     },
     {
+        "id": "28e65808dff70419",
+        "type": "server-settings",
+        "workstation": "",
+        "username": "",
+        "password": "",
+        "host": "http://192.168.196.2:5000"
+    },
+    {
+        "id": "8a495c7a43152ead",
+        "type": "camera-server",
+        "camlocation": "http://192.168.196.2:5555"
+    },
+    {
         "id": "5d16ae27fd2b1294",
         "type": "motion-detection",
         "z": "e583048378e103aa",
@@ -17,7 +30,7 @@
         "threshold": "60",
         "mask": "ea087c1a-62fa-43a6-a52d-a51976b98842",
         "debounce": "",
-        "x": 290,
+        "x": 310,
         "y": 180,
         "wires": [
             []
@@ -58,8 +71,6 @@
         "z": "e583048378e103aa",
         "fvconfig": "28e65808dff70419",
         "host": "",
-        "value": 0,
-        "efx": "cv2.cvtColor() with cv2.COLOR_BGR2GRAY",
         "x": 320,
         "y": 280,
         "wires": [
@@ -94,18 +105,5 @@
                 "33c6a17d5d9b5a0c"
             ]
         ]
-    },
-    {
-        "id": "28e65808dff70419",
-        "type": "server-settings",
-        "workstation": "",
-        "username": "",
-        "password": "",
-        "host": "http://192.168.196.2:5000"
-    },
-    {
-        "id": "8a495c7a43152ead",
-        "type": "camera-server",
-        "camlocation": "http://192.168.196.2:5555"
     }
 ]

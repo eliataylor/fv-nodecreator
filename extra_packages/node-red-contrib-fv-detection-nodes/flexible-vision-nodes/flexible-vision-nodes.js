@@ -670,16 +670,18 @@ module.exports = function (RED) {
             options.method = 'POST';
             options.body = JSON.stringify({
                 threshold: node.threshold,
-                camId: node.camId,
+                camId: n.camId,
                 mask: node.mask,
                 camhost: node.host,
                 fvhost: config.host
             })
             options.url = url;
 
+            debugger;
             node.debug(JSON.stringify(options));
+            node.debug("INPUT " + n.camId, JSON.stringify(node));
 
-            node.status({fill: "yellow", shape: "dot", text: node.threshold + '%'})
+            node.status({fill: "yellow", shape: "dot", text:  node.camId + ': ' + node.threshold + '%'})
 
             request(options, (error, response, body) => {
                 if (!error) {
