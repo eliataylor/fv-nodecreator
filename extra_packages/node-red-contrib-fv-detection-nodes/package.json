@@ -37,6 +37,7 @@
         "cors": "^2.8.4",
         "form-data": "^2.3.3",
         "nodes": "^0.1.0",
-        "request": "^2.88.0"
+        "request": "^2.88.0",
+        "jimp-compact": "~0.10.1"
     }
 }

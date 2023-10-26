@@ -596,14 +596,14 @@
                 debounce: {value: 250, required: false}
             },
             inputs: 1,
-            outputs: 1,
+            outputs: 2,
             icon: "motion_photos_auto_black_24dp.svg",
+            outputLabels: ["Motion", "No Motion"],
             oneditsave:  function() {
                 this.mask = $('#node-input-mask').val();
             },
             oneditprepare: function() {
                 // get masks
-                debugger;
                 const camController = new CameraController($, {
                     camlocation: this.camlocation,
                     host: this.host,

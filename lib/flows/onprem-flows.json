@@ -26,14 +26,20 @@
         "z": "e583048378e103aa",
         "fvconfig": "28e65808dff70419",
         "camlocation": "8a495c7a43152ead",
-        "camId": "233630185040191",
+        "camId": "233630185045974",
         "threshold": "60",
         "mask": "ea087c1a-62fa-43a6-a52d-a51976b98842",
-        "debounce": "",
+        "debounce": "-250",
         "x": 310,
-        "y": 180,
+        "y": 120,
         "wires": [
-            []
+            [
+                "f2bd2275cf25136b",
+                "14c64192bdb8a17b"
+            ],
+            [
+                "e353bca09bfda750"
+            ]
         ]
     },
     {
@@ -58,7 +64,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 100,
-        "y": 180,
+        "y": 120,
         "wires": [
             [
                 "5d16ae27fd2b1294"
@@ -74,7 +80,10 @@
         "x": 320,
         "y": 280,
         "wires": [
-            []
+            [
+                "14c64192bdb8a17b",
+                "f2bd2275cf25136b"
+            ]
         ]
     },
     {
@@ -105,5 +114,62 @@
                 "33c6a17d5d9b5a0c"
             ]
         ]
+    },
+    {
+        "id": "f2bd2275cf25136b",
+        "type": "debug",
+        "z": "e583048378e103aa",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "e353bca09bfda750",
+        "type": "delay",
+        "z": "e583048378e103aa",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "250",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 310,
+        "y": 200,
+        "wires": [
+            [
+                "5d16ae27fd2b1294"
+            ]
+        ]
+    },
+    {
+        "id": "14c64192bdb8a17b",
+        "type": "display-image",
+        "z": "e583048378e103aa",
+        "name": "",
+        "width": 160,
+        "data": "payload",
+        "dataType": "msg",
+        "thumbnail": false,
+        "active": true,
+        "pass": false,
+        "outputs": 0,
+        "x": 660,
+        "y": 220,
+        "wires": []
     }
 ]

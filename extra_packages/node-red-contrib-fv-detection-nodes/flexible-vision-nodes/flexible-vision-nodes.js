@@ -587,15 +587,9 @@ module.exports = function (RED) {
             node.status({fill: "red", shape: "dot", text: "error"});
         }
 
-        const HandleResponse = (msg) => {
-            msg.topic = 'image manipulation returned';
-            node.status({fill: "green", shape: "dot"});
-            node.send(msg);
-        }
-
         node.on('input', function (msg) {
 
-            var config = RED.nodes.getNode(n.fvconfig);
+            // WARN change hardcoded test api
             let url = 'http://localhost:5123/api/dev/test/image_manipulation';
             const options = {timeout: 15000, headers: {'Content-Type': 'application/json'}};
             options.method = 'POST';
@@ -608,12 +602,17 @@ module.exports = function (RED) {
 
             node.debug(JSON.stringify(options));
 
-            node.status({fill: "yellow", shape: "dot", text: node.threshold + '%'})
+            node.status({fill: "yellow", shape: "dot", text: 'processing ' + node.efx_name})
 
             request(options, (error, response, body) => {
                 if (!error) {
-                    msg.payload = JSON.parse(body);
-                    return HandleResponse(msg);
+                    let bodyjson = JSON.parse(body);
+                    if (typeof bodyjson["b64"] === "string") {
+                        msg.topic = 'image manipulation returned';
+                        msg.payload = bodyjson['b64']
+                        node.status({fill: "green", shape: "dot"});
+                        return node.send(msg);
+                    }
                 }
                 console.log("FAILED")
                 msg.payload = error;
@@ -644,24 +643,6 @@ module.exports = function (RED) {
         node.threshold = n.threshold;
         node.debounce = n.debounce;
 
-        const HandleFailures = function (msg) {
-            msg.topic = 'nomotion';
-            node.error(msg);
-            node.send(msg);
-            node.status({fill: "red", shape: "dot", text: "error"});
-        }
-
-        const HandleResponse = (msg) => {
-            msg.topic = 'motion detected';
-            node.status({
-                fill: (msg.payload.diff > this.threshold) ? "green" : 'yellow',
-                shape: "dot",
-                text: msg.payload.diff + '%'
-            });
-            node.send(msg);
-        }
-
-        // Function to handle incoming messages
         node.on('input', function (msg) {
 
             var config = RED.nodes.getNode(n.fvconfig);
@@ -670,27 +651,40 @@ module.exports = function (RED) {
             options.method = 'POST';
             options.body = JSON.stringify({
                 threshold: node.threshold,
-                camId: n.camId,
+                camId: node.camId,
                 mask: node.mask,
                 camhost: node.host,
                 fvhost: config.host
             })
             options.url = url;
 
-            debugger;
-            node.debug(JSON.stringify(options));
-            node.debug("INPUT " + n.camId, JSON.stringify(node));
+            node.debug("INPUT " + n.camId, JSON.stringify(n));
+            node.debug(JSON.stringify(node));
 
-            node.status({fill: "yellow", shape: "dot", text:  node.camId + ': ' + node.threshold + '%'})
+            node.status({fill: "yellow", shape: "dot", text:  node.camId + ' expects ' + node.threshold + '%'})
 
             request(options, (error, response, body) => {
                 if (!error) {
-                    msg.payload = JSON.parse(body);
-                    return HandleResponse(msg);
+                    const bodyjson = JSON.parse(body);
+                    node.status({
+                        fill: (bodyjson.diff > this.threshold) ? "green" : 'yellow',
+                        shape: "dot",
+                        text: bodyjson.diff + '% changed vs. ' + this.threshold + '% allowed'
+                    });
+                    if (bodyjson.diff > this.threshold) {
+                        msg.topic = 'motion detected';
+                        msg.payload = bodyjson['b64']
+                        return node.send([msg, null]);
+                    } else {
+                        msg.topic = 'no motion';
+                        msg.payload = bodyjson;
+                        return node.send([null, msg]);
+                    }
                 }
-                console.log("FAILED")
+                msg.topic = 'no motion failed';
                 msg.payload = error;
-                return HandleFailures(msg);
+                node.status({fill: "red", shape: "dot", text: "error"});
+                return node.send([null, msg]);
             });
 
 
