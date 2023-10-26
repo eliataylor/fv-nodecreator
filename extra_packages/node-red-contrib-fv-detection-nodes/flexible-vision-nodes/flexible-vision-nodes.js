@@ -489,7 +489,6 @@ module.exports = function (RED) {
 
     }
 
-
     function SetCameraConfig(n) {
         RED.nodes.createNode(this, n);
         const node = this;
@@ -561,10 +560,8 @@ module.exports = function (RED) {
         });
     }
 
-
     function ImageManipulation(n) {
         RED.nodes.createNode(this, n);
-        this.threshold = n.threshold;
         const node = this;
 
         const hostConfig = RED.nodes.getNode(n.camlocation || n.host);
@@ -580,13 +577,6 @@ module.exports = function (RED) {
         node.efx_name = n.efx_name;
         node.efx_value = n.efx_value;
 
-        const HandleFailures = function (msg) {
-            msg.topic = 'image manipulation failed';
-            node.error(msg);
-            node.send(msg);
-            node.status({fill: "red", shape: "dot", text: "error"});
-        }
-
         node.on('input', function (msg) {
 
             // WARN change hardcoded test api
@@ -595,17 +585,17 @@ module.exports = function (RED) {
             options.method = 'POST';
             options.body = JSON.stringify({
                 base64: msg.payload,
-                efx_value: node.threshold,
+                efx_value: node.efx_value,
                 efx_name: node.efx_name
             })
             options.url = url;
 
-            node.debug(JSON.stringify(options));
+            node.debug(JSON.stringify(n));
 
             node.status({fill: "yellow", shape: "dot", text: 'processing ' + node.efx_name})
 
             request(options, (error, response, body) => {
-                if (!error) {
+                if (!error && body) {
                     let bodyjson = JSON.parse(body);
                     if (typeof bodyjson["b64"] === "string") {
                         msg.topic = 'image manipulation returned';
@@ -614,9 +604,11 @@ module.exports = function (RED) {
                         return node.send(msg);
                     }
                 }
-                console.log("FAILED")
+                console.log("image manipulation failed", error)
                 msg.payload = error;
-                return HandleFailures(msg);
+                msg.topic = 'image manipulation failed';
+                node.status({fill: "red", shape: "dot", text: "error"});
+                return node.send(msg);
             });
 
 
@@ -625,7 +617,6 @@ module.exports = function (RED) {
 
     function MotionDetection(n) {
         RED.nodes.createNode(this, n);
-        this.threshold = n.threshold;
         const node = this;
 
         const hostConfig = RED.nodes.getNode(n.camlocation || n.host);

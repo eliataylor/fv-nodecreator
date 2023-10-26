@@ -732,50 +732,51 @@
     <div class="form-row">
         <label for="node-input-efx_name"><i class="fa fa-eercast"></i> Image Effect</label>
         <select id="node-input-efx_name">
-            <option value="cv2.cvtColor() with cv2.COLOR_BGR2GRAY">Grayscale Conversion</option>
+            <option value="cvtColor">Grayscale Conversion</option>
             <optgroup label="Blur Filters">
-                <option value="cv2.GaussianBlur()">Gaussian Blur</option>
-                <option value="cv2.medianBlur()">Median Blur</option>
-                <option value="cv2.bilateralFilter()">Bilateral Filter</option>
+                <option value="GaussianBlur">Gaussian Blur</option>
+                <option value="medianBlur">Median Blur</option>
+                <option value="bilateralFilter">Bilateral Filter</option>
             </optgroup>
             <optgroup label="Edge Detection Filters">
-                <option value="cv2.Canny()">Canny Edge Detection</option>
-                <option value="cv2.Sobel()">Sobel Filter</option>
-                <option value="cv2.Laplacian()">Laplacian Filter</option>
+                <option value="Canny">Canny Edge Detection</option>
+                <option value="Sobel">Sobel Filter</option>
+                <option value="Laplacian">Laplacian Filter</option>
             </optgroup>
             <optgroup label="Thresholding">
-                <option value="cv2.threshold()">Thresholding</option>
-                <option value="cv2.adaptiveThreshold()">Adaptive Thresholding</option>
+                <option value="threshold">Thresholding</option>
+                <option value="adaptiveThreshold">Adaptive Thresholding</option>
             </optgroup>
             <optgroup label="Denoising">
-                <option value="cv2.fastNlMeansDenoising()">Fast Non-Local Means Denoising</option>
+                <option value="fastNlMeansDenoising">Fast Non-Local Means Denoising</option>
             </optgroup>
             <optgroup label="Morphological Filters">
-                <option value="cv2.erode()">Erosion</option>
-                <option value="cv2.dilate()">Dilation</option>
-                <option value="cv2.morphologyEx()">Morphology Operations</option>
+                <option value="erode">Erosion</option>
+                <option value="dilate">Dilation</option>
+                <option value="morphologyEx">Morphology Operations</option>
             </optgroup>
             <optgroup label="Color Space Conversions">
-                <option value="cv2.cvtColor() with various color space conversions">Various Conversions</option>
+                <option value="BGR2HSV">Color Space - BGR2HSV</option>
+                <option value="BGR2YUV">Color Space - BGR2YUV</option>
             </optgroup>
             <optgroup label="Histogram Equalization">
-                <option value="cv2.equalizeHist()">Equalize Histogram</option>
+                <option value="equalizeHist">Equalize Histogram</option>
             </optgroup>
             <optgroup label="Custom Kernel Convolution">
-                <option value="cv2.filter2D()">Custom Kernel Convolution</option>
+                <option value="filter2D">Custom Kernel Convolution</option>
             </optgroup>
             <optgroup label="Resize and Scaling">
-                <option value="cv2.resize()">Resize and Scaling</option>
+                <option value="resize">Resize and Scaling</option>
             </optgroup>
             <optgroup label="Rotation and Affine Transformations">
-                <option value="cv2.getRotationMatrix2D()">Get Rotation Matrix</option>
-                <option value="cv2.warpAffine()">Warp Affine</option>
+                <option value="getRotationMatrix2D">Get Rotation Matrix</option>
+                <option value="warpAffine">Warp Affine</option>
             </optgroup>
             <optgroup label="Image Warping">
-                <option value="cv2.warpPerspective()">Image Warping</option>
+                <option value="warpPerspective">Image Warping</option>
             </optgroup>
             <optgroup label="Image Blending">
-                <option value="cv2.addWeighted()">Image Blending</option>
+                <option value="addWeighted">Image Blending</option>
             </optgroup>
         </select>
     </div>

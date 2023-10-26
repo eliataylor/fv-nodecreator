@@ -8,24 +8,11 @@
         "env": []
     },
     {
-        "id": "28e65808dff70419",
-        "type": "server-settings",
-        "workstation": "",
-        "username": "",
-        "password": "",
-        "host": "http://192.168.196.2:5000"
-    },
-    {
-        "id": "8a495c7a43152ead",
-        "type": "camera-server",
-        "camlocation": "http://192.168.196.2:5555"
-    },
-    {
         "id": "5d16ae27fd2b1294",
         "type": "motion-detection",
         "z": "e583048378e103aa",
         "fvconfig": "28e65808dff70419",
-        "camlocation": "8a495c7a43152ead",
+        "camlocation": "http://192.168.196.2:5555",
         "camId": "233630185045974",
         "threshold": "60",
         "mask": "ea087c1a-62fa-43a6-a52d-a51976b98842",
@@ -38,7 +25,7 @@
                 "14c64192bdb8a17b"
             ],
             [
-                "e353bca09bfda750"
+                "f2bd2275cf25136b"
             ]
         ]
     },
@@ -77,7 +64,9 @@
         "z": "e583048378e103aa",
         "fvconfig": "28e65808dff70419",
         "host": "",
-        "x": 320,
+        "efx_value": "5",
+        "efx_name": "GaussianBlur",
+        "x": 480,
         "y": 280,
         "wires": [
             [
@@ -111,7 +100,7 @@
         "y": 280,
         "wires": [
             [
-                "33c6a17d5d9b5a0c"
+                "a862fd73ed66a7c3"
             ]
         ]
     },
@@ -132,31 +121,6 @@
         "wires": []
     },
     {
-        "id": "e353bca09bfda750",
-        "type": "delay",
-        "z": "e583048378e103aa",
-        "name": "",
-        "pauseType": "delay",
-        "timeout": "250",
-        "timeoutUnits": "milliseconds",
-        "rate": "1",
-        "nbRateUnits": "1",
-        "rateUnits": "second",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": false,
-        "allowrate": false,
-        "outputs": 1,
-        "x": 310,
-        "y": 200,
-        "wires": [
-            [
-                "5d16ae27fd2b1294"
-            ]
-        ]
-    },
-    {
         "id": "14c64192bdb8a17b",
         "type": "display-image",
         "z": "e583048378e103aa",
@@ -168,8 +132,36 @@
         "active": true,
         "pass": false,
         "outputs": 0,
-        "x": 660,
-        "y": 220,
+        "x": 740,
+        "y": 160,
         "wires": []
+    },
+    {
+        "id": "a862fd73ed66a7c3",
+        "type": "file in",
+        "z": "e583048378e103aa",
+        "name": "example file",
+        "filename": "/Users/elitaylor/Developer/flexibleassembly/nodecreator/extra_packages/node-red-contrib-fv-detection-nodes/resources/images/refined_motion_logo.png",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "base64",
+        "allProps": false,
+        "x": 270,
+        "y": 280,
+        "wires": [
+            [
+                "33c6a17d5d9b5a0c"
+            ]
+        ]
+    },
+    {
+        "id": "28e65808dff70419",
+        "type": "server-settings",
+        "workstation": "",
+        "username": "",
+        "password": "",
+        "host": "http://192.168.196.2:5000"
     }
 ]
