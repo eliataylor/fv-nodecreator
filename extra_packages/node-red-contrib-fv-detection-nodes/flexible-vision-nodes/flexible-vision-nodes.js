@@ -669,7 +669,7 @@ module.exports = function (RED) {
                         return node.send([msg, null]);
                     } else {
                         msg.topic = 'no motion';
-                        msg.payload = bodyjson;
+                        msg.payload = bodyjson['b64']
                         return node.send([null, msg]);
                     }
                 }

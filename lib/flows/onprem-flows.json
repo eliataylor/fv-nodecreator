@@ -14,7 +14,7 @@
         "fvconfig": "28e65808dff70419",
         "camlocation": "8a495c7a43152ead",
         "camId": "233630185045974",
-        "threshold": ".5",
+        "threshold": ".85",
         "mask": "49c4725d-d026-4cd2-aee3-23f690dc5b85",
         "debounce": "-250",
         "x": 310,
@@ -25,7 +25,9 @@
                 "14c64192bdb8a17b"
             ],
             [
-                "f2bd2275cf25136b"
+                "f2bd2275cf25136b",
+                "a57b65b0ec042091",
+                "14c64192bdb8a17b"
             ]
         ]
     },
@@ -153,6 +155,31 @@
         "wires": [
             [
                 "33c6a17d5d9b5a0c"
+            ]
+        ]
+    },
+    {
+        "id": "a57b65b0ec042091",
+        "type": "delay",
+        "z": "e583048378e103aa",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "250",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 310,
+        "y": 200,
+        "wires": [
+            [
+                "5d16ae27fd2b1294"
             ]
         ]
     },
