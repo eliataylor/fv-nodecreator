@@ -641,9 +641,10 @@ module.exports = function (RED) {
             const options = {timeout: 15000, headers: {'Content-Type': 'application/json'}};
             options.method = 'POST';
             options.body = JSON.stringify({
-                threshold: node.threshold,
                 camId: node.camId,
                 mask: node.mask,
+                threshold: node.threshold,
+                debounce: node.debounce,
                 camhost: node.host,
                 fvhost: config.host
             })
@@ -652,7 +653,7 @@ module.exports = function (RED) {
             node.debug("INPUT " + n.camId, JSON.stringify(n));
             node.debug(JSON.stringify(node));
 
-            node.status({fill: "yellow", shape: "dot", text:  node.camId + ' expects ' + node.threshold + '%'})
+            node.status({fill: "yellow", shape: "dot", text:  node.camId + ' expects > ' + node.threshold})
 
             request(options, (error, response, body) => {
                 if (!error) {
@@ -660,7 +661,7 @@ module.exports = function (RED) {
                     node.status({
                         fill: (bodyjson.diff > this.threshold) ? "green" : 'yellow',
                         shape: "dot",
-                        text: bodyjson.diff + '% changed vs. ' + this.threshold + '% allowed'
+                        text: bodyjson.diff + ' score vs. ' + this.threshold + ' allowed'
                     });
                     if (bodyjson.diff > this.threshold) {
                         msg.topic = 'motion detected';
