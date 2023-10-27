@@ -1,3 +1,10 @@
+
+
+#### 
+Currently, Image Manipulation and Motion Detect will only work against the dev API at "http://localhost:5123". Run it with https://github.com/eliataylor/fa-onprem-api/tree/master
+
+
+
 ## Docker Environment
 - `docker build -t ${whoami}/nodecreator .`
 - `docker stop nodecreator && docker rm nodecreator`
@@ -37,24 +44,6 @@
 - null: "Event Test Data"
 
 
-display image node only accepts base64 data passed to it.
-- change size of display image box
 
-Motion Detection: http://192.168.196.2:5000/api/capture/mask/get_masks
-
-Grab Image: add Mask field to fields
-
-Image Manipulation: accepts Base64
-
-
-wait on this:
-Add Data Node: post valid json to (api endpoint: /update interence object)
-
-
-Parse Results:
-after running interface results are a large json of attributes
-
-
-ROI (region of interest)
 
 zerotier uses port 1880
