@@ -686,14 +686,14 @@ module.exports = function (RED) {
                         msg.payload = bodyjson['b64']
                         node.status({
                             fill: "green",
-                            text: `${bodyjson.score.toFixed(2)}% < ${n.threshold}%`});
+                            text: `${bodyjson.score.toFixed(2)}% similar`});
                         return node.send([msg, null]);
                     } else {
                         msg.topic = 'no motion';
                         msg.payload = bodyjson['b64']
                         node.status({
                             fill: "yellow",
-                            text: `${bodyjson.score.toFixed(2)}% > ${n.threshold}%`
+                            text: `${bodyjson.score.toFixed(2)}% similar`
                         });
                         return node.send([null, msg]);
                     }
