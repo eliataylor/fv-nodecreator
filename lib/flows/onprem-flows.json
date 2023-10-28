@@ -8,15 +8,28 @@
         "env": []
     },
     {
+        "id": "28e65808dff70419",
+        "type": "server-settings",
+        "workstation": "",
+        "username": "",
+        "password": "",
+        "host": "http://192.168.196.2:5000"
+    },
+    {
+        "id": "8a495c7a43152ead",
+        "type": "camera-server",
+        "camlocation": "http://192.168.196.2:5555"
+    },
+    {
         "id": "5d16ae27fd2b1294",
         "type": "motion-detection",
         "z": "e583048378e103aa",
         "fvconfig": "28e65808dff70419",
         "camlocation": "8a495c7a43152ead",
         "camId": "233630185045974",
-        "threshold": ".85",
-        "mask": "49c4725d-d026-4cd2-aee3-23f690dc5b85",
-        "debounce": "-250",
+        "mask": "6ebc4bce-c33d-4d7d-b731-9baa8f55d31e",
+        "threshold": ".86",
+        "debounce": "253",
         "x": 310,
         "y": 120,
         "wires": [
@@ -26,8 +39,8 @@
             ],
             [
                 "f2bd2275cf25136b",
-                "a57b65b0ec042091",
-                "14c64192bdb8a17b"
+                "14c64192bdb8a17b",
+                "a57b65b0ec042091"
             ]
         ]
     },
@@ -143,7 +156,7 @@
         "type": "file in",
         "z": "e583048378e103aa",
         "name": "example file",
-        "filename": "/Users/elitaylor/Developer/flexibleassembly/nodecreator/extra_packages/node-red-contrib-fv-detection-nodes/resources/images/refined_motion_logo.png",
+        "filename": "extra_packages/node-red-contrib-fv-detection-nodes/resources/images/refined_motion_logo.png",
         "filenameType": "str",
         "format": "utf8",
         "chunk": false,
@@ -162,10 +175,10 @@
         "id": "a57b65b0ec042091",
         "type": "delay",
         "z": "e583048378e103aa",
-        "name": "",
+        "name": "reboot",
         "pauseType": "delay",
-        "timeout": "250",
-        "timeoutUnits": "milliseconds",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
         "rate": "1",
         "nbRateUnits": "1",
         "rateUnits": "second",
@@ -178,22 +191,7 @@
         "x": 310,
         "y": 200,
         "wires": [
-            [
-                "5d16ae27fd2b1294"
-            ]
+            []
         ]
-    },
-    {
-        "id": "28e65808dff70419",
-        "type": "server-settings",
-        "workstation": "",
-        "username": "",
-        "password": "",
-        "host": "http://192.168.196.2:5000"
-    },
-    {
-        "id": "8a495c7a43152ead",
-        "type": "camera-server",
-        "camlocation": "http://192.168.196.2:5555"
     }
 ]

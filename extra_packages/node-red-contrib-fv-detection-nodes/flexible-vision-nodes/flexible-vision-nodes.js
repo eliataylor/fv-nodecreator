@@ -617,65 +617,91 @@ module.exports = function (RED) {
 
     function MotionDetection(n) {
         RED.nodes.createNode(this, n);
-        const node = this;
+
+        const HOURGLASS = 'PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgLTk2MCA5NjAgOTYwIiB3aWR0aD0iMjQiIHdpZHRoPSIyNCI+PHBhdGggZD0iTzMyMC0xNjBoMzIwdjEyMHEwLTY2LTM3LTQ3LTExM3QtMTExLTQ3cTctNjYgMC0xMTMgNDd0LTExMy00N3E2NiAwLTExMyA0N3QtNDcgMTExIDQ3di0xMjB6bTE2MC0zNjBxNjYgMCAxMTMtNDcgNDd0LTEyMCAxNjBxLTc2IDQ3IDEyIDQ3di0xMjB6bTE2MC04MHYtODByaDgwdi0xMjBxNjAgNjEgMjguNS0xMTQuNU0zNDgtNDgwdi0xMzgtODBoODB2LTEyMC00NzUuNUwzNDAtNDgwIDYxLjUtMTE0LjV0NDctMTEzIDQ3LTM3LTExMyA0N3F6MTYwLTE2MCBxNjYgMCAxMTMtNDd0LTExMy00N3QtNDd0LTEyIDYxIDExMyA0N3Z4MTYwLTM2em0xNjAtODB2LTgweC04MHE4MC0xMjB0LTExMjAgMCA2MS0yOC41IDExMy00N3Q0NyLTExM3E0NyA2NiA0NyAxMTMgNDd6MTYwLTh6MTYwLTI0MC04MC0yNDB2LTEyMHQtODB2LTgwczY2IDAtMTEgNDctNDd0NDd0LTEyIDYxIDExMzA0NyA0N3Q0NyA2Ni0yOCAzMi04OS41LTM1LjUgODktODUuNXQyNDAuLTQ4MHYtMTIwLTI4djc0LjUtODUuNXQxMjQwLTY4MHQ4MC0xMjB2LTEyMHpoNjQwdi04MHpNMTYwLTI4MHYtODB6MTYwLTY0MHpNMTYwLTgwejE2MC02NDB6Ii8+PC9zdmc+\n'
 
         const hostConfig = RED.nodes.getNode(n.camlocation || n.host);
-        node.camlocation = n.camlocation;
-        node.host = n.host;
+        this.camlocation = n.camlocation;
+        this.host = n.host;
         if (hostConfig && hostConfig.camlocation && hostConfig.camlocation.indexOf('http') > -1) {
-            node.host = hostConfig.camlocation
+            this.host = hostConfig.camlocation
         } else if (n.camlocation && n.camlocation.indexOf('http') > -1) {
-            node.host = n.camlocation
+            this.host = n.camlocation
         } else if (n.host && n.host.indexOf('http') > -1) {
-            node.host = n.host;
+            this.host = n.host;
         }
-        node.camId = n.camId;
-        node.mask = n.mask;
-        node.threshold = n.threshold;
-        node.debounce = n.debounce;
+        this.camId = n.camId;
+        this.mask = n.mask;
+        this.threshold = parseInt(n.threshold) || 50;
+        this.debounce = parseInt(n.debounce) || 250;
+
+        const node = this;
 
         node.on('input', function (msg) {
+            let lastRun = this.context().flow.get("last_motion_check"), now = new Date().getTime()
+            if (lastRun && lastRun > now - n.debounce - 50) {
+                node.debug("ANTI SPAM: " + now);
+                msg.topic = 'wait until ' + new Date(now + n.debounce).toString();
+                msg.payload = HOURGLASS;
+                node.status({fill: "pink", shape: "dot", text: "wait"});
+                return node.send([null, msg]);
+            }
 
-            var config = RED.nodes.getNode(n.fvconfig);
+            this.context().flow.set("last_motion_check", now);
+
+            var fvconfig = RED.nodes.getNode(n.fvconfig);
             let url = 'http://localhost:5123/api/dev/test/detect_motion'; // WARN: change to config.host + '/api/detect_motion'
             const options = {timeout: 15000, headers: {'Content-Type': 'application/json'}};
             options.method = 'POST';
             options.body = JSON.stringify({
-                camId: node.camId,
-                mask: node.mask,
-                threshold: node.threshold,
-                debounce: node.debounce,
+                camId: n.camId,
+                mask: n.mask,
+                threshold: n.threshold,
+                debounce: n.debounce,
                 camhost: node.host,
-                fvhost: config.host
+                fvhost: fvconfig.host
             })
             options.url = url;
 
-            node.debug("INPUT " + n.camId, JSON.stringify(n));
-            node.debug(JSON.stringify(node));
-
-            node.status({fill: "yellow", shape: "dot", text:  node.camId + ' expects > ' + node.threshold})
+            node.status({fill: "blue", text:  n.camId + ' expects > ' + n.threshold})
 
             request(options, (error, response, body) => {
+
                 if (!error) {
-                    const bodyjson = JSON.parse(body);
-                    node.status({
-                        fill: (bodyjson.diff > this.threshold) ? "green" : 'yellow',
-                        shape: "dot",
-                        text: bodyjson.diff + ' score vs. ' + this.threshold + ' allowed'
-                    });
-                    if (bodyjson.diff > this.threshold) {
+                    let bodyjson = null;
+                    try{
+                        bodyjson = JSON.parse(body);
+                    } catch(e) {
+                        return node.debug(e)
+                    }
+                    if (!bodyjson['b64']) {
+                        msg.topic = 'bad response';
+                        msg.payload = HOURGLASS;
+                        node.status({fill: "red", shape: "dot", text: "bad response"});
+                        return node.send([null, msg]);
+                    }
+
+                    if (bodyjson.score < n.threshold) {
                         msg.topic = 'motion detected';
                         msg.payload = bodyjson['b64']
+                        node.status({
+                            fill: "green",
+                            text: `${bodyjson.score.toFixed(2)}% < ${n.threshold}%`});
                         return node.send([msg, null]);
                     } else {
                         msg.topic = 'no motion';
                         msg.payload = bodyjson['b64']
+                        node.status({
+                            fill: "yellow",
+                            text: `${bodyjson.score.toFixed(2)}% > ${n.threshold}%`
+                        });
                         return node.send([null, msg]);
                     }
                 }
+                node.debug(body);
                 msg.topic = 'no motion failed';
-                msg.payload = error;
-                node.status({fill: "red", shape: "dot", text: "error"});
+                msg.payload = HOURGLASS;
+                node.status({fill: "red", shape: "dot", text: "error / timeout"});
                 return node.send([null, msg]);
             });
 
