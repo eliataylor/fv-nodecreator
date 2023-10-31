@@ -1,0 +1,261 @@
+{
+  "grayscale": {
+    "signature": "cvtColor(src, code[, dst[, dstCn]])",
+    "description": "Converts an image to grayscale.",
+    "params": {
+      "src": "Input image",
+      "code": "Color conversion code (e.g., COLOR_BGR2GRAY)",
+      "dst": "Output image (optional)",
+      "dstCn": "Number of channels in the destination image (optional, default: 0)"
+    }
+  },
+  "GaussianBlur": {
+    "signature": "GaussianBlur(src, ksize, sigmaX[, dst[, sigmaY[, borderType]]])",
+    "description": "Applies Gaussian blur to an image.",
+    "params": {
+      "src": "Input image",
+      "ksize": "Gaussian kernel size (e.g., (5, 5)",
+      "sigmaX": "Standard deviation of the kernel in the X direction",
+      "sigmaY": "Standard deviation of the kernel in the Y direction (optional, default: 0)",
+      "borderType": "Pixel extrapolation method (optional, default: BORDER_DEFAULT)"
+    }
+  },
+  "medianBlur": {
+    "signature": "medianBlur(src, ksize[, dst])",
+    "description": "Applies median blur to an image.",
+    "params": {
+      "src": "Input image",
+      "ksize": "Aperture linear size (must be an odd number)",
+      "dst": "Output image (optional)"
+    }
+  },
+  "bilateralFilter": {
+    "signature": "bilateralFilter(src, d, sigmaColor, sigmaSpace[, dst[, borderType]])",
+    "description": "Applies bilateral filtering to an image.",
+    "params": {
+      "src": "Input image",
+      "d": "Diameter of the pixel neighborhood used for filtering",
+      "sigmaColor": "Filter sigma in the color space",
+      "sigmaSpace": "Filter sigma in the coordinate space",
+      "dst": "Output image (optional)",
+      "borderType": "Pixel extrapolation method (optional, default: BORDER_DEFAULT)"
+    }
+  },
+  "Canny": {
+    "signature": "Canny(image, threshold1, threshold2[, edges[, apertureSize[, L2gradient]]])",
+    "description": "Detects edges in an image using the Canny edge detector.",
+    "params": {
+      "image": "Input image",
+      "threshold1": "First threshold for hysteresis procedure",
+      "threshold2": "Second threshold for hysteresis procedure",
+      "edges": "Output edges (optional)",
+      "apertureSize": "Size of the Sobel kernel (optional, default: 3)",
+      "L2gradient": "Flag to use L2-norm (optional, default: false)"
+    }
+  },
+  "Sobel": {
+    "signature": "Sobel(src, ddepth, dx, dy[, dst[, ksize[, scale[, delta[, borderType]]]])",
+    "description": "Applies Sobel edge detection to an image.",
+    "params": {
+      "src": "Input image",
+      "ddepth": "Desired depth of the destination image",
+      "dx": "Order of the derivative in the x direction",
+      "dy": "Order of the derivative in the y direction",
+      "dst": "Output image (optional)",
+      "ksize": "Size of the Sobel kernel (optional, default: 3)",
+      "scale": "Scale factor (optional, default: 1)",
+      "delta": "Optional delta value (optional, default: 0)",
+      "borderType": "Pixel extrapolation method (optional, default: BORDER_DEFAULT)"
+    }
+  },
+  "Laplacian": {
+    "signature": "Laplacian(src, ddepth[, dst[, ksize[, scale[, delta[, borderType]]]])",
+    "description": "Applies Laplacian edge detection to an image.",
+    "params": {
+      "src": "Input image",
+      "ddepth": "Desired depth of the destination image",
+      "dst": "Output image (optional)",
+      "ksize": "Size of the Laplacian kernel (optional, default: 1)",
+      "scale": "Scale factor (optional, default: 1)",
+      "delta": "Optional delta value (optional, default: 0)",
+      "borderType": "Pixel extrapolation method (optional, default: BORDER_DEFAULT)"
+    }
+  },
+  "threshold": {
+    "signature": "threshold(src, thresh, maxval, type[, dst])",
+    "description": "Applies a fixed-level threshold to an image.",
+    "params": {
+      "src": "Input image",
+      "thresh": "Threshold value",
+      "maxval": "Maximum value to use with binary and binary inverse thresholding",
+      "type": "Thresholding type (e.g., THRESH_BINARY)",
+      "dst": "Output image (optional)"
+    }
+  },
+  "adaptiveThreshold": {
+    "signature": "adaptiveThreshold(src, maxval, adaptiveMethod, thresholdType, blockSize, C[, dst])",
+    "description": "Applies an adaptive threshold to an image.",
+    "params": {
+      "src": "Input image",
+      "maxval": "Maximum value to use with binary thresholding",
+      "adaptiveMethod": "Adaptive method (e.g., ADAPTIVE_THRESH_MEAN_C)",
+      "thresholdType": "Thresholding type (e.g., THRESH_BINARY)",
+      "blockSize": "Size of the neighborhood area",
+      "C": "Constant subtracted from the mean",
+      "dst": "Output image (optional)"
+    }
+  },
+  "fastNlMeansDenoising": {
+    "signature": "fastNlMeansDenoising(src, dst, h[, hForColorComponents, templateWindowSize, searchWindowSize])",
+    "description": "Applies fast non-local means denoising to an image.",
+    "params": {
+      "src": "Input image",
+      "dst": "Output image",
+      "h": "Strength of the noise reduction",
+      "hForColorComponents": "Strength of the noise reduction for color components (optional, default: 0)",
+      "templateWindowSize": "Size of the window for searching pixels (optional, default: (7,7))",
+      "searchWindowSize": "Size of the window for searching the neighborhood (optional, default: (21,21))"
+    }
+  },
+  "erode": {
+    "signature": "erode(src, kernel[, dst[, anchor[, iterations[, borderType[, borderValue]]]])",
+    "description": "Erodes an image using a specific structuring element.",
+    "params": {
+      "src": "Input image",
+      "kernel": "Structuring element used for erosion",
+      "dst": "Output image (optional)",
+      "anchor": "Anchor point (optional, default: (-1, -1))",
+      "iterations": "Number of times erosion is applied (optional, default: 1)",
+      "borderType": "Pixel extrapolation method (optional, default: BORDER_CONSTANT)",
+      "borderValue": "Value used for border pixels (optional, default: 0)"
+    }
+  },
+  "dilate": {
+    "signature": "dilate(src, kernel[, dst[, anchor[, iterations[, borderType[, borderValue]]]])",
+    "description": "Dilates an image using a specific structuring element.",
+    "params": {
+      "src": "Input image",
+      "kernel": "Structuring element used for dilation",
+      "dst": "Output image (optional)",
+      "anchor": "Anchor point (optional, default: (-1, -1))",
+      "iterations": "Number of times dilation is applied (optional, default: 1)",
+      "borderType": "Pixel extrapolation method (optional, default: BORDER_CONSTANT)",
+      "borderValue": "Value used for border pixels (optional, default: 0)"
+    }
+  },
+  "morphologyEx": {
+    "signature": "morphologyEx(src, op, kernel[, dst[, anchor[, iterations[, borderType[, borderValue]]]])",
+    "description": "Applies a morphological operation to an image.",
+    "params": {
+      "src": "Input image",
+      "op": "Type of morphological operation (e.g., MORPH_OPEN)",
+      "kernel": "Structuring element used for the operation",
+      "dst": "Output image (optional)",
+      "anchor": "Anchor point (optional, default: (-1, -1))",
+      "iterations": "Number of times the operation is applied (optional, default: 1)",
+      "borderType": "Pixel extrapolation method (optional, default: BORDER_CONSTANT)",
+      "borderValue": "Value used for border pixels (optional, default: 0)"
+    }
+  },
+    "BGR2HSV": {
+      "signature": "cvtColor(src, code[, dst[, dstCn]])",
+      "description": "Converts an image from BGR color space to HSV color space.",
+      "params": {
+        "src": "Input image",
+        "code": "Color conversion code (e.g., COLOR_BGR2HSV)",
+        "dst": "Output image (optional)",
+        "dstCn": "Number of channels in the destination image (optional, default: 0)"
+      }
+    },
+    "BGR2YUV": {
+      "signature": "cvtColor(src, code[, dst[, dstCn]])",
+      "description": "Converts an image from BGR color space to YUV color space.",
+      "params": {
+        "src": "Input image",
+        "code": "Color conversion code (e.g., COLOR_BGR2YUV)",
+        "dst": "Output image (optional)",
+        "dstCn": "Number of channels in the destination image (optional, default: 0)"
+      }
+    },
+  "equalizeHist": {
+    "signature": "equalizeHist(src[, dst])",
+    "description": "Equalizes the histogram of an image to improve contrast.",
+    "params": {
+      "src": "Input image",
+      "dst": "Output image (optional)"
+    }
+  },
+  "filter2D": {
+    "signature": "filter2D(src, ddepth, kernel[, dst[, anchor[, delta[, borderType]]])",
+    "description": "Applies a 2D filter to an image.",
+    "params": {
+      "src": "Input image",
+      "ddepth": "Desired depth of the destination image",
+      "kernel": "Kernel for filtering",
+      "dst": "Output image (optional)",
+      "anchor": "Anchor point (optional, default: (-1, -1))",
+      "delta": "Optional delta value (optional, default: 0)",
+      "borderType": "Pixel extrapolation method (optional, default: BORDER_DEFAULT)"
+    }
+  },
+  "resize": {
+    "signature": "resize(src, dsize[, dst[, fx[, fy[, interpolation]]])",
+    "description": "Resizes an image to a specified size.",
+    "params": {
+      "src": "Input image",
+      "dsize": "Output image size",
+      "dst": "Output image (optional)",
+      "fx": "Scale factor along the horizontal axis (optional, default: 0)",
+      "fy": "Scale factor along the vertical axis (optional, default: 0)",
+      "interpolation": "Interpolation method (e.g., INTER_LINEAR) (optional, default: INTER_LINEAR)"
+    }
+  },
+  "getRotationMatrix2D": {
+    "signature": "getRotationMatrix2D(center, angle, scale)",
+    "description": "Computes a 2D rotation matrix for image rotation.",
+    "params": {
+      "center": "Center of the rotation",
+      "angle": "Rotation angle in degrees",
+      "scale": "Scale factor"
+    }
+  },
+  "warpAffine": {
+    "signature": "warpAffine(src, M, dsize[, dst[, flags[, borderMode[, borderValue]]])",
+    "description": "Applies an affine transformation to an image.",
+    "params": {
+      "src": "Input image",
+      "M": "Transformation matrix",
+      "dsize": "Size of the output image",
+      "dst": "Output image (optional, default: None)",
+      "flags": "Combination of interpolation and extrapolation methods (optional, default: INTER_LINEAR)",
+      "borderMode": "Pixel extrapolation method (optional, default: BORDER_CONSTANT)",
+      "borderValue": "Value used for border pixels (optional, default: 0)"
+    }
+  },
+  "warpPerspective": {
+    "signature": "warpPerspective(src, M, dsize[, dst[, flags[, borderMode[, borderValue]]])",
+    "description": "Applies a perspective transformation to an image.",
+    "params": {
+      "src": "Input image",
+      "M": "Perspective transformation matrix",
+      "dsize": "Size of the output image",
+      "dst": "Output image (optional, default: None)",
+      "flags": "Combination of interpolation and extrapolation methods (optional, default: INTER_LINEAR)",
+      "borderMode": "Pixel extrapolation method (optional, default: BORDER_CONSTANT)",
+      "borderValue": "Value used for border pixels (optional, default: 0)"
+    }
+  },
+  "addWeighted": {
+    "signature": "addWeighted(src1, alpha, src2, beta, gamma[, dst[, dtype]])",
+    "description": "Blends two images with a specified weight.",
+    "params": {
+      "src1": "First input image",
+      "alpha": "Weight for the first image",
+      "src2": "Second input image",
+      "beta": "Weight for the second image",
+      "gamma": "Scalar added to each sum",
+      "dst": "Output image (optional, default: None)",
+      "dtype": "Depth of the output image (optional, default: -1)"
+    }
+  }
+}

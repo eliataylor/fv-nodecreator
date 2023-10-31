@@ -593,19 +593,19 @@
                 camId: {value: "", required: true},
                 host: {value: "", required: false, hidden: true},
                 mask: {value: false}, // false === unloaded, null === 'no mask', value as ID of mask
-                threshold: {value: 85, required: true, validate:RED.validators.number()},
-                debounce: {value: 250, required: false, validate:RED.validators.number()}
+                threshold: {value: 85, required: true, validate: RED.validators.number()},
+                debounce: {value: 250, required: false, validate: RED.validators.number()}
             },
             inputs: 1,
             outputs: 2,
             icon: "motion_photos_auto_black_24dp.svg",
             outputLabels: ["Motion", "No Motion"],
-            oneditsave:  function() {
+            oneditsave: function () {
                 this.mask = $('#node-input-mask').val();
                 this.debounce = $('#node-input-debounce').val();
                 this.threshold = $('#node-input-threshold').val();
             },
-            oneditprepare: function() {
+            oneditprepare: function () {
                 // get masks
                 const camController = new CameraController($, {
                     camlocation: this.camlocation,
@@ -674,12 +674,78 @@
             defaults: {
                 fvconfig: {type: "server-settings", required: true},
                 host: {value: "", required: false, hidden: true},
-                efx_value: {value: 0, required: false},
+                efx_value: {value: 0, required: false, disabled:true},
                 efx_name: {value: false, required: true}
             },
             inputs: 1,
             outputs: 1,
-            icon: "blur_on_FILL0_wght400_GRAD0_opsz24.svg"
+            icon: "blur_on_FILL0_wght400_GRAD0_opsz24.svg",
+            oneditsave: function() {
+                // Handle form submission
+                this.efx_value = $('#cv2form').serializeToString();
+            },
+
+            oneditprepare: function () {
+                let FILTERS = {}
+
+                function buildParametersForm() {
+                    const efx_name = $('#node-input-efx_name').val();
+                    if (typeof FILTERS[efx_name] === 'undefined') {
+                        console.error('invalid filter name ' + efx_name, FILTERS);
+                        return false;
+                    }
+                    console.log('render filter name ' + efx_name);
+
+                    let formHtml = '<form id="cv2form">';
+
+
+                    // document.getElementById("cv2signature").innerText = FILTERS[efx_name]['signature'];
+                    document.getElementById("cv2description").innerText = FILTERS[efx_name]['description'];
+                    document.getElementById("cv2params").innerText = '';
+
+                    for (let param in FILTERS[efx_name].params) {
+                        if (param === 'src' || param === 'dst') continue;
+
+                        const desc = FILTERS[efx_name].params[param];
+
+                        let defaultValue = desc.indexOf("default:") > -1 ? desc.match(/default:\s+(.*)/)[1] : '';
+                        formHtml += '<label for="' + param + '">' + param + '</label>';
+                        formHtml += '<input type="text" id="' + param + '" placeholder="' + defaultValue + '">';
+
+                        const dt = document.createElement('DT');
+                        dt.innerText = param
+                        document.getElementById("cv2params").append(dt)
+
+                        const dd = document.createElement('DD');
+                        dd.innerText = desc;
+                        document.getElementById("cv2params").append(dd)
+                    }
+
+                    formHtml += '</form>';
+                    $('#dynamicParamForm').html(formHtml);
+
+                }
+
+                fetch('resources/node-red-contrib-fv-detection-nodes/api/opencv-filters.json', {
+                    headers: {'Content-Type': 'application/json'}
+                })
+                .then(response => response.json())
+                .then(json => {
+                    FILTERS = json
+                    buildParametersForm();
+                    console.log('filters: ', FILTERS)
+                })
+                .catch((error) => {
+                    alert(error);
+                    console.error('Error:', error);
+                });
+
+                $('#node-input-efx_name').on("change", function () {
+                    buildParametersForm();
+                });
+
+
+            }
         });
 
     })();
@@ -728,7 +794,7 @@
 
 <!-- IMAGE MANIPULATION START -->
 <script type="text/html" data-template-name="image-manipulation">
-    <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css"/>
+    <link rel="stylesheet" hreff="resources/node-red-contrib-fv-detection-nodes/camera-controller.css"/>
     <div class="form-row">
         <label for="node-input-fvconfig"><i class="fa fa-server" aria-hidden="true"></i> FV Server IP</label>
         <select id="node-input-fvconfig"></select>
@@ -783,11 +849,18 @@
                 <option value="addWeighted">Image Blending</option>
             </optgroup>
         </select>
+        <blockquote>
+        <div style="font-weight:700" id="cv2description"></div>
+        <code >
+            <dl id="cv2params"></dl>
+        </code>
+        </blockquote>
     </div>
-    <div class="form-row">
+    <div class="form-row" style="opacity:.5">
         <label for="node-input-efx_value"><i class="fa fa-snowflake-o"></i> Effect Value</label>
         <input type="text" id="node-input-efx_value" placeholder="value for effect">
     </div>
+    <div id="dynamicParamForm"></div>
 </script>
 <!-- IMAGE MANIPULATION END -->
 
