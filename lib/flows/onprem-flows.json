@@ -79,7 +79,7 @@
         "z": "e583048378e103aa",
         "fvconfig": "28e65808dff70419",
         "host": "",
-        "efx_value": "5",
+        "efx_value": "{\"ksize\":\"34,45\",\"sigmaX\":\"54\",\"sigmaY\":\"0\",\"borderType\":\"etr\"}",
         "efx_name": "GaussianBlur",
         "x": 480,
         "y": 280,

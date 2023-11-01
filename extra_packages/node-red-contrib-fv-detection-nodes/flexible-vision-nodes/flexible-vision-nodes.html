@@ -674,32 +674,42 @@
             defaults: {
                 fvconfig: {type: "server-settings", required: true},
                 host: {value: "", required: false, hidden: true},
-                efx_value: {value: 0, required: false, disabled:true},
+                efx_value: {value: '', required: true, disabled: true},
                 efx_name: {value: false, required: true}
             },
             inputs: 1,
             outputs: 1,
             icon: "blur_on_FILL0_wght400_GRAD0_opsz24.svg",
-            oneditsave: function() {
-                // Handle form submission
-                this.efx_value = $('#cv2form').serializeToString();
+            oneditsave: function () {
+                const form = document.getElementById("cv2form");
+                const formData = {}
+                for (let i = 0; i < form.elements.length; i++) {
+                    const field = form.elements[i];
+                    if (field.name) {
+                        formData[field.name] = field.value;
+                    }
+                }
+
+                this.efx_value = formData;
+                $('#node-input-efx_value').val(JSON.stringify(formData));
             },
 
             oneditprepare: function () {
                 let FILTERS = {}
 
-                function buildParametersForm() {
+                const buildParametersForm = () => {
                     const efx_name = $('#node-input-efx_name').val();
                     if (typeof FILTERS[efx_name] === 'undefined') {
                         console.error('invalid filter name ' + efx_name, FILTERS);
                         return false;
                     }
-                    console.log('render filter name ' + efx_name);
 
-                    let formHtml = '<form id="cv2form">';
+                    const existing = this.efx_value ? JSON.parse(this.efx_value) : {};
+                    console.log('render filter: ' + efx_name, existing);
 
 
-                    // document.getElementById("cv2signature").innerText = FILTERS[efx_name]['signature'];
+                    let formHtml = '';
+
                     document.getElementById("cv2description").innerText = FILTERS[efx_name]['description'];
                     document.getElementById("cv2params").innerText = '';
 
@@ -708,39 +718,41 @@
 
                         const desc = FILTERS[efx_name].params[param];
 
-                        let defaultValue = desc.indexOf("default:") > -1 ? desc.match(/default:\s+(.*)/)[1] : '';
-                        formHtml += '<label for="' + param + '">' + param + '</label>';
-                        formHtml += '<input type="text" id="' + param + '" placeholder="' + defaultValue + '">';
+                        let defaultValue = '', match = desc.match(/default:\s+([^)]*)/);
+                        if (match) {
+                            defaultValue = match[1].trim();
+                        }
 
-                        const dt = document.createElement('DT');
-                        dt.innerText = param
-                        document.getElementById("cv2params").append(dt)
+                        let initValue = (existing[param] !== 'undefined') ? existing[param] : defaultValue;
+                        const isRequired = desc.indexOf('optional') > -1 ? '' : '<span style="color:red">*</span>'
+                        formHtml += '<div class="form-row">'
+                        formHtml += '<label for="' + param + '">' + param + isRequired +  '</label>';
+                        formHtml += '<input class="form-control" type="text" id="' + param + '" name="' + param + '" placeholder="' + defaultValue + '" value="'+initValue+'">';
+                        formHtml += `<small style="margin-left:100px; display: block" class="form-text text-muted">${desc}</small>`;
+                        formHtml += '</div>'
 
-                        const dd = document.createElement('DD');
-                        dd.innerText = desc;
-                        document.getElementById("cv2params").append(dd)
                     }
 
-                    formHtml += '</form>';
-                    $('#dynamicParamForm').html(formHtml);
+                    $('#cv2form').html(formHtml);
 
                 }
 
                 fetch('resources/node-red-contrib-fv-detection-nodes/api/opencv-filters.json', {
                     headers: {'Content-Type': 'application/json'}
                 })
-                .then(response => response.json())
-                .then(json => {
-                    FILTERS = json
-                    buildParametersForm();
-                    console.log('filters: ', FILTERS)
-                })
-                .catch((error) => {
-                    alert(error);
-                    console.error('Error:', error);
-                });
+                    .then(response => response.json())
+                    .then(json => {
+                        FILTERS = json
+                        buildParametersForm();
+                        console.log('filters: ', FILTERS)
+                    })
+                    .catch((error) => {
+                        alert(error);
+                        console.error('Error:', error);
+                    });
 
                 $('#node-input-efx_name').on("change", function () {
+                    $('#node-input-efx_value').val();
                     buildParametersForm();
                 });
 
@@ -800,7 +812,7 @@
         <select id="node-input-fvconfig"></select>
     </div>
     <div class="form-row">
-        <label for="node-input-efx_name"><i class="fa fa-eercast"></i> Image Effect</label>
+        <label for="node-input-efx_name"><i class="fa fa-eercast"></i> Effect Type</label>
         <select id="node-input-efx_name">
             <option value="cvtColor">Grayscale Conversion</option>
             <optgroup label="Blur Filters">
@@ -849,18 +861,20 @@
                 <option value="addWeighted">Image Blending</option>
             </optgroup>
         </select>
-        <blockquote>
-        <div style="font-weight:700" id="cv2description"></div>
-        <code >
-            <dl id="cv2params"></dl>
-        </code>
+        <blockquote style="display:none;">
+            <div style="font-weight:700" id="cv2description"></div>
+            <code>
+                <dl id="cv2params"></dl>
+            </code>
         </blockquote>
     </div>
-    <div class="form-row" style="opacity:.5">
+    <div class="form-row" >
         <label for="node-input-efx_value"><i class="fa fa-snowflake-o"></i> Effect Value</label>
-        <input type="text" id="node-input-efx_value" placeholder="value for effect">
+        <input type="text" disabled id="node-input-efx_value" >
     </div>
-    <div id="dynamicParamForm"></div>
+    <blockquote class="form-group">
+        <form id="cv2form" name="cv2form"></form>
+    </blockquote>
 </script>
 <!-- IMAGE MANIPULATION END -->
 
