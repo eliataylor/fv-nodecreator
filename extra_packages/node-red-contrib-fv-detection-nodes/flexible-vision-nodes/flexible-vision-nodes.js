@@ -1,6 +1,8 @@
 module.exports = function (RED) {
     "use strict";
 
+    const HOURGLASS = 'PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgLTk2MCA5NjAgOTYwIiB3aWR0aD0iMjQiIHdpZHRoPSIyNCI+PHBhdGggZD0iTzMyMC0xNjBoMzIwdjEyMHEwLTY2LTM3LTQ3LTExM3QtMTExLTQ3cTctNjYgMC0xMTMgNDd0LTExMy00N3E2NiAwLTExMyA0N3QtNDcgMTExIDQ3di0xMjB6bTE2MC0zNjBxNjYgMCAxMTMtNDcgNDd0LTEyMCAxNjBxLTc2IDQ3IDEyIDQ3di0xMjB6bTE2MC04MHYtODByaDgwdi0xMjBxNjAgNjEgMjguNS0xMTQuNU0zNDgtNDgwdi0xMzgtODBoODB2LTEyMC00NzUuNUwzNDAtNDgwIDYxLjUtMTE0LjV0NDctMTEzIDQ3LTM3LTExMyA0N3F6MTYwLTE2MCBxNjYgMCAxMTMtNDd0LTExMy00N3QtNDd0LTEyIDYxIDExMyA0N3Z4MTYwLTM2em0xNjAtODB2LTgweC04MHE4MC0xMjB0LTExMjAgMCA2MS0yOC41IDExMy00N3Q0NyLTExM3E0NyA2NiA0NyAxMTMgNDd6MTYwLTh6MTYwLTI0MC04MC0yNDB2LTEyMHQtODB2LTgwczY2IDAtMTEgNDctNDd0NDd0LTEyIDYxIDExMzA0NyA0N3Q0NyA2Ni0yOCAzMi04OS41LTM1LjUgODktODUuNXQyNDAuLTQ4MHYtMTIwLTI4djc0LjUtODUuNXQxMjQwLTY4MHQ4MC0xMjB2LTEyMHpoNjQwdi04MHpNMTYwLTI4MHYtODB6MTYwLTY0MHpNMTYwLTgwejE2MC02NDB6Ii8+PC9zdmc+\n'
+
     const FV_DOMAIN = 'v1.cloud.flexiblevision.com';
     //const FV_DOMAIN = 'clouddeploy.api.flexiblevision.com'
     let AUTH_TOKEN = '';
@@ -579,15 +581,17 @@ module.exports = function (RED) {
 
         node.on('input', function (msg) {
 
+            const obj = {
+                base64: msg.payload,
+                efx_value: JSON.parse(node.efx_value),
+                efx_name: node.efx_name,
+                params:{}
+            };
             // WARN change hardcoded test api
             let url = 'http://localhost:5123/api/dev/test/image_manipulation';
             const options = {timeout: 15000, headers: {'Content-Type': 'application/json'}};
             options.method = 'POST';
-            options.body = JSON.stringify({
-                base64: msg.payload,
-                efx_value: node.efx_value,
-                efx_name: node.efx_name
-            })
+            options.body = JSON.stringify(obj);
             options.url = url;
 
             node.debug(JSON.stringify(n));
@@ -596,18 +600,26 @@ module.exports = function (RED) {
 
             request(options, (error, response, body) => {
                 if (!error && body) {
-                    let bodyjson = JSON.parse(body);
-                    if (typeof bodyjson["b64"] === "string") {
-                        msg.topic = 'image manipulation returned';
-                        msg.payload = bodyjson['b64']
-                        node.status({fill: "green", shape: "dot"});
+                    try {
+                        let bodyjson = JSON.parse(body);
+                        if (typeof bodyjson["b64"] === "string") {
+                            msg.topic = 'image manipulation returned';
+                            msg.payload = bodyjson['b64']
+                            node.status({fill: "green", shape: "dot"});
+                            return node.send(msg);
+                        }
+                    } catch (err) {
+                        console.error(body);
+                        msg.payload = HOURGLASS;
+                        msg.topic = 'invalid json';
+                        node.status({fill: "red", shape: "dot", text: "invalid json: " + body});
                         return node.send(msg);
                     }
                 }
-                console.log("image manipulation failed", error)
-                msg.payload = error;
+                console.error("image manipulation failed", error.message)
+                msg.payload = HOURGLASS;
                 msg.topic = 'image manipulation failed';
-                node.status({fill: "red", shape: "dot", text: "error"});
+                node.status({fill: "red", shape: "dot", text: error.message});
                 return node.send(msg);
             });
 
@@ -617,8 +629,6 @@ module.exports = function (RED) {
 
     function MotionDetection(n) {
         RED.nodes.createNode(this, n);
-
-        const HOURGLASS = 'PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgLTk2MCA5NjAgOTYwIiB3aWR0aD0iMjQiIHdpZHRoPSIyNCI+PHBhdGggZD0iTzMyMC0xNjBoMzIwdjEyMHEwLTY2LTM3LTQ3LTExM3QtMTExLTQ3cTctNjYgMC0xMTMgNDd0LTExMy00N3E2NiAwLTExMyA0N3QtNDcgMTExIDQ3di0xMjB6bTE2MC0zNjBxNjYgMCAxMTMtNDcgNDd0LTEyMCAxNjBxLTc2IDQ3IDEyIDQ3di0xMjB6bTE2MC04MHYtODByaDgwdi0xMjBxNjAgNjEgMjguNS0xMTQuNU0zNDgtNDgwdi0xMzgtODBoODB2LTEyMC00NzUuNUwzNDAtNDgwIDYxLjUtMTE0LjV0NDctMTEzIDQ3LTM3LTExMyA0N3F6MTYwLTE2MCBxNjYgMCAxMTMtNDd0LTExMy00N3QtNDd0LTEyIDYxIDExMyA0N3Z4MTYwLTM2em0xNjAtODB2LTgweC04MHE4MC0xMjB0LTExMjAgMCA2MS0yOC41IDExMy00N3Q0NyLTExM3E0NyA2NiA0NyAxMTMgNDd6MTYwLTh6MTYwLTI0MC04MC0yNDB2LTEyMHQtODB2LTgwczY2IDAtMTEgNDctNDd0NDd0LTEyIDYxIDExMzA0NyA0N3Q0NyA2Ni0yOCAzMi04OS41LTM1LjUgODktODUuNXQyNDAuLTQ4MHYtMTIwLTI4djc0LjUtODUuNXQxMjQwLTY4MHQ4MC0xMjB2LTEyMHpoNjQwdi04MHpNMTYwLTI4MHYtODB6MTYwLTY0MHpNMTYwLTgwejE2MC02NDB6Ii8+PC9zdmc+\n'
 
         const hostConfig = RED.nodes.getNode(n.camlocation || n.host);
         this.camlocation = n.camlocation;

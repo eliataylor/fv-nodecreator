@@ -670,7 +670,13 @@
         RED.nodes.registerType('image-manipulation', {
             category: 'Flexible Vision',
             color: '#1fdccc',
-            label: 'Effect Image',
+            label: function () {
+                if (this.efx_name && this.efx_name.length > 0) {
+                    return this.efx_name;
+                } else {
+                    return 'Effect Image';
+                }
+            },
             defaults: {
                 fvconfig: {type: "server-settings", required: true},
                 host: {value: "", required: false, hidden: true},
@@ -685,7 +691,7 @@
                 const formData = {}
                 for (let i = 0; i < form.elements.length; i++) {
                     const field = form.elements[i];
-                    if (field.name) {
+                    if (field.name && field.value && field.value != '' && field.value != 'undefined' && field.value != 'null') {
                         formData[field.name] = field.value;
                     }
                 }
@@ -719,15 +725,17 @@
                         const desc = FILTERS[efx_name].params[param];
 
                         let defaultValue = '', match = desc.match(/default:\s+([^)]*)/);
-                        if (match) {
+                        if (match && match.length > 1) {
                             defaultValue = match[1].trim();
+
                         }
 
-                        let initValue = (existing[param] !== 'undefined') ? existing[param] : defaultValue;
+                        let initValue = (typeof existing[param] !== 'undefined') ? existing[param] : defaultValue;
                         const isRequired = desc.indexOf('optional') > -1 ? '' : '<span style="color:red">*</span>'
                         formHtml += '<div class="form-row">'
                         formHtml += '<label for="' + param + '">' + param + isRequired +  '</label>';
-                        formHtml += '<input class="form-control" type="text" id="' + param + '" name="' + param + '" placeholder="' + defaultValue + '" value="'+initValue+'">';
+                        formHtml += '<input class="form-control" type="text" id="' + param + '" name="' + param + '" ' +
+                            'placeholder="' + defaultValue + '" value="'+initValue+'">';
                         formHtml += `<small style="margin-left:100px; display: block" class="form-text text-muted">${desc}</small>`;
                         formHtml += '</div>'
 
@@ -736,6 +744,12 @@
                     $('#cv2form').html(formHtml);
 
                 }
+
+                $('#node-input-efx_name').on("change", function () {
+                    $('#node-input-efx_value').val();
+                    buildParametersForm();
+                });
+
 
                 fetch('resources/node-red-contrib-fv-detection-nodes/api/opencv-filters.json', {
                     headers: {'Content-Type': 'application/json'}
@@ -750,12 +764,6 @@
                         alert(error);
                         console.error('Error:', error);
                     });
-
-                $('#node-input-efx_name').on("change", function () {
-                    $('#node-input-efx_value').val();
-                    buildParametersForm();
-                });
-
 
             }
         });
@@ -868,7 +876,7 @@
             </code>
         </blockquote>
     </div>
-    <div class="form-row" >
+    <div class="form-row" style="opacity:0.3;">
         <label for="node-input-efx_value"><i class="fa fa-snowflake-o"></i> Effect Value</label>
         <input type="text" disabled id="node-input-efx_value" >
     </div>

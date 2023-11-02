@@ -42,10 +42,10 @@
     }
   },
   "Canny": {
-    "signature": "Canny(image, threshold1, threshold2[, edges[, apertureSize[, L2gradient]]])",
+    "signature": "Canny(src, threshold1, threshold2[, edges[, apertureSize[, L2gradient]]])",
     "description": "Detects edges in an image using the Canny edge detector.",
     "params": {
-      "image": "Input image",
+      "src": "Source input image",
       "threshold1": "First threshold for hysteresis procedure",
       "threshold2": "Second threshold for hysteresis procedure",
       "edges": "Output edges (optional)",
@@ -124,7 +124,7 @@
       "src": "Input image",
       "kernel": "Structuring element used for erosion",
       "dst": "Output image (optional)",
-      "anchor": "Anchor point (optional, default: (-1, -1))",
+      "anchor": "Anchor point (optional, default: (-1, -1) )",
       "iterations": "Number of times erosion is applied (optional, default: 1)",
       "borderType": "Pixel extrapolation method (optional, default: BORDER_CONSTANT)",
       "borderValue": "Value used for border pixels (optional, default: 0)"
@@ -137,7 +137,7 @@
       "src": "Input image",
       "kernel": "Structuring element used for dilation",
       "dst": "Output image (optional)",
-      "anchor": "Anchor point (optional, default: (-1, -1))",
+      "anchor": "Anchor point (optional, default: (-1, -1) )",
       "iterations": "Number of times dilation is applied (optional, default: 1)",
       "borderType": "Pixel extrapolation method (optional, default: BORDER_CONSTANT)",
       "borderValue": "Value used for border pixels (optional, default: 0)"
@@ -151,7 +151,7 @@
       "op": "Type of morphological operation (e.g., MORPH_OPEN)",
       "kernel": "Structuring element used for the operation",
       "dst": "Output image (optional)",
-      "anchor": "Anchor point (optional, default: (-1, -1))",
+      "anchor": "Anchor point (optional, default: (-1, -1) )",
       "iterations": "Number of times the operation is applied (optional, default: 1)",
       "borderType": "Pixel extrapolation method (optional, default: BORDER_CONSTANT)",
       "borderValue": "Value used for border pixels (optional, default: 0)"
@@ -193,7 +193,7 @@
       "ddepth": "Desired depth of the destination image",
       "kernel": "Kernel for filtering",
       "dst": "Output image (optional)",
-      "anchor": "Anchor point (optional, default: (-1, -1))",
+      "anchor": "Anchor point (optional, default: (-1, -1) )",
       "delta": "Optional delta value (optional, default: 0)",
       "borderType": "Pixel extrapolation method (optional, default: BORDER_DEFAULT)"
     }
@@ -249,7 +249,7 @@
     "signature": "addWeighted(src1, alpha, src2, beta, gamma[, dst[, dtype]])",
     "description": "Blends two images with a specified weight.",
     "params": {
-      "src1": "First input image",
+      "src": "First input image",
       "alpha": "Weight for the first image",
       "src2": "Second input image",
       "beta": "Weight for the second image",

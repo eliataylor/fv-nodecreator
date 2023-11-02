@@ -79,7 +79,7 @@
         "z": "e583048378e103aa",
         "fvconfig": "28e65808dff70419",
         "host": "",
-        "efx_value": "{\"ksize\":\"34,45\",\"sigmaX\":\"54\",\"sigmaY\":\"0\",\"borderType\":\"etr\"}",
+        "efx_value": "{\"ksize\":\"5,5\",\"sigmaX\":\"24\",\"sigmaY\":\"0\",\"borderType\":\"BORDER_DEFAULT\"}",
         "efx_name": "GaussianBlur",
         "x": 480,
         "y": 280,
@@ -140,16 +140,18 @@
         "type": "display-image",
         "z": "e583048378e103aa",
         "name": "",
-        "width": 160,
+        "width": "300",
         "data": "payload",
         "dataType": "msg",
         "thumbnail": false,
         "active": true,
-        "pass": false,
-        "outputs": 0,
+        "pass": true,
+        "outputs": 1,
         "x": 800,
         "y": 180,
-        "wires": []
+        "wires": [
+            []
+        ]
     },
     {
         "id": "a862fd73ed66a7c3",
@@ -193,6 +195,331 @@
         "wires": [
             [
                 "5d16ae27fd2b1294"
+            ]
+        ]
+    },
+    {
+        "id": "9c5b9f8b2ef1cbd4",
+        "type": "image-manipulation",
+        "z": "e583048378e103aa",
+        "fvconfig": "28e65808dff70419",
+        "host": "",
+        "efx_value": "{\"threshold1\":\"5\",\"threshold2\":\"5\"}",
+        "efx_name": "Canny",
+        "x": 480,
+        "y": 360,
+        "wires": [
+            [
+                "14c64192bdb8a17b"
+            ]
+        ]
+    },
+    {
+        "id": "f506851c5e569c8c",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 100,
+        "y": 360,
+        "wires": [
+            [
+                "ae5c04cca6eaab70"
+            ]
+        ]
+    },
+    {
+        "id": "ae5c04cca6eaab70",
+        "type": "file in",
+        "z": "e583048378e103aa",
+        "name": "example file",
+        "filename": "extra_packages/node-red-contrib-fv-detection-nodes/resources/images/refined_motion_logo.png",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "base64",
+        "allProps": false,
+        "x": 270,
+        "y": 360,
+        "wires": [
+            [
+                "9c5b9f8b2ef1cbd4"
+            ]
+        ]
+    },
+    {
+        "id": "ae477e964feaad4f",
+        "type": "image-manipulation",
+        "z": "e583048378e103aa",
+        "fvconfig": "28e65808dff70419",
+        "host": "",
+        "efx_value": "{\"dsize\":\"25, 25\",\"fx\":\"0\",\"fy\":\"0\",\"interpolation\":\"INTER_LINEAR\"}",
+        "efx_name": "resize",
+        "x": 490,
+        "y": 440,
+        "wires": [
+            [
+                "14c64192bdb8a17b"
+            ]
+        ]
+    },
+    {
+        "id": "f565c094e466a624",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 440,
+        "wires": [
+            [
+                "5e5e02d8ac069a50"
+            ]
+        ]
+    },
+    {
+        "id": "5e5e02d8ac069a50",
+        "type": "file in",
+        "z": "e583048378e103aa",
+        "name": "example file",
+        "filename": "extra_packages/node-red-contrib-fv-detection-nodes/resources/images/refined_motion_logo.png",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "base64",
+        "allProps": false,
+        "x": 280,
+        "y": 440,
+        "wires": [
+            [
+                "ae477e964feaad4f"
+            ]
+        ]
+    },
+    {
+        "id": "949f4fb9b3bad457",
+        "type": "image-manipulation",
+        "z": "e583048378e103aa",
+        "fvconfig": "28e65808dff70419",
+        "host": "",
+        "efx_value": "{\"dtype\":\"-1\"}",
+        "efx_name": "addWeighted",
+        "x": 510,
+        "y": 540,
+        "wires": [
+            [
+                "14c64192bdb8a17b"
+            ]
+        ]
+    },
+    {
+        "id": "4a173d236da83782",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 540,
+        "wires": [
+            [
+                "382c3155982b1070"
+            ]
+        ]
+    },
+    {
+        "id": "382c3155982b1070",
+        "type": "file in",
+        "z": "e583048378e103aa",
+        "name": "example file",
+        "filename": "extra_packages/node-red-contrib-fv-detection-nodes/resources/images/refined_motion_logo.png",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "base64",
+        "allProps": false,
+        "x": 280,
+        "y": 540,
+        "wires": [
+            [
+                "949f4fb9b3bad457"
+            ]
+        ]
+    },
+    {
+        "id": "31e51f6afca61a5f",
+        "type": "image-manipulation",
+        "z": "e583048378e103aa",
+        "fvconfig": "28e65808dff70419",
+        "host": "",
+        "efx_value": "{\"anchor\":\"(-1, -1)\",\"iterations\":\"1\",\"borderType\":\"BORDER_CONSTANT\",\"borderValue\":\"0\"}",
+        "efx_name": "dilate",
+        "x": 470,
+        "y": 640,
+        "wires": [
+            [
+                "14c64192bdb8a17b"
+            ]
+        ]
+    },
+    {
+        "id": "14afd37c93fe768c",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 640,
+        "wires": [
+            [
+                "62f65a1e55b5733c"
+            ]
+        ]
+    },
+    {
+        "id": "62f65a1e55b5733c",
+        "type": "file in",
+        "z": "e583048378e103aa",
+        "name": "example file",
+        "filename": "extra_packages/node-red-contrib-fv-detection-nodes/resources/images/refined_motion_logo.png",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "base64",
+        "allProps": false,
+        "x": 260,
+        "y": 640,
+        "wires": [
+            [
+                "31e51f6afca61a5f"
+            ]
+        ]
+    },
+    {
+        "id": "9425c88e938020ab",
+        "type": "image-manipulation",
+        "z": "e583048378e103aa",
+        "fvconfig": "28e65808dff70419",
+        "host": "",
+        "efx_value": "{\"thresh\":\"5\",\"maxval\":\"2\",\"type\":\"THRESH_BINARY\"}",
+        "efx_name": "threshold",
+        "x": 480,
+        "y": 720,
+        "wires": [
+            [
+                "14c64192bdb8a17b"
+            ]
+        ]
+    },
+    {
+        "id": "6f3b8542fbebc540",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 720,
+        "wires": [
+            [
+                "e75a5c7e15117405"
+            ]
+        ]
+    },
+    {
+        "id": "e75a5c7e15117405",
+        "type": "file in",
+        "z": "e583048378e103aa",
+        "name": "example file",
+        "filename": "extra_packages/node-red-contrib-fv-detection-nodes/resources/images/refined_motion_logo.png",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "base64",
+        "allProps": false,
+        "x": 260,
+        "y": 720,
+        "wires": [
+            [
+                "9425c88e938020ab"
             ]
         ]
     }
