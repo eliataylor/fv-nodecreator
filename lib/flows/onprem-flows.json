@@ -65,7 +65,7 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 100,
+        "x": 90,
         "y": 120,
         "wires": [
             [
@@ -79,7 +79,7 @@
         "z": "e583048378e103aa",
         "fvconfig": "28e65808dff70419",
         "host": "",
-        "efx_value": "{\"ksize\":\"5,5\",\"sigmaX\":\"24\",\"sigmaY\":\"0\",\"borderType\":\"BORDER_DEFAULT\"}",
+        "efx_value": "{\"ksize\":\"25,25\",\"sigmaX\":\"0\",\"sigmaY\":\"0\",\"borderType\":\"BORDER_DEFAULT\"}",
         "efx_name": "GaussianBlur",
         "x": 480,
         "y": 280,
@@ -111,7 +111,7 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 100,
+        "x": 90,
         "y": 280,
         "wires": [
             [
@@ -140,7 +140,7 @@
         "type": "display-image",
         "z": "e583048378e103aa",
         "name": "",
-        "width": "300",
+        "width": "160",
         "data": "payload",
         "dataType": "msg",
         "thumbnail": false,
@@ -165,7 +165,7 @@
         "sendError": false,
         "encoding": "base64",
         "allProps": false,
-        "x": 270,
+        "x": 280,
         "y": 280,
         "wires": [
             [
@@ -206,7 +206,7 @@
         "host": "",
         "efx_value": "{\"threshold1\":\"5\",\"threshold2\":\"5\"}",
         "efx_name": "Canny",
-        "x": 480,
+        "x": 460,
         "y": 360,
         "wires": [
             [
@@ -235,7 +235,7 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 100,
+        "x": 90,
         "y": 360,
         "wires": [
             [
@@ -255,7 +255,7 @@
         "sendError": false,
         "encoding": "base64",
         "allProps": false,
-        "x": 270,
+        "x": 280,
         "y": 360,
         "wires": [
             [
@@ -271,7 +271,7 @@
         "host": "",
         "efx_value": "{\"dsize\":\"25, 25\",\"fx\":\"0\",\"fy\":\"0\",\"interpolation\":\"INTER_LINEAR\"}",
         "efx_name": "resize",
-        "x": 490,
+        "x": 460,
         "y": 440,
         "wires": [
             [
@@ -300,7 +300,7 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 110,
+        "x": 90,
         "y": 440,
         "wires": [
             [
@@ -336,7 +336,7 @@
         "host": "",
         "efx_value": "{\"dtype\":\"-1\"}",
         "efx_name": "addWeighted",
-        "x": 510,
+        "x": 480,
         "y": 540,
         "wires": [
             [
@@ -365,7 +365,7 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 110,
+        "x": 90,
         "y": 540,
         "wires": [
             [
@@ -401,7 +401,7 @@
         "host": "",
         "efx_value": "{\"anchor\":\"(-1, -1)\",\"iterations\":\"1\",\"borderType\":\"BORDER_CONSTANT\",\"borderValue\":\"0\"}",
         "efx_name": "dilate",
-        "x": 470,
+        "x": 460,
         "y": 640,
         "wires": [
             [
@@ -450,7 +450,7 @@
         "sendError": false,
         "encoding": "base64",
         "allProps": false,
-        "x": 260,
+        "x": 280,
         "y": 640,
         "wires": [
             [
@@ -466,7 +466,7 @@
         "host": "",
         "efx_value": "{\"thresh\":\"5\",\"maxval\":\"2\",\"type\":\"THRESH_BINARY\"}",
         "efx_name": "threshold",
-        "x": 480,
+        "x": 470,
         "y": 720,
         "wires": [
             [
@@ -515,7 +515,7 @@
         "sendError": false,
         "encoding": "base64",
         "allProps": false,
-        "x": 260,
+        "x": 280,
         "y": 720,
         "wires": [
             [

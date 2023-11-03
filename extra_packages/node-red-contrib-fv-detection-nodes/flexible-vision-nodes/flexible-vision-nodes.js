@@ -584,17 +584,15 @@ module.exports = function (RED) {
             const obj = {
                 base64: msg.payload,
                 efx_value: JSON.parse(node.efx_value),
-                efx_name: node.efx_name,
-                params:{}
+                efx_name: node.efx_name
             };
-            // WARN change hardcoded test api
+
+            // WARN: change hardcoded test api
             let url = 'http://localhost:5123/api/dev/test/image_manipulation';
             const options = {timeout: 15000, headers: {'Content-Type': 'application/json'}};
             options.method = 'POST';
             options.body = JSON.stringify(obj);
             options.url = url;
-
-            node.debug(JSON.stringify(n));
 
             node.status({fill: "yellow", shape: "dot", text: 'processing ' + node.efx_name})
 
@@ -622,8 +620,6 @@ module.exports = function (RED) {
                 node.status({fill: "red", shape: "dot", text: error.message});
                 return node.send(msg);
             });
-
-
         });
     }
 
