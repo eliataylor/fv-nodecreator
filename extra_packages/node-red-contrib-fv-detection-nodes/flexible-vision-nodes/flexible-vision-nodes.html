@@ -923,7 +923,7 @@
     <div class="form-row">
         <label for="node-input-efx_name"><i class="fa fa-eercast"></i> Effect Type</label>
         <select id="node-input-efx_name">
-            <option value="cvtColor">Grayscale Conversion</option>
+            <option value="cvtColor">Convert Color Scale</option>
             <optgroup label="Blur Filters">
                 <option value="GaussianBlur">Gaussian Blur</option>
                 <option value="medianBlur">Median Blur</option>
@@ -935,17 +935,11 @@
                 <option value="Laplacian">Laplacian Filter</option>
             </optgroup>
             <option value="adaptiveThreshold">Adaptive Thresholding</option>
-            <optgroup label="Denoising">
-                <option value="fastNlMeansDenoising">Fast Non-Local Means Denoising</option>
-            </optgroup>
+            <option value="fastNlMeansDenoising">Fast Non-Local Means Denoising</option>
             <optgroup label="Morphological Filters">
                 <option value="erode">Erosion</option>
                 <option value="dilate">Dilation</option>
                 <option value="morphologyEx">Morphology Operations</option>
-            </optgroup>
-            <optgroup label="Color Space Conversions">
-                <option value="BGR2HSV">Color Space - BGR2HSV</option>
-                <option value="BGR2YUV">Color Space - BGR2YUV</option>
             </optgroup>
             <optgroup label="Histogram Equalization">
                 <option value="equalizeHist">Equalize Histogram</option>

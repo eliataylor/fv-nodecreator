@@ -1,5 +1,5 @@
 {
-  "grayscale": {
+  "cvtColor": {
     "signature": "cvtColor(src, code[, dst[, dstCn]])",
     "description": "Converts an image to grayscale.",
     "params": {
@@ -146,26 +146,6 @@
       "borderValue": "Value used for border pixels (optional, default: 0)"
     }
   },
-    "BGR2HSV": {
-      "signature": "cvtColor(src, code[, dst[, dstCn]])",
-      "description": "Converts an image from BGR color space to HSV color space.",
-      "params": {
-        "src": "Input image",
-        "code": "Color conversion code (e.g., COLOR_BGR2HSV)",
-        "dst": "Output image (optional)",
-        "dstCn": "Number of channels in the destination image (optional, default: 0)"
-      }
-    },
-    "BGR2YUV": {
-      "signature": "cvtColor(src, code[, dst[, dstCn]])",
-      "description": "Converts an image from BGR color space to YUV color space.",
-      "params": {
-        "src": "Input image",
-        "code": "Color conversion code (e.g., COLOR_BGR2YUV)",
-        "dst": "Output image (optional)",
-        "dstCn": "Number of channels in the destination image (optional, default: 0)"
-      }
-    },
   "equalizeHist": {
     "signature": "equalizeHist(src[, dst])",
     "description": "Equalizes the histogram of an image to improve contrast.",
