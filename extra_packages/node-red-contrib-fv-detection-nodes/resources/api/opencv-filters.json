@@ -81,27 +81,16 @@
       "borderType": "Pixel extrapolation method (optional, default: BORDER_DEFAULT)"
     }
   },
-  "threshold": {
-    "signature": "threshold(src, thresh, maxval, type[, dst])",
-    "description": "Applies a fixed-level threshold to an image.",
-    "params": {
-      "src": "Input image",
-      "thresh": "Threshold value",
-      "maxval": "Maximum value to use with binary and binary inverse thresholding",
-      "type": "Thresholding type (e.g., THRESH_BINARY)",
-      "dst": "Output image (optional)"
-    }
-  },
   "adaptiveThreshold": {
     "signature": "adaptiveThreshold(src, maxval, adaptiveMethod, thresholdType, blockSize, C[, dst])",
     "description": "Applies an adaptive threshold to an image.",
     "params": {
       "src": "Input image",
-      "maxval": "Maximum value to use with binary thresholding",
-      "adaptiveMethod": "Adaptive method (e.g., ADAPTIVE_THRESH_MEAN_C)",
-      "thresholdType": "Thresholding type (e.g., THRESH_BINARY)",
-      "blockSize": "Size of the neighborhood area",
-      "C": "Constant subtracted from the mean",
+      "maxval": "The maximum pixel value that can be assigned to a pixel. If a pixel's intensity is greater than the threshold, it will be set to this value. Typically, it is set to 255 for binary images",
+      "adaptiveMethod": "The method used to calculate the threshold value for each pixel in the image. It can take one of two values (e.g., ADAPTIVE_THRESH_MEAN_C || ADAPTIVE_THRESH_GAUSSIAN_C)",
+      "thresholdType": "The type of threshold to be applied after calculating the adaptive threshold values. It can be one of the following values (e.g., THRESH_BINARY)",
+      "blockSize": " The size of the pixel neighborhood used for calculating the adaptive threshold. It should be an odd number (e.g., 3, 5, 7, etc.). Larger values result in a smoother thresholding effect",
+      "C": "A constant subtracted from the calculated threshold for each pixel. It can be positive or negative and is used to fine-tune the thresholding process.",
       "dst": "Output image (optional)"
     }
   },
@@ -135,11 +124,11 @@
     "description": "Dilates an image using a specific structuring element.",
     "params": {
       "src": "Input image",
-      "kernel": "Structuring element used for dilation",
+      "kernel": "The kernel is a structuring element used for the dilation operation. It defines the neighborhood around each pixel that is considered when performing the dilation. The kernel is typically a square or rectangular matrix with odd dimensions. The dimensions of the kernel determine the size and shape of the dilation effect. Common choices for kernels include 3x3 and 5x5 matrices. You can create a kernel using cv2.getStructuringElement() or provide your own custom kernel.",
       "dst": "Output image (optional)",
-      "anchor": "Anchor point (optional, default: (-1, -1) )",
-      "iterations": "Number of times dilation is applied (optional, default: 1)",
-      "borderType": "Pixel extrapolation method (optional, default: BORDER_CONSTANT)",
+      "anchor": "It specifies the anchor point within the kernel. The anchor point is the pixel around which the dilation operation is applied. The default value is (-1, -1), which means the center of the kernel is used as the anchor. You can specify a different anchor point if needed. (optional, default: (-1, -1) )",
+      "iterations": "This parameter controls how many times the dilation operation is applied to the image. When set to 1 (the default), the dilation is applied once. You can increase the number of iterations to achieve a more pronounced effect. For example, setting iterations to 2 would perform two dilations in sequence. (optional, default: 1)",
+      "borderType": "It specifies how the border of the image is handled. This parameter determines what happens when the kernel extends beyond the image boundaries. Common options include cv2.BORDER_CONSTANT, cv2.BORDER_REPLICATE, cv2.BORDER_REFLECT, and cv2.BORDER_WRAP. The choice of border type can affect the behavior of the dilation operation, especially near the image edges. (optional, default: BORDER_CONSTANT)",
       "borderValue": "Value used for border pixels (optional, default: 0)"
     }
   },

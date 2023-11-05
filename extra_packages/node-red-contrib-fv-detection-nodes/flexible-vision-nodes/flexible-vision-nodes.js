@@ -586,6 +586,13 @@ module.exports = function (RED) {
                 efx_value: JSON.parse(node.efx_value),
                 efx_name: node.efx_name
             };
+            if (msg.efx_value && typeof msg.efx_value === 'object') {
+                for (let param in msg.efx_value) {
+                    if (msg.efx_value[param] !== '' && msg.efx_value[param] !== null) {
+                        obj.efx_value[param] = msg.efx_value[param];
+                    }
+                }
+            }
 
             // WARN: change hardcoded test api
             let url = 'http://localhost:5123/api/dev/test/image_manipulation';
@@ -600,6 +607,12 @@ module.exports = function (RED) {
                 if (!error && body) {
                     try {
                         let bodyjson = JSON.parse(body);
+                        if (typeof bodyjson['error'] === 'string') {
+                            msg.topic = 'image manipulation error';
+                            msg.payload = HOURGLASS
+                            node.status({fill: "red", shape: "dot", text: bodyjson['error']});
+                            return node.send(msg);
+                        }
                         if (typeof bodyjson["b64"] === "string") {
                             msg.topic = 'image manipulation returned';
                             msg.payload = bodyjson['b64']
@@ -607,7 +620,6 @@ module.exports = function (RED) {
                             return node.send(msg);
                         }
                     } catch (err) {
-                        console.error(body);
                         msg.payload = HOURGLASS;
                         msg.topic = 'invalid json';
                         node.status({fill: "red", shape: "dot", text: "invalid json: " + body});
@@ -669,15 +681,15 @@ module.exports = function (RED) {
             })
             options.url = url;
 
-            node.status({fill: "blue", text:  n.camId + ' expects > ' + n.threshold})
+            node.status({fill: "blue", text: n.camId + ' expects > ' + n.threshold})
 
             request(options, (error, response, body) => {
 
                 if (!error) {
                     let bodyjson = null;
-                    try{
+                    try {
                         bodyjson = JSON.parse(body);
-                    } catch(e) {
+                    } catch (e) {
                         return node.debug(e)
                     }
                     if (!bodyjson['b64']) {
@@ -692,7 +704,8 @@ module.exports = function (RED) {
                         msg.payload = bodyjson['b64']
                         node.status({
                             fill: "green",
-                            text: `${bodyjson.score.toFixed(2)}% similar`});
+                            text: `${bodyjson.score.toFixed(2)}% similar`
+                        });
                         return node.send([msg, null]);
                     } else {
                         msg.topic = 'no motion';
@@ -715,6 +728,99 @@ module.exports = function (RED) {
         });
     }
 
+    function PinStateGet(n) {
+        RED.nodes.createNode(this, n);
+
+        const hostConfig = RED.nodes.getNode(n.camlocation || n.host);
+        this.camlocation = n.camlocation;
+        this.host = n.host;
+        if (hostConfig && hostConfig.camlocation && hostConfig.camlocation.indexOf('http') > -1) {
+            this.host = hostConfig.camlocation
+        } else if (n.camlocation && n.camlocation.indexOf('http') > -1) {
+            this.host = n.camlocation
+        } else if (n.host && n.host.indexOf('http') > -1) {
+            this.host = n.host;
+        }
+        this.camId = n.camId;
+        this.pin = n.pin;
+        this.state = parseInt(n.state) || 50;
+        const node = this;
+
+        node.on('input', function (msg) {
+
+            let url = 'http://192.168.196.2:5000/api/capture/io/cur_pins_state';
+            const options = {'url': url, method: 'GET', timeout: 15000, headers: {'Content-Type': 'application/json'}};
+            node.status({fill: "blue", text: 'checking ' + n.pin})
+
+            request(options, (error, response, body) => {
+                node.debug(body);
+                const pins = JSON.parse(body);
+
+                if (error) {
+                    // msg.topic = 'setting pin failed ' + error;
+                    node.status({fill: "red", shape: "dot", text: "error / timeout"});
+                    msg.payload = {pin: this.pin, state: false}
+                } else {
+                    node.status({fill: "blue", text: pins[n.pin] ? 'enabled' : 'disabled'})
+                    msg.payload = {pin: n.pin, state: pins[n.pin]};
+                }
+
+                return node.send(msg);
+            });
+
+
+        });
+
+    }
+
+    function PinStateSet(n) {
+        RED.nodes.createNode(this, n);
+
+        const hostConfig = RED.nodes.getNode(n.camlocation || n.host);
+        this.camlocation = n.camlocation;
+        this.host = n.host;
+        if (hostConfig && hostConfig.camlocation && hostConfig.camlocation.indexOf('http') > -1) {
+            this.host = hostConfig.camlocation
+        } else if (n.camlocation && n.camlocation.indexOf('http') > -1) {
+            this.host = n.camlocation
+        } else if (n.host && n.host.indexOf('http') > -1) {
+            this.host = n.host;
+        }
+        this.camId = n.camId;
+        this.pin = n.pin;
+        this.state = parseInt(n.state) || 50;
+
+        const node = this;
+
+        node.on('input', function (msg) {
+
+
+            let url = 'http://172.17.0.1:5001/set_pin';
+            // let url = 'http://192.168.196.2:5000/api/capture/io/toggle_pin';
+            const options = {"url": url, method: "PUT", timeout: 15000, headers: {'Content-Type': 'application/json'}};
+            options.body = JSON.stringify({
+                pin_num: n.pin,
+                state: n.state
+            })
+            node.status({fill: "blue", text: 'set ' + n.pin})
+
+            request(options, (error, response, body) => {
+                node.debug(body);
+                msg.payload = body;
+
+                if (error) {
+                    msg.topic = 'setting pin failed ' + error;
+                    node.status({fill: "red", shape: "dot", text: "error / timeout"});
+                }
+                return node.send(msg);
+            });
+
+        });
+    }
+
+
+    RED.nodes.registerType('pin-state-get', PinStateGet);
+    RED.nodes.registerType('pin-state-set', PinStateSet);
     RED.nodes.registerType('motion-detection', MotionDetection);
     RED.nodes.registerType('image-manipulation', ImageManipulation);
     RED.nodes.registerType("remote-server", RemoteServerNode);

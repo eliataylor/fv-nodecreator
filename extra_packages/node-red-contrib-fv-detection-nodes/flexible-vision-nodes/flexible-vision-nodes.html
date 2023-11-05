@@ -148,6 +148,44 @@
 </script>
 <!-- fv snap inputs END -->
 
+<!-- get pin state START -->
+<script type="text/html" data-template-name="pin-state-get">
+    <div class="form-row">
+        <label for="node-input-fvconfig"><i class="fa fa-server" aria-hidden="true"></i> FV Server IP</label>
+        <select id="node-input-fvconfig"></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-project"><i class="fa connectdevelop" aria-hidden="true"></i> Pins</label>
+        <select type="text" id="node-input-pin" ></select>
+    </div>
+</script>
+<!-- get pin state END -->
+
+<!-- set pin state START -->
+<script type="text/html" data-template-name="pin-state-set">
+    <div class="form-row">
+        <label for="node-input-fvconfig"><i class="fa fa-server" aria-hidden="true"></i> FV Server IP</label>
+        <select id="node-input-fvconfig"></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-project"><i class="fa connectdevelop" aria-hidden="true"></i> Pins</label>
+        <select type="text" id="node-input-pin" >
+            <option value="1">GP1</option>
+            <option value="2">GP2</option>
+            <option value="3">GP3</option>
+            <option value="4">GP4</option>
+            <option value="5">GP5</option>
+            <option value="6">GP6</option>
+            <option value="7">GP7</option>
+            <option value="8">GP8</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-state"><i class="fa fa-toggle-on" aria-hidden="true"></i> Enable</label>
+        <input type="checkbox" id="node-input-state">
+    </div>
+</script>
+<!-- set pin state END -->
 
 <!-- fv cloud upload inputs -->
 <script type="text/html" data-template-name="cloud-upload">
@@ -196,6 +234,7 @@
         </li>
     </ol>
 </script>
+
 
 
 <script type="text/javascript">
@@ -583,6 +622,69 @@
             }
         });
 
+        RED.nodes.registerType('pin-state-get', {
+            category: 'Flexible Vision',
+            color: '#579b1e',
+            defaults: {
+                fvconfig: {type: "server-settings", required: true},
+                pin: {value: '', required: true}
+            },
+            inputs: 1,
+            outputs: 1,
+            icon: "fiber_pin_black_24dp.svg",
+            label: function () {
+                return 'get ' + this.pin + ' state';
+            },
+            oneditprepare: function () {
+                var host = $('#node-input-fvconfig option:selected').text();
+                if (host) {
+                    let url = 'http://192.168.196.2:5000/api/capture/io/cur_pins_state';
+
+                    $('#node-input-pin').html('');
+
+                    $.ajax({
+                        url: url,
+                        dataType: "json"
+                    }).done((data) => {
+                        console.log(data)
+                        const select = document.getElementById("node-input-pin");
+                        select.innerText = '';
+                        let src = false;
+                        for (let key in data) {
+                            if (key.indexOf('GP') !== 0) continue;
+                            var option = document.createElement("option");
+                            option.text = key;
+                            option.value = key;
+                            if (this.pin == key) {
+                                option.selected = true
+                                src = key;
+                            }
+                            select.appendChild(option);
+                        }
+                    }).error(function (err) {
+                        $('#node-input-pin').html('<option value="">Error loading pins</option>');
+                        console.log(err);
+                    });
+                }
+            }
+        });
+
+        RED.nodes.registerType('pin-state-set', {
+            category: 'Flexible Vision',
+            color: '#bd6c09',
+            defaults: {
+                fvconfig: {type: "server-settings", required: true},
+                pin: {value: '', required: true},
+                state: {value: false, required: true}
+            },
+            inputs: 1,
+            outputs: 1,
+            icon: "fiber_pin_black_24dp.svg",
+            label: function () {
+                return (this.state ? " enable " : "disable ") + this.pin;
+            }
+        });
+
         RED.nodes.registerType('motion-detection', {
             category: 'Flexible Vision',
             color: '#9d1fdc',
@@ -750,7 +852,6 @@
                     buildParametersForm();
                 });
 
-
                 fetch('resources/node-red-contrib-fv-detection-nodes/api/opencv-filters.json', {
                     headers: {'Content-Type': 'application/json'}
                 })
@@ -833,10 +934,7 @@
                 <option value="Sobel">Sobel Filter</option>
                 <option value="Laplacian">Laplacian Filter</option>
             </optgroup>
-            <optgroup label="Thresholding">
-                <option value="threshold">Thresholding</option>
-                <option value="adaptiveThreshold">Adaptive Thresholding</option>
-            </optgroup>
+            <option value="adaptiveThreshold">Adaptive Thresholding</option>
             <optgroup label="Denoising">
                 <option value="fastNlMeansDenoising">Fast Non-Local Means Denoising</option>
             </optgroup>
