@@ -26,7 +26,7 @@
         "z": "e583048378e103aa",
         "fvconfig": "28e65808dff70419",
         "camlocation": "8a495c7a43152ead",
-        "camId": "233630185045974",
+        "camId": "233630185039658",
         "mask": "6ebc4bce-c33d-4d7d-b731-9baa8f55d31e",
         "threshold": ".86",
         "debounce": "253",
@@ -39,8 +39,7 @@
             ],
             [
                 "f2bd2275cf25136b",
-                "14c64192bdb8a17b",
-                "a57b65b0ec042091"
+                "14c64192bdb8a17b"
             ]
         ]
     },

@@ -209,7 +209,7 @@
       "M": "Perspective transformation matrix",
       "dsize": "Size of the output image",
       "dst": "Output image (optional, default: None)",
-      "flags": "Combination of interpolation and extrapolation methods (optional, default: INTER_LINEAR)",
+      "fflags": "Combination of interpolation and extrapolation methods (optional, default: INTER_LINEAR)",
       "borderMode": "Pixel extrapolation method (optional, default: BORDER_CONSTANT)",
       "borderValue": "Value used for border pixels (optional, default: 0)"
     }
