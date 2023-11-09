@@ -159,7 +159,6 @@ module.exports = function (RED) {
                     });
                 }
             });
-
         });
     }
 
@@ -171,13 +170,11 @@ module.exports = function (RED) {
         node.host = config.host;
         node.preset = n.preset;
 
-
         // node.model   = n.model;
         // node.version = n.version;
         // node.camera  = n.camera;
         node.ws = config.workstation;
         // node.mask    = n.mask;
-
 
         // var idx_uid  = node.camera.split("#")
         // var cam_idx  = idx_uid[0]
@@ -581,19 +578,6 @@ module.exports = function (RED) {
 
         node.on('input', function (msg) {
 
-            const obj = {
-                base64: msg.payload,
-                efx_value: JSON.parse(node.efx_value),
-                efx_name: node.efx_name
-            };
-            if (msg.efx_value && typeof msg.efx_value === 'object') {
-                for (let param in msg.efx_value) {
-                    if (msg.efx_value[param] !== '' && msg.efx_value[param] !== null) {
-                        obj.efx_value[param] = msg.efx_value[param];
-                    }
-                }
-            }
-
             function handleError(topic, err, payload) {
                 msg.topic = topic;
                 msg.payload = payload
@@ -602,34 +586,40 @@ module.exports = function (RED) {
             }
 
             if (node.efx_name === 'remove_bgr') {
-                let url = 'http://172.17.0.1:5021/api/visiontools/remove_bgr';
+                let url = 'http://192.168.196.2:5021/api/visiontools/remove_bgr';
                 const options = {timeout: 15000, headers: {'Content-Type': 'application/json'}};
                 options.method = 'POST';
-                options.body = JSON.stringify(obj);
+                options.body = JSON.stringify({img_b64:msg.payload});
                 options.url = url;
 
                 node.status({fill: "yellow", shape: "dot", text: 'processing ' + node.efx_name})
 
                 request(options, (error, response, body) => {
+                    node.debug(body)
                     if (!error && body) {
-                        try {
-                            let bodyjson = JSON.parse(body);
-                            if (typeof bodyjson['error'] === 'string') {
-                                return handleError('image manipulation error', bodyjson['error'], HOURGLASS)
-                            }
-                            if (typeof bodyjson["b64"] === "string") {
-                                msg.topic = 'image manipulation returned';
-                                msg.payload = bodyjson['b64']
-                                node.status({fill: "green", shape: "dot"});
-                                return node.send(msg);
-                            }
-                        } catch (err) {
-                            return handleError('image manipulation json error', "invalid json: " + body, HOURGLASS)
-                        }
+                        msg.topic = 'remove_bgr returned';
+                        msg.payload = body
+                        node.status({fill: "green", shape: "dot"});
+                        return node.send(msg);
                     }
-                    return handleError('image manipulation failed', error.message, HOURGLASS)
+                    return handleError('remove_bgr failed', error.message, HOURGLASS)
                 });
             } else {
+
+
+                const obj = {
+                    base64: msg.payload,
+                    efx_value: JSON.parse(node.efx_value),
+                    efx_name: node.efx_name
+                };
+                if (msg.efx_value && typeof msg.efx_value === 'object') {
+                    for (let param in msg.efx_value) {
+                        if (msg.efx_value[param] !== '' && msg.efx_value[param] !== null) {
+                            obj.efx_value[param] = msg.efx_value[param];
+                        }
+                    }
+                }
+
                 // WARN: change hardcoded test api
                 let url = 'http://localhost:5123/api/dev/test/image_manipulation';
                 const options = {timeout: 15000, headers: {'Content-Type': 'application/json'}};

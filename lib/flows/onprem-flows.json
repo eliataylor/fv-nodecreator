@@ -130,8 +130,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 620,
-        "y": 80,
+        "x": 820,
+        "y": 540,
         "wires": []
     },
     {
@@ -822,7 +822,10 @@
         "x": 470,
         "y": 960,
         "wires": [
-            []
+            [
+                "f2bd2275cf25136b",
+                "14c64192bdb8a17b"
+            ]
         ]
     },
     {

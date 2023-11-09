@@ -2,9 +2,7 @@
   "remove_bgr" : {
     "signature": "remove_bgr()",
     "description": "Removes Background from the image.",
-    "params": {
-      "src": "Input image"
-    }
+    "params": {}
   },
   "cvtColor": {
     "signature": "cvtColor(src, code[, dst[, dstCn]])",
