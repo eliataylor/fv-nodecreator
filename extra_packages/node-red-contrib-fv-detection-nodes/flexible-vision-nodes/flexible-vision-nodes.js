@@ -781,19 +781,23 @@ module.exports = function (RED) {
             // http://192.168.196.2:5000
             let url = fvconfig.host + '/api/capture/predict/update_inference';
             const options = {"url": url, method: "PUT", timeout: 15000, headers: {'Content-Type': 'application/json'}};
-            options.body = JSON.stringify({metadata: n.metadata, target: n.inferenceobj})
-            node.status({fill: "blue", text: 'updating  ' + n.inferenceobj})
+            try {
+                options.body = JSON.stringify( msg.payload)
+                node.status({fill: "blue", text: 'updating  ' + n.inferenceobj})
+                request(options, (error, response, body) => {
+                    node.debug(body);
+                    msg.payload = body;
 
-            request(options, (error, response, body) => {
-                node.debug(body);
-                msg.payload = body;
-
-                if (error) {
-                    msg.topic = 'error updating inference ' + error;
-                    node.status({fill: "red", shape: "dot", text: "error / timeout"});
-                }
-                return node.send(msg);
-            });
+                    if (error) {
+                        msg.topic = 'error updating inference ' + error;
+                        node.status({fill: "red", shape: "dot", text: "error / timeout"});
+                    }
+                    return node.send(msg);
+                });
+            } catch(e) {
+                node.status({fill: "red", text: 'invalid json payload'})
+                return node.send(null);
+            }
 
         });
     }
