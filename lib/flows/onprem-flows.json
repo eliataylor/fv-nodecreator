@@ -21,25 +21,49 @@
         "camlocation": "http://192.168.196.2:5555"
     },
     {
+        "id": "d59af0ccd1165eaf",
+        "type": "server-settings",
+        "workstation": "",
+        "username": "",
+        "password": "",
+        "host": "http://192.168.196.2:5021"
+    },
+    {
+        "id": "4176c95e1d16b22a",
+        "type": "server-settings",
+        "workstation": "",
+        "username": "",
+        "password": "",
+        "host": "http://localhost:5123"
+    },
+    {
+        "id": "b5649c176837af55",
+        "type": "server-settings",
+        "workstation": "",
+        "username": "",
+        "password": "",
+        "host": "http://172.17.0.1:5001"
+    },
+    {
         "id": "5d16ae27fd2b1294",
         "type": "motion-detection",
         "z": "e583048378e103aa",
-        "fvconfig": "28e65808dff70419",
+        "fvconfig": "4176c95e1d16b22a",
         "camlocation": "8a495c7a43152ead",
-        "camId": "233630185039658",
-        "mask": "6ebc4bce-c33d-4d7d-b731-9baa8f55d31e",
+        "camId": "233630185045974",
+        "mask": "",
         "threshold": ".86",
         "debounce": "253",
-        "x": 310,
-        "y": 120,
+        "x": 330,
+        "y": 40,
         "wires": [
             [
-                "f2bd2275cf25136b",
-                "14c64192bdb8a17b"
+                "96d4c9db28363246",
+                "c8050990edfaced1"
             ],
             [
-                "f2bd2275cf25136b",
-                "14c64192bdb8a17b"
+                "c8050990edfaced1",
+                "96d4c9db28363246"
             ]
         ]
     },
@@ -64,8 +88,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 90,
-        "y": 120,
+        "x": 110,
+        "y": 40,
         "wires": [
             [
                 "5d16ae27fd2b1294"
@@ -76,8 +100,7 @@
         "id": "33c6a17d5d9b5a0c",
         "type": "image-manipulation",
         "z": "e583048378e103aa",
-        "fvconfig": "28e65808dff70419",
-        "host": "",
+        "fvconfig": "4176c95e1d16b22a",
         "efx_value": "{\"ksize\":\"5,5\",\"sigmaX\":\"0\",\"sigmaY\":\"0\",\"borderType\":\"BORDER_DEFAULT\"}",
         "efx_name": "GaussianBlur",
         "x": 470,
@@ -146,8 +169,8 @@
         "active": true,
         "pass": true,
         "outputs": 1,
-        "x": 800,
-        "y": 180,
+        "x": 840,
+        "y": 600,
         "wires": [
             []
         ]
@@ -189,8 +212,8 @@
         "drop": false,
         "allowrate": false,
         "outputs": 1,
-        "x": 310,
-        "y": 220,
+        "x": 330,
+        "y": 140,
         "wires": [
             [
                 "5d16ae27fd2b1294"
@@ -201,9 +224,8 @@
         "id": "9c5b9f8b2ef1cbd4",
         "type": "image-manipulation",
         "z": "e583048378e103aa",
-        "fvconfig": "28e65808dff70419",
-        "host": "",
-        "efx_value": "{\"threshold1\":\"5\",\"threshold2\":\"5\"}",
+        "fvconfig": "4176c95e1d16b22a",
+        "efx_value": "{\"threshold1\":\"5\",\"threshold2\":\"5\",\"apertureSize\":\"3\",\"L2gradient\":\"false\"}",
         "efx_name": "Canny",
         "x": 450,
         "y": 426.66666666666663,
@@ -267,8 +289,7 @@
         "id": "ae477e964feaad4f",
         "type": "image-manipulation",
         "z": "e583048378e103aa",
-        "fvconfig": "28e65808dff70419",
-        "host": "",
+        "fvconfig": "4176c95e1d16b22a",
         "efx_value": "{\"dsize\":\"25, 25\",\"fx\":\"0\",\"fy\":\"0\",\"interpolation\":\"INTER_LINEAR\"}",
         "efx_name": "resize",
         "x": 450,
@@ -333,8 +354,7 @@
         "id": "949f4fb9b3bad457",
         "type": "image-manipulation",
         "z": "e583048378e103aa",
-        "fvconfig": "28e65808dff70419",
-        "host": "",
+        "fvconfig": "4176c95e1d16b22a",
         "efx_value": "{\"alpha\":\".5\",\"src2\":\"iVBORw0KGgoAAAANSUhEUgAAAJIAAABbCAYAAACYnNzyAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABLklEQVR4nO3cwQkCMRBA0YlYyJZmJ7ZmZ/FgBerfw8J798AQPswhkLX3HvjXzQ1SEBIJIZEQEgkhkRASCSGREBIJIZEQEgkhkRASCSGREBIJIZEQEom7a5xZax0zc3x7bu/9Omei6xHSx2Nmnj+cW2cMc0VWGwkhkRASCSGREBIJIZEQEgkhkRASCSGREBIJIZHwrY3X/4SQSFhtJIREQkgkhERCSCSEREJIJIREQkgkhERCSCSEREJIJIREQkgkhERCSCSEREJIJIREQkgkhERCSCSEREJIJIREQkgkhERCSCSEREJIJIREQkgkhERCSCSEREJIJIREQkgkhERCSCSEREJIJIREQkgkhERCSCSEREJIJIREQkgkhERCSCSEREJIJIREQkgkhMT/ZuYN9c0Sj3mEEjoAAAAASUVORK5CYII=\",\"beta\":\".4\",\"gamma\":\"0\",\"dtype\":\"-1\"}",
         "efx_name": "addWeighted",
         "x": 470,
@@ -399,8 +419,7 @@
         "id": "31e51f6afca61a5f",
         "type": "image-manipulation",
         "z": "e583048378e103aa",
-        "fvconfig": "28e65808dff70419",
-        "host": "",
+        "fvconfig": "4176c95e1d16b22a",
         "efx_value": "{\"kernel\":\"3x3\",\"anchor\":\"(-1, -1)\",\"iterations\":\"1\",\"borderType\":\"BORDER_CONSTANT\",\"borderValue\":\"0\"}",
         "efx_name": "dilate",
         "x": 450,
@@ -465,8 +484,7 @@
         "id": "9425c88e938020ab",
         "type": "image-manipulation",
         "z": "e583048378e103aa",
-        "fvconfig": "28e65808dff70419",
-        "host": "",
+        "fvconfig": "4176c95e1d16b22a",
         "efx_value": "{\"maxval\":\"255\",\"adaptiveMethod\":\"ADAPTIVE_THRESH_MEAN_C\",\"thresholdType\":\"THRESH_BINARY\",\"blockSize\":\"3\",\"C\":\"0\"}",
         "efx_name": "adaptiveThreshold",
         "x": 490,
@@ -580,9 +598,8 @@
         "id": "499e8eb5d7b850f0",
         "type": "image-manipulation",
         "z": "e583048378e103aa",
-        "fvconfig": "28e65808dff70419",
-        "host": "",
-        "efx_value": "{\"M\":\"[[1, 1, 1],               [2, 2, 2],               [3, 3, 3]]\",\"dsize\":\"2,2\",\"flags\":\"INTER_LINEAR\",\"borderMode\":\"BORDER_CONSTANT\",\"borderValue\":\"0\"}",
+        "fvconfig": "4176c95e1d16b22a",
+        "efx_value": "{\"M\":\"[[1, 1, 1],               [2, 2, 2],               [3, 3, 3]]\",\"dsize\":\"2,2\",\"fflags\":\"INTER_LINEAR\",\"borderMode\":\"BORDER_CONSTANT\",\"borderValue\":\"0\"}",
         "efx_name": "warpPerspective",
         "x": 490,
         "y": 800,
@@ -660,7 +677,7 @@
         "id": "5b22e7250ca199ba",
         "type": "pin-state-set",
         "z": "e583048378e103aa",
-        "fvconfig": "28e65808dff70419",
+        "fvconfig": "b5649c176837af55",
         "pin": "3",
         "state": false,
         "x": 260,
@@ -749,8 +766,7 @@
         "id": "2e96c07a39049641",
         "type": "image-manipulation",
         "z": "e583048378e103aa",
-        "fvconfig": "28e65808dff70419",
-        "host": "",
+        "fvconfig": "4176c95e1d16b22a",
         "efx_value": "{\"code\":\"COLOR_BGR2GRAY\",\"dstCn\":\"0\"}",
         "efx_name": "cvtColor",
         "x": 460,
@@ -815,8 +831,7 @@
         "id": "2d5a45d791845995",
         "type": "image-manipulation",
         "z": "e583048378e103aa",
-        "fvconfig": "28e65808dff70419",
-        "host": "",
+        "fvconfig": "d59af0ccd1165eaf",
         "efx_value": "{}",
         "efx_name": "remove_bgr",
         "x": 470,
@@ -936,5 +951,39 @@
                 "9e51f9aaaaccfe21"
             ]
         ]
+    },
+    {
+        "id": "96d4c9db28363246",
+        "type": "display-image",
+        "z": "e583048378e103aa",
+        "name": "",
+        "width": "160",
+        "data": "payload",
+        "dataType": "msg",
+        "thumbnail": false,
+        "active": true,
+        "pass": true,
+        "outputs": 1,
+        "x": 760,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c8050990edfaced1",
+        "type": "debug",
+        "z": "e583048378e103aa",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 80,
+        "wires": []
     }
 ]

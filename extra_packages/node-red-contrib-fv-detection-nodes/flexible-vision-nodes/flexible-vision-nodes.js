@@ -368,13 +368,6 @@ module.exports = function (RED) {
 
 
     // VISION NODES
-
-    function RemoteServerNode(n) {
-        RED.nodes.createNode(this, n);
-        this.host = n.host;
-        this.port = n.port;
-    }
-
     function CameraLocationNode(n) {
         RED.nodes.createNode(this, n);
         // console.log("CameraLocationNode", n, this);
@@ -563,16 +556,8 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, n);
         const node = this;
 
-        const hostConfig = RED.nodes.getNode(n.camlocation || n.host);
-        node.camlocation = n.camlocation;
-        node.host = n.host;
-        if (hostConfig && hostConfig.camlocation && hostConfig.camlocation.indexOf('http') > -1) {
-            node.host = hostConfig.camlocation
-        } else if (n.camlocation && n.camlocation.indexOf('http') > -1) {
-            node.host = n.camlocation
-        } else if (n.host && n.host.indexOf('http') > -1) {
-            node.host = n.host;
-        }
+        const fvconfig = RED.nodes.getNode(n.fvconfig);
+        console.error('imgManip ', fvconfig);
         node.efx_name = n.efx_name;
         node.efx_value = n.efx_value;
 
@@ -586,7 +571,9 @@ module.exports = function (RED) {
             }
 
             if (node.efx_name === 'remove_bgr') {
-                let url = 'http://192.168.196.2:5021/api/visiontools/remove_bgr';
+                let url = fvconfig.host + '/api/visiontools/remove_bgr';
+                node.debug('requesting ' + url);
+                console.error('requesting ' + url);
                 const options = {timeout: 15000, headers: {'Content-Type': 'application/json'}};
                 options.method = 'POST';
                 options.body = JSON.stringify({img_b64:msg.payload});
@@ -606,7 +593,6 @@ module.exports = function (RED) {
                 });
             } else {
 
-
                 const obj = {
                     base64: msg.payload,
                     efx_value: JSON.parse(node.efx_value),
@@ -620,8 +606,7 @@ module.exports = function (RED) {
                     }
                 }
 
-                // WARN: change hardcoded test api
-                let url = 'http://localhost:5123/api/dev/test/image_manipulation';
+                let url = fvconfig.host + '/api/dev/test/image_manipulation';
                 const options = {timeout: 15000, headers: {'Content-Type': 'application/json'}};
                 options.method = 'POST';
                 options.body = JSON.stringify(obj);
@@ -657,16 +642,8 @@ module.exports = function (RED) {
     function MotionDetection(n) {
         RED.nodes.createNode(this, n);
 
-        const hostConfig = RED.nodes.getNode(n.camlocation || n.host);
-        this.camlocation = n.camlocation;
-        this.host = n.host;
-        if (hostConfig && hostConfig.camlocation && hostConfig.camlocation.indexOf('http') > -1) {
-            this.host = hostConfig.camlocation
-        } else if (n.camlocation && n.camlocation.indexOf('http') > -1) {
-            this.host = n.camlocation
-        } else if (n.host && n.host.indexOf('http') > -1) {
-            this.host = n.host;
-        }
+        const fvconfig = RED.nodes.getNode(n.fvconfig);
+        const camConfig = RED.nodes.getNode(n.camlocation);
         this.camId = n.camId;
         this.mask = n.mask;
         this.threshold = parseInt(n.threshold) || 50;
@@ -686,8 +663,7 @@ module.exports = function (RED) {
 
             this.context().flow.set("last_motion_check", now);
 
-            var fvconfig = RED.nodes.getNode(n.fvconfig);
-            let url = 'http://localhost:5123/api/dev/test/detect_motion'; // WARN: change to config.host + '/api/detect_motion'
+            let url = fvconfig.host + '/api/dev/test/detect_motion'
             const options = {timeout: 15000, headers: {'Content-Type': 'application/json'}};
             options.method = 'POST';
             options.body = JSON.stringify({
@@ -695,7 +671,7 @@ module.exports = function (RED) {
                 mask: n.mask,
                 threshold: n.threshold,
                 debounce: n.debounce,
-                camhost: node.host,
+                camhost: camConfig.host,
                 fvhost: fvconfig.host
             })
             options.url = url;
@@ -705,16 +681,16 @@ module.exports = function (RED) {
             request(options, (error, response, body) => {
 
                 if (!error) {
-                    let bodyjson = null;
+                    let bodyjson = null, err = 'bad response';
                     try {
                         bodyjson = JSON.parse(body);
                     } catch (e) {
-                        return node.debug(e)
+                        err = e.message;
                     }
-                    if (!bodyjson['b64']) {
-                        msg.topic = 'bad response';
+                    if (!bodyjson || typeof bodyjson['b64'] !== 'string') {
+                        msg.topic = err;
                         msg.payload = HOURGLASS;
-                        node.status({fill: "red", shape: "dot", text: "bad response"});
+                        node.status({fill: "red", shape: "dot", text: err});
                         return node.send([null, msg]);
                     }
 
@@ -750,16 +726,7 @@ module.exports = function (RED) {
     function PinStateGet(n) {
         RED.nodes.createNode(this, n);
 
-        const hostConfig = RED.nodes.getNode(n.camlocation || n.host);
-        this.camlocation = n.camlocation;
-        this.host = n.host;
-        if (hostConfig && hostConfig.camlocation && hostConfig.camlocation.indexOf('http') > -1) {
-            this.host = hostConfig.camlocation
-        } else if (n.camlocation && n.camlocation.indexOf('http') > -1) {
-            this.host = n.camlocation
-        } else if (n.host && n.host.indexOf('http') > -1) {
-            this.host = n.host;
-        }
+        const fvconfig = RED.nodes.getNode(n.fvconfig);
         this.camId = n.camId;
         this.pin = n.pin;
         this.state = parseInt(n.state) || 50;
@@ -767,7 +734,8 @@ module.exports = function (RED) {
 
         node.on('input', function (msg) {
 
-            let url = 'http://192.168.196.2:5000/api/capture/io/cur_pins_state';
+            let url = fvconfig.host + '/api/capture/io/cur_pins_state';
+//            let url = 'http://192.168.196.2:5000/api/capture/io/cur_pins_state';
             const options = {'url': url, method: 'GET', timeout: 15000, headers: {'Content-Type': 'application/json'}};
             node.status({fill: "blue", text: 'checking ' + n.pin})
 
@@ -795,16 +763,7 @@ module.exports = function (RED) {
     function PinStateSet(n) {
         RED.nodes.createNode(this, n);
 
-        const hostConfig = RED.nodes.getNode(n.camlocation || n.host);
-        this.camlocation = n.camlocation;
-        this.host = n.host;
-        if (hostConfig && hostConfig.camlocation && hostConfig.camlocation.indexOf('http') > -1) {
-            this.host = hostConfig.camlocation
-        } else if (n.camlocation && n.camlocation.indexOf('http') > -1) {
-            this.host = n.camlocation
-        } else if (n.host && n.host.indexOf('http') > -1) {
-            this.host = n.host;
-        }
+        const fvconfig = RED.nodes.getNode(n.fvconfig);
         this.camId = n.camId;
         this.pin = n.pin;
         this.state = parseInt(n.state) || 50;
@@ -813,8 +772,8 @@ module.exports = function (RED) {
 
         node.on('input', function (msg) {
 
-
-            let url = 'http://172.17.0.1:5001/set_pin';
+            let url = fvconfig.host + '/set_pin';
+            // let url = 'http://172.17.0.1:5001/set_pin';
             // let url = 'http://192.168.196.2:5000/api/capture/io/toggle_pin';
             const options = {"url": url, method: "PUT", timeout: 15000, headers: {'Content-Type': 'application/json'}};
             options.body = JSON.stringify({
@@ -840,23 +799,15 @@ module.exports = function (RED) {
     function UpdateInference(n) {
         RED.nodes.createNode(this, n);
 
-        const hostConfig = RED.nodes.getNode(n.camlocation || n.host);
-        this.camlocation = n.camlocation;
-        this.host = n.host;
-        if (hostConfig && hostConfig.camlocation && hostConfig.camlocation.indexOf('http') > -1) {
-            this.host = hostConfig.camlocation
-        } else if (n.camlocation && n.camlocation.indexOf('http') > -1) {
-            this.host = n.camlocation
-        } else if (n.host && n.host.indexOf('http') > -1) {
-            this.host = n.host;
-        }
+        const fvconfig = RED.nodes.getNode(n.fvconfig);
         this.inferenceobj = n.inferenceobj;
 
         const node = this;
 
         node.on('input', function (msg) {
 
-            let url = 'http://192.168.196.2:5000/api/capture/predict/update_inference';
+            // http://192.168.196.2:5000
+            let url = fvconfig.host + '/api/capture/predict/update_inference';
             const options = {"url": url, method: "PUT", timeout: 15000, headers: {'Content-Type': 'application/json'}};
             options.body = JSON.stringify({metadata: n.metadata, target: n.inferenceobj})
             node.status({fill: "blue", text: 'updating  ' + n.inferenceobj})
@@ -875,15 +826,12 @@ module.exports = function (RED) {
         });
     }
 
-
-
+    RED.nodes.registerType("camera-server", CameraLocationNode);
     RED.nodes.registerType('update-inference', UpdateInference);
     RED.nodes.registerType('pin-state-get', PinStateGet);
     RED.nodes.registerType('pin-state-set', PinStateSet);
     RED.nodes.registerType('motion-detection', MotionDetection);
     RED.nodes.registerType('image-manipulation', ImageManipulation);
-    RED.nodes.registerType("remote-server", RemoteServerNode);
-    RED.nodes.registerType("camera-server", CameraLocationNode);
     RED.nodes.registerType("set-camera-property", SetCameraConfig);
     RED.nodes.registerType("release-camera", ReleaseCameraNode);
     RED.nodes.registerType("open-camera", OpenCameraNode);
