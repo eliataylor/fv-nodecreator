@@ -702,7 +702,8 @@
             oneditsave: function () {
                 this.mask = $('#node-input-mask').val();
                 this.debounce = $('#node-input-debounce').val();
-                this.threshold = $('#node-input-threshold').val();
+                this.threshold = $('#node-i' +
+                    'nput-threshold').val();
             },
             oneditprepare: function () {
                 var host = $('#node-input-fvconfig option:selected').text();

@@ -45,6 +45,14 @@
         "host": "http://172.17.0.1:5001"
     },
     {
+        "id": "dea299fe3d3b98f2",
+        "type": "server-settings",
+        "workstation": "",
+        "username": "",
+        "password": "",
+        "host": "http://192.168.196.2:5555"
+    },
+    {
         "id": "5d16ae27fd2b1294",
         "type": "motion-detection",
         "z": "e583048378e103aa",

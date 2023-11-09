@@ -26,24 +26,3 @@ Currently, Image Manipulation and Motion Detect will only work against the dev A
 
 #### Notes
 
-#### Detected Access Modes: "Example"
-
-- Not Implemented: "Event Test Data"
-- Not available: "User Set Save"
-- Read Only: "Pixel Correction Y"
-- Read and Write: "Test Pending Ack"
-- Write Only: "Event Test Control"
-
-#### Detected Field Types: "Example" 
-- Bool: "Chunk Enable"
-- Command: "Event Test Control"
-- Enumerate: "Chunk Selector"
-- Float: "Balance Ratio"
-- Integer: "Test Pending Ack"
-- String: "Device User ID"
-- null: "Event Test Data"
-
-
-
-
-zerotier uses port 1880

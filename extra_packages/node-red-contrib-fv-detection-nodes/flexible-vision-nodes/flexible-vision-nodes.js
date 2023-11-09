@@ -378,16 +378,7 @@ module.exports = function (RED) {
     function ReleaseCameraNode(n) {
         RED.nodes.createNode(this, n);
         const node = this;
-        const hostConfig = RED.nodes.getNode(n.camlocation || n.host);
-        node.camlocation = n.camlocation;
-        node.host = n.host;
-        if (hostConfig && hostConfig.camlocation && hostConfig.camlocation.indexOf('http') > -1) {
-            node.host = hostConfig.camlocation
-        } else if (n.camlocation && n.camlocation.indexOf('http') > -1) {
-            node.host = n.camlocation
-        } else if (n.host && n.host.indexOf('http') > -1) {
-            node.host = n.host;
-        }
+        const camHost = RED.nodes.getNode(n.camlocation);
         node.camId = n.camId;
 
         const HandleFailures = function (msg) {
@@ -405,7 +396,7 @@ module.exports = function (RED) {
 
         node.on('input', function (msg) {
 
-            const url = node.host + '/api/vision/vision/release/' + node.camId;
+            const url = camHost.host + '/api/vision/vision/release/' + node.camId;
             node.status({fill: "green", shape: "dot", text: url})
 
             const options = {method: 'GET', timeout: 15000, headers: {'Content-Type': 'application/json'}};
@@ -431,16 +422,7 @@ module.exports = function (RED) {
     function OpenCameraNode(n) {
         RED.nodes.createNode(this, n);
         const node = this;
-        const hostConfig = RED.nodes.getNode(n.camlocation || n.host);
-        node.camlocation = n.camlocation;
-        node.host = n.host;
-        if (hostConfig && hostConfig.camlocation && hostConfig.camlocation.indexOf('http') > -1) {
-            node.host = hostConfig.camlocation
-        } else if (n.camlocation && n.camlocation.indexOf('http') > -1) {
-            node.host = n.camlocation
-        } else if (n.host && n.host.indexOf('http') > -1) {
-            node.host = n.host;
-        }
+        const camConfig = RED.nodes.getNode(n.camlocation || n.host);
         node.camId = n.camId;
 
         const HandleFailures = function (msg) {
@@ -458,7 +440,7 @@ module.exports = function (RED) {
 
         node.on('input', function (msg) {
 
-            const url = node.host + '/api/vision/vision/open/' + node.camId;
+            const url = camConfig.host + '/api/vision/vision/open/' + node.camId;
             node.status({fill: "green", shape: "dot", text: url})
 
             const options = {method: 'GET', timeout: 15000, headers: {'Content-Type': 'application/json'}};
@@ -484,17 +466,7 @@ module.exports = function (RED) {
     function SetCameraConfig(n) {
         RED.nodes.createNode(this, n);
         const node = this;
-        const hostConfig = RED.nodes.getNode(n.camlocation || n.host);
-
-        node.camlocation = n.camlocation;
-        node.host = n.host;
-        if (hostConfig && hostConfig.camlocation && hostConfig.camlocation.indexOf('http') > -1) {
-            node.host = hostConfig.camlocation
-        } else if (n.camlocation && n.camlocation.indexOf('http') > -1) {
-            node.host = n.camlocation
-        } else if (n.host && n.host.indexOf('http') > -1) {
-            node.host = n.host;
-        }
+        const camConfig = RED.nodes.getNode(n.camlocation || n.host);
         node.camId = n.camId;
         node.camProp = n.camProp;
         node.propVal = n.propVal;
@@ -517,7 +489,7 @@ module.exports = function (RED) {
 
         node.on('input', function (msg) {
 
-            let url = node.host + '/api/vision/vision/';
+            let url = camConfig.host + '/api/vision/vision/';
             const options = {timeout: 15000, headers: {'Content-Type': 'application/json'}};
             if (node.access_mode && node.access_mode.toUpperCase() === 'READ ONLY') {
                 options.method = 'GET';
