@@ -56,7 +56,7 @@
         <dt>msg.file
             <span class="property-type">buffer object</span>
         </dt>
-        <dd> Image as buffer object.</dd>
+        <dd>Image as buffer object.</dd>
         <dt>msg.did
             <span class="property-type">String</span>
         </dt>
@@ -236,7 +236,6 @@
 </script>
 
 
-
 <script type="text/javascript">
     (function () {
         const FV_DOMAIN = 'v1.cloud.flexiblevision.com';
@@ -304,7 +303,6 @@
         $(document).on('click change', '.preset-select', function () {
             var host = $('#node-input-fvconfig option:selected').text();
             var preset = $('#node-input-preset option:selected').text();
-
             PRESET = preset;
         });
 
@@ -687,13 +685,12 @@
 
         RED.nodes.registerType('motion-detection', {
             category: 'Flexible Vision',
-            color: '#9d1fdc',
+            color: '#d09f25',
             label: 'Detect Motion',
             defaults: {
                 fvconfig: {type: "server-settings", required: true},
                 camlocation: {type: "camera-server", required: true},
                 camId: {value: "", required: true},
-                host: {value: "", required: false, hidden: true},
                 mask: {value: false}, // false === unloaded, null === 'no mask', value as ID of mask
                 threshold: {value: 85, required: true, validate: RED.validators.number()},
                 debounce: {value: 250, required: false, validate: RED.validators.number()}
@@ -708,28 +705,29 @@
                 this.threshold = $('#node-input-threshold').val();
             },
             oneditprepare: function () {
-                // get masks
-                const camController = new CameraController($, {
-                    camlocation: this.camlocation,
-                    host: this.host,
-                    camId: this.camId,
-                })
-                camController.startListeners();
-                window.camController = camController; // debugging
-
-                document.getElementById("fvCamForm").addEventListener('updateToolContext',
-                    (e) => {
-                        this.camlocation = e.detail.host
-                        this.camId = e.detail.camId
-                        console.log('ON UPDATE ' + e.detail.camId);
-                    },
-                    {capture: false}
-                );
-
                 var host = $('#node-input-fvconfig option:selected').text();
-                if (host) {
-                    let url = host + '/api/capture/mask/get_masks';
 
+                if (host) {
+                    // get cameras
+                    const camController = new CameraController($, {
+                        camlocation: this.camlocation,
+                        host: host,
+                        camId: this.camId,
+                    })
+                    camController.startListeners();
+                    window.camController = camController; // debugging
+
+                    document.getElementById("fvCamForm").addEventListener('updateToolContext',
+                        (e) => {
+                            this.camlocation = e.detail.host
+                            this.camId = e.detail.camId
+                            console.log('ON UPDATE ' + e.detail.camId);
+                        },
+                        {capture: false}
+                    );
+
+                    // get masks
+                    let url = host + '/api/capture/mask/get_masks';
                     if (!this.mask || this.mask == '') {
                         $('#node-input-mask').html('<option value="">Loading masks...</option>');
                     }
@@ -771,7 +769,7 @@
 
         RED.nodes.registerType('image-manipulation', {
             category: 'Flexible Vision',
-            color: '#1fdccc',
+            color: '#857d0c',
             label: function () {
                 if (this.efx_name && this.efx_name.length > 0) {
                     return this.efx_name;
@@ -923,6 +921,7 @@
     <div class="form-row">
         <label for="node-input-efx_name"><i class="fa fa-eercast"></i> Effect Type</label>
         <select id="node-input-efx_name">
+            <option value="remove_bgr">Remove Background</option>
             <option value="cvtColor">Convert Color Scale</option>
             <optgroup label="Blur Filters">
                 <option value="GaussianBlur">Gaussian Blur</option>
@@ -978,6 +977,24 @@
 </script>
 <!-- IMAGE MANIPULATION END -->
 
+
+<!-- UPDATE INFERENCE START -->
+<script type="text/html" data-template-name="update-inference">
+    <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css"/>
+    <div class="form-row">
+        <label for="node-input-fvconfig"><i class="fa fa-server" aria-hidden="true"></i> FV Server IP</label>
+        <select id="node-input-fvconfig"></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-inferenceobj"><i class="fa fa-percent"></i> Target Inference Object</label>
+        <input type="text" id="node-input-inferenceobj" placeholder="Target Inference Object">
+    </div>
+    <div class="form-row">
+        <label for="node-input-metadata"><i class="fa fa-hourglass-end"></i> Metadata to Add</label>
+        <input type="text" id="node-input-metadata" placeholder="json object">
+    </div>
+</script>
+<!-- UPDATE INFERENCE END -->
 
 <script type="text/javascript" src="resources/node-red-contrib-fv-detection-nodes/camera-controller.js"/>
 
@@ -1113,47 +1130,6 @@
                 else if (parts.length === 1) parts.unshift("Config");
                 return parts.join(' - ');
             },
-            oneditsave: function () {
-                // document.getElementById("fvCamForm").removeEventListener('updateToolContext', this.setFVContext);
-                const node = this;
-                let url = node.host + '/api/vision/vision/';
-                const options = {timeout: 15000, headers: {'Content-Type': 'application/json'}};
-                if (node.access_mode && node.access_mode.toUpperCase() === 'READ ONLY') {
-                    options.method = 'GET';
-                    url += 'readConfig/' + node.camId + '/' + encodeURIComponent(node.camProp);
-                } else {
-                    options.method = 'POST';
-                    url += 'setVal/' + node.camId;
-                    options.body = JSON.stringify({
-                        node_name: node.camProp,
-                        node_type: node.node_type,
-                        value: node.propVal
-                    })
-                }
-                fetch(url, options)
-                    .then(data => {
-                        console.log('Success:', data);
-                    })
-                    .catch((error) => {
-                        alert(error);
-                        console.error('Error:', error);
-                    });
-            },
-            /*
-            oneditcancel: function() {
-                console.log("ONEDITCANCEL!", this);
-            },
-            onpaletteremove: function() {
-                document.getElementById("fvCamForm").removeEventListener('updateToolContext', this.setFVContext);
-            },
-            setFVContext: function(e) {
-                console.log("updateToolContext", e.detail);
-                this.camlocation = e.detail.host
-                this.camId = e.detail.camId
-                this.camProp = e.detail.camProp
-                this.propVal = e.detail.propVal
-            },
-             */
             oneditprepare: function () {
                 const camController = new CameraController($, {
                     camlocation: this.camlocation,
@@ -1260,6 +1236,20 @@
                     {capture: false}
                 );
             }
+        });
+
+        RED.nodes.registerType('update-inference', {
+            category: 'Flexible Vision',
+            paletteLabel: 'Update Inference Object',
+            color: '#ba78ff',
+            defaults: {
+                fvconfig: {type: "server-settings", required: true},
+                inferenceobj: {value: "", required: true},
+                metadata: {value: "", required: true}
+            },
+            inputs: 1,
+            outputs: 1,
+            icon: "hub_black_24dp.svg"
         });
 
     })();

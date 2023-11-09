@@ -594,44 +594,73 @@ module.exports = function (RED) {
                 }
             }
 
-            // WARN: change hardcoded test api
-            let url = 'http://localhost:5123/api/dev/test/image_manipulation';
-            const options = {timeout: 15000, headers: {'Content-Type': 'application/json'}};
-            options.method = 'POST';
-            options.body = JSON.stringify(obj);
-            options.url = url;
-
-            node.status({fill: "yellow", shape: "dot", text: 'processing ' + node.efx_name})
-
-            request(options, (error, response, body) => {
-                if (!error && body) {
-                    try {
-                        let bodyjson = JSON.parse(body);
-                        if (typeof bodyjson['error'] === 'string') {
-                            msg.topic = 'image manipulation error';
-                            msg.payload = HOURGLASS
-                            node.status({fill: "red", shape: "dot", text: bodyjson['error']});
-                            return node.send(msg);
-                        }
-                        if (typeof bodyjson["b64"] === "string") {
-                            msg.topic = 'image manipulation returned';
-                            msg.payload = bodyjson['b64']
-                            node.status({fill: "green", shape: "dot"});
-                            return node.send(msg);
-                        }
-                    } catch (err) {
-                        msg.payload = HOURGLASS;
-                        msg.topic = 'invalid json';
-                        node.status({fill: "red", shape: "dot", text: "invalid json: " + body});
-                        return node.send(msg);
-                    }
-                }
-                console.error("image manipulation failed", error.message)
-                msg.payload = HOURGLASS;
-                msg.topic = 'image manipulation failed';
-                node.status({fill: "red", shape: "dot", text: error.message});
+            function handleError(topic, err, payload) {
+                msg.topic = topic;
+                msg.payload = payload
+                node.status({fill: "red", shape: "dot", text: err});
                 return node.send(msg);
-            });
+            }
+
+            if (node.efx_name === 'remove_bgr') {
+                let url = 'http://172.17.0.1:5021/api/visiontools/remove_bgr';
+                const options = {timeout: 15000, headers: {'Content-Type': 'application/json'}};
+                options.method = 'POST';
+                options.body = JSON.stringify(obj);
+                options.url = url;
+
+                node.status({fill: "yellow", shape: "dot", text: 'processing ' + node.efx_name})
+
+                request(options, (error, response, body) => {
+                    if (!error && body) {
+                        try {
+                            let bodyjson = JSON.parse(body);
+                            if (typeof bodyjson['error'] === 'string') {
+                                return handleError('image manipulation error', bodyjson['error'], HOURGLASS)
+                            }
+                            if (typeof bodyjson["b64"] === "string") {
+                                msg.topic = 'image manipulation returned';
+                                msg.payload = bodyjson['b64']
+                                node.status({fill: "green", shape: "dot"});
+                                return node.send(msg);
+                            }
+                        } catch (err) {
+                            return handleError('image manipulation json error', "invalid json: " + body, HOURGLASS)
+                        }
+                    }
+                    return handleError('image manipulation failed', error.message, HOURGLASS)
+                });
+            } else {
+                // WARN: change hardcoded test api
+                let url = 'http://localhost:5123/api/dev/test/image_manipulation';
+                const options = {timeout: 15000, headers: {'Content-Type': 'application/json'}};
+                options.method = 'POST';
+                options.body = JSON.stringify(obj);
+                options.url = url;
+
+                node.status({fill: "yellow", shape: "dot", text: 'processing ' + node.efx_name})
+
+                request(options, (error, response, body) => {
+                    if (!error && body) {
+                        try {
+                            let bodyjson = JSON.parse(body);
+                            if (typeof bodyjson['error'] === 'string') {
+                                return handleError('image manipulation error', bodyjson['error'], HOURGLASS)
+                            }
+                            if (typeof bodyjson["b64"] === "string") {
+                                msg.topic = 'image manipulation returned';
+                                msg.payload = bodyjson['b64']
+                                node.status({fill: "green", shape: "dot"});
+                                return node.send(msg);
+                            }
+                        } catch (err) {
+                            return handleError('image manipulation json error', "invalid json: " + body, HOURGLASS)
+                        }
+                    }
+                    return handleError('image manipulation failed', error.message, HOURGLASS)
+                });
+            }
+
+
         });
     }
 
@@ -818,7 +847,47 @@ module.exports = function (RED) {
         });
     }
 
+    function UpdateInference(n) {
+        RED.nodes.createNode(this, n);
 
+        const hostConfig = RED.nodes.getNode(n.camlocation || n.host);
+        this.camlocation = n.camlocation;
+        this.host = n.host;
+        if (hostConfig && hostConfig.camlocation && hostConfig.camlocation.indexOf('http') > -1) {
+            this.host = hostConfig.camlocation
+        } else if (n.camlocation && n.camlocation.indexOf('http') > -1) {
+            this.host = n.camlocation
+        } else if (n.host && n.host.indexOf('http') > -1) {
+            this.host = n.host;
+        }
+        this.inferenceobj = n.inferenceobj;
+
+        const node = this;
+
+        node.on('input', function (msg) {
+
+            let url = 'http://172.17.0.1:5001/api/capture/predict/update_inference';
+            const options = {"url": url, method: "PUT", timeout: 15000, headers: {'Content-Type': 'application/json'}};
+            options.body = JSON.stringify({metadata: n.metadata, target: n.inferenceobj})
+            node.status({fill: "blue", text: 'updating  ' + n.inferenceobj})
+
+            request(options, (error, response, body) => {
+                node.debug(body);
+                msg.payload = body;
+
+                if (error) {
+                    msg.topic = 'error updating inference ' + error;
+                    node.status({fill: "red", shape: "dot", text: "error / timeout"});
+                }
+                return node.send(msg);
+            });
+
+        });
+    }
+
+
+
+    RED.nodes.registerType('update-inference', UpdateInference);
     RED.nodes.registerType('pin-state-get', PinStateGet);
     RED.nodes.registerType('pin-state-set', PinStateSet);
     RED.nodes.registerType('motion-detection', MotionDetection);

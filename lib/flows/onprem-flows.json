@@ -810,5 +810,68 @@
                 "2e96c07a39049641"
             ]
         ]
+    },
+    {
+        "id": "2d5a45d791845995",
+        "type": "image-manipulation",
+        "z": "e583048378e103aa",
+        "fvconfig": "28e65808dff70419",
+        "host": "",
+        "efx_value": "{}",
+        "efx_name": "remove_bgr",
+        "x": 470,
+        "y": 960,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ced3c64f4fd7fd5a",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 100,
+        "y": 960,
+        "wires": [
+            [
+                "37a3a86b40365c9e"
+            ]
+        ]
+    },
+    {
+        "id": "37a3a86b40365c9e",
+        "type": "file in",
+        "z": "e583048378e103aa",
+        "name": "example file",
+        "filename": "extra_packages/node-red-contrib-fv-detection-nodes/resources/images/refined_motion_logo.png",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "base64",
+        "allProps": false,
+        "x": 270,
+        "y": 960,
+        "wires": [
+            [
+                "2d5a45d791845995"
+            ]
+        ]
     }
 ]
