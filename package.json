@@ -15,6 +15,11 @@
   "dependencies": {
     "@node-red-contrib-themes/theme-collection": "^3.1.4",
     "fvonprem-nodes": "file:extra_packages/node-red-contrib-fv-detection-nodes",
-    "node-red": "^3.1.0"
+    "node-red": "^3.1.0",
+    "cors": "^2.8.4",
+    "form-data": "^2.3.3",
+    "nodes": "^0.1.0",
+    "request": "^2.88.0",
+    "jimp-compact": "~0.10.1"
   }
 }
