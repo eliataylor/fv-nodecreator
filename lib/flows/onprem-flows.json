@@ -907,7 +907,7 @@
         "fvconfig": "28e65808dff70419",
         "inferenceobj": "aasd",
         "metadata": "asdfasdf",
-        "x": 290,
+        "x": 390,
         "y": 1340,
         "wires": [
             [
@@ -927,7 +927,7 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 500,
+        "x": 660,
         "y": 1340,
         "wires": []
     },
@@ -949,10 +949,10 @@
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 100,
+        "topic": "update inference",
+        "payload": "{\"base64\":\"1234\"}",
+        "payloadType": "json",
+        "x": 130,
         "y": 1340,
         "wires": [
             [
