@@ -856,7 +856,7 @@ module.exports = function (RED) {
 
         node.on('input', function (msg) {
 
-            let url = 'http://172.17.0.1:5001/api/capture/predict/update_inference';
+            let url = 'http://192.168.196.2:5000/api/capture/predict/update_inference';
             const options = {"url": url, method: "PUT", timeout: 15000, headers: {'Content-Type': 'application/json'}};
             options.body = JSON.stringify({metadata: n.metadata, target: n.inferenceobj})
             node.status({fill: "blue", text: 'updating  ' + n.inferenceobj})

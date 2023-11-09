@@ -178,7 +178,7 @@
         "z": "e583048378e103aa",
         "name": "reboot",
         "pauseType": "delay",
-        "timeout": "1",
+        "timeout": "5",
         "timeoutUnits": "seconds",
         "rate": "1",
         "nbRateUnits": "1",
@@ -874,6 +874,66 @@
         "wires": [
             [
                 "2d5a45d791845995"
+            ]
+        ]
+    },
+    {
+        "id": "9e51f9aaaaccfe21",
+        "type": "update-inference",
+        "z": "e583048378e103aa",
+        "fvconfig": "28e65808dff70419",
+        "inferenceobj": "aasd",
+        "metadata": "asdfasdf",
+        "x": 290,
+        "y": 1340,
+        "wires": [
+            [
+                "ac00eb066131d965"
+            ]
+        ]
+    },
+    {
+        "id": "ac00eb066131d965",
+        "type": "debug",
+        "z": "e583048378e103aa",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 1340,
+        "wires": []
+    },
+    {
+        "id": "825f07cf368b3785",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 100,
+        "y": 1340,
+        "wires": [
+            [
+                "9e51f9aaaaccfe21"
             ]
         ]
     }
