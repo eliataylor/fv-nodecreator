@@ -24,5 +24,8 @@ Currently, Image Manipulation and Motion Detect will only work against the dev A
 - in settings.js edit `editorTheme.theme` can be any [theme](https://github.com/node-red-contrib-themes/theme-collection), currently dark, dracula, midnight-red, oled, solarized-dark, solarized-light  
 - `npm start`
 
-#### Notes
+#### To Publish
+ - `cd extra_packages/node-red-contrib-fv-detection-nodes`
+ - `npm login`
+ - `npm publish`
 
