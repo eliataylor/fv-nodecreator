@@ -25,6 +25,7 @@ Currently, Image Manipulation and Motion Detect will only work against the dev A
 - `npm start`
 
 #### To Publish
+ - increment 
  - `cd extra_packages/node-red-contrib-fv-detection-nodes`
  - `npm login`
  - `npm publish`

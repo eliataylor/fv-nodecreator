@@ -1,6 +1,6 @@
 {
     "name": "node-red-contrib-fv-detection-nodes",
-    "version": "1.0.9",
+    "version": "1.1.0",
     "description": "Flexible Vision Detection Nodes",
     "author": "Flexible Vision",
     "license": "MIT",
