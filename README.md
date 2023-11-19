@@ -33,7 +33,11 @@ Currently, Image Manipulation and Motion Detect will only work against the dev A
 - `sudo docker run --name fvonprem_nodes -p 1881:1881 -d visioncell/nodecreator`
 - `sudo docker exec -it fvonprem_nodes /bin/bash`
 
-
+### Install Packages into Global Node-Red installation
+- navigate anywhere you want to checkout this module: ex. `cd ~/Documents` 
+- `git clone git@github.com:eliataylor/fv-nodecreator.git`
+- navigate to your Node-RED Directory: `cd ~/.node-red`
+- `npm install ~/Documents/fv-nodecreator/extra_packages/node-red-contrib-fv-detection-nodes`
 
 ### Theming
 - in settings.js edit `editorTheme.theme` can be any [theme](https://github.com/node-red-contrib-themes/theme-collection), currently dark, dracula, midnight-red, oled, solarized-dark, solarized-light
