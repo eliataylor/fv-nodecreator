@@ -588,6 +588,9 @@ module.exports = function (RED) {
 
                 request(options, (error, response, body) => {
                     if (!error && body) {
+                        if (body.indexOf('404 Not Found') > -1) {
+                            return handleError('Image Manipulation API error', 'API missing endpoint', HOURGLASS)
+                        }
                         try {
                             let bodyjson = JSON.parse(body);
                             if (typeof bodyjson['error'] === 'string') {
@@ -651,13 +654,17 @@ module.exports = function (RED) {
             node.status({fill: "blue", text: n.camId + ' expects > ' + n.threshold})
 
             request(options, (error, response, body) => {
-
-                if (!error) {
+                console.log(url, body);
+                if (!error && body) {
+                    console.log("BODY IS", body);
                     let bodyjson = null, err = 'bad response';
                     try {
                         bodyjson = JSON.parse(body);
                     } catch (e) {
                         err = e.message;
+                        if (body.indexOf('404 Not Found') > -1) {
+                            err = 'API Missing endpoint';
+                        }
                     }
                     if (!bodyjson || typeof bodyjson['b64'] !== 'string') {
                         msg.topic = err;
