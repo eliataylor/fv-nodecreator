@@ -706,8 +706,8 @@
                     'nput-threshold').val();
             },
             oneditprepare: function () {
+                var host = $('#node-input-fvconfig option:selected').text();
                 var camlocation = $('#node-input-camlocation option:selected').text();
-
                 if (camlocation && !camlocation.indexOf('...')) {
                     // get cameras
                     const camController = new CameraController($, {
@@ -725,10 +725,13 @@
                         },
                         {capture: false}
                     );
+                }
 
+                var host = $('#node-input-fvconfig option:selected').text();
+                if (host && !host.indexOf('...')) {
                     // get masks
 
-                    let url = camlocation + '/api/capture/mask/get_masks';
+                    let url = host + '/api/capture/mask/get_masks';
                     if (!this.mask || this.mask == '') {
                         $('#node-input-mask').html('<option value="">Loading masks...</option>');
                     }
