@@ -5,11 +5,11 @@
         <input type="text" id="node-config-input-workstation">
     </div>
     <div class="form-row">
-        <label for="node-input-username"><i class="fa fa-user" aria-hidden="true"></i> Username</label>
+        <label for="node-config-input-username"><i class="fa fa-user" aria-hidden="true"></i> Username</label>
         <input type="text" id="node-config-input-username">
     </div>
     <div class="form-row">
-        <label for="node-input-password"><i class="fa fa-lock" aria-hidden="true"></i> Password</label>
+        <label for="node-config-input-password"><i class="fa fa-lock" aria-hidden="true"></i> Password</label>
         <input type="password" id="node-config-input-password">
     </div>
     <div class="form-row">
@@ -156,7 +156,7 @@
     </div>
     <div class="form-row">
         <label for="node-input-project"><i class="fa connectdevelop" aria-hidden="true"></i> Pins</label>
-        <select type="text" id="node-input-pin" ></select>
+        <select type="text" id="node-input-pin"></select>
     </div>
 </script>
 <!-- get pin state END -->
@@ -169,7 +169,7 @@
     </div>
     <div class="form-row">
         <label for="node-input-project"><i class="fa connectdevelop" aria-hidden="true"></i> Pins</label>
-        <select type="text" id="node-input-pin" >
+        <select type="text" id="node-input-pin">
             <option value="1">GP1</option>
             <option value="2">GP2</option>
             <option value="3">GP3</option>
@@ -541,9 +541,9 @@
         RED.nodes.registerType('server-settings', {
             category: 'config',
             defaults: {
-                workstation: {value: "", required: true},
-                username: {value: "", required: true},
-                password: {value: "", required: true},
+                workstation: {value: "", required: false},
+                username: {value: "", required: false},
+                password: {value: "", required: false},
                 host: {value: "", required: true},
             },
             inputs: 0,
@@ -706,13 +706,12 @@
                     'nput-threshold').val();
             },
             oneditprepare: function () {
-                var host = $('#node-input-fvconfig option:selected').text();
+                var camlocation = $('#node-input-camlocation option:selected').text();
 
-                if (host) {
+                if (camlocation && !camlocation.indexOf('...')) {
                     // get cameras
                     const camController = new CameraController($, {
                         camlocation: this.camlocation,
-                        host: host,
                         camId: this.camId,
                     })
                     camController.startListeners();
@@ -729,7 +728,7 @@
 
                     // get masks
 
-                    let url = host + '/api/capture/mask/get_masks';
+                    let url = camlocation + '/api/capture/mask/get_masks';
                     if (!this.mask || this.mask == '') {
                         $('#node-input-mask').html('<option value="">Loading masks...</option>');
                     }
@@ -760,7 +759,7 @@
                         }
 
                     }).error(function (err) {
-                        $('#node-input-mask').html('<option value="">Error loading masks from '+url+'</option>');
+                        $('#node-input-mask').html('<option value="">Error loading masks from ' + url + '</option>');
                         console.log(err);
                     });
                 }
@@ -806,6 +805,9 @@
 
                 const buildParametersForm = () => {
                     const efx_name = $('#node-input-efx_name').val();
+
+                    if (Object.keys(FILTERS).length === 0) return false; // still loading
+
                     if (typeof FILTERS[efx_name] === 'undefined') {
                         console.error('invalid filter name ' + efx_name, FILTERS);
                         return false;
@@ -834,9 +836,9 @@
                         let initValue = (typeof existing[param] !== 'undefined') ? existing[param] : defaultValue;
                         const isRequired = desc.indexOf('optional') > -1 ? '' : '<span style="color:red">*</span>'
                         formHtml += '<div class="form-row">'
-                        formHtml += '<label for="' + param + '">' + param + isRequired +  '</label>';
+                        formHtml += '<label for="' + param + '">' + param + isRequired + '</label>';
                         formHtml += '<input class="form-control" type="text" id="' + param + '" name="' + param + '" ' +
-                            'placeholder="' + defaultValue + '" value="'+initValue+'">';
+                            'placeholder="' + defaultValue + '" value="' + initValue + '">';
                         formHtml += `<small style="margin-left:100px; display: block" class="form-text text-muted">${desc}</small>`;
                         formHtml += '</div>'
 
@@ -914,7 +916,7 @@
 
 <!-- IMAGE MANIPULATION START -->
 <script type="text/html" data-template-name="image-manipulation">
-    <link rel="stylesheet" hreff="resources/node-red-contrib-fv-detection-nodes/camera-controller.css"/>
+    <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css"/>
     <div class="form-row">
         <label for="node-input-fvconfig"><i class="fa fa-server" aria-hidden="true"></i> FV Server IP</label>
         <select id="node-input-fvconfig"></select>
@@ -970,7 +972,7 @@
     </div>
     <div class="form-row" style="opacity:0.3;">
         <label for="node-input-efx_value"><i class="fa fa-snowflake-o"></i> Effect Value</label>
-        <input type="text" disabled id="node-input-efx_value" >
+        <input type="text" disabled id="node-input-efx_value">
     </div>
     <blockquote class="form-group">
         <form id="cv2form" name="cv2form"></form>
@@ -997,8 +999,6 @@
 </script>
 <!-- UPDATE INFERENCE END -->
 
-<script type="text/javascript" src="resources/node-red-contrib-fv-detection-nodes/camera-controller.js"/>
-
 <script type="text/html" data-template-name="camera-server">
     <div class="form-row">
         <label for="node-config-input-camlocation"><i class="fa fa-link"></i> Host : Port</label>
@@ -1010,16 +1010,22 @@
     <p>Camera Location</p>
 </script>
 
+<script type="text/javascript" src="resources/node-red-contrib-fv-detection-nodes/camera-controller.js"/>
+
+
+
 <script type="text/html" data-template-name="set-camera-property">
     <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css"/>
-    <div class="form-row">
-        <label for="node-input-camlocation"><i class="fa fa-link"></i> Cam Location</label>
-        <select id="node-input-camlocation"></select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-camera"><i class="fa fa-camera"></i> Target Cam</label>
-        <select id="node-input-camera"></select>
-        <button type="button" class="red-ui-button" id="allCamRefreshBtn">Refresh</button>
+    <div id="fvCamForm">
+        <div class="form-row">
+            <label for="node-input-camlocation"><i class="fa fa-link"></i> Cam Location</label>
+            <select id="node-input-camlocation"></select>
+        </div>
+        <div class="form-row">
+            <label for="node-input-camera"><i class="fa fa-camera"></i> Target Cam</label>
+            <select id="node-input-camera"></select>
+            <button type="button" class="red-ui-button" id="allCamRefreshBtn">Refresh</button>
+        </div>
     </div>
     <div class="form-row">
         <label for="node-input-camprop"><i class="fa fa-tag"></i> Cam Property</label>
@@ -1077,8 +1083,10 @@
             defaults: {
                 camlocation: {value: "http://172.17.0.1:5555", required: true}
             },
+            inputs: 0,
+            outputs: 0,
             label: function () {
-                return this.camlocation;
+                return this.camlocation || this.host;
             }
         });
 

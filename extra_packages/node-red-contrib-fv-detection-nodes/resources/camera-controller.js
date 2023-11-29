@@ -140,8 +140,8 @@ class CameraController {
                 }
             }
         }
-        if (this.host === "") {
-            console.log("cannot load cameras with host")
+        if (!this.host || this.host === "") {
+            console.log("cannot load cameras without host")
             return false;
         }
 
