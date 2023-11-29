@@ -908,9 +908,9 @@
         <label for="node-input-threshold"><i class="fa fa-percent"></i> Threshold</label>
         <input type="text" id="node-input-threshold" placeholder="Enter minimum change threshold (%)">
     </div>
-    <div class="form-row">
+    <div class="form-row" style="display: none">
         <label for="node-input-debounce"><i class="fa fa-hourglass-end"></i> Debounce (milliseconds)</label>
-        <input type="text" id="node-input-debounce" placeholder="250 milliseconds">
+        <input type="text" id="node-input-debounce" value="-500" placeholder="250 milliseconds">
     </div>
 </script>
 <!-- MOTION DETECTION END -->
@@ -974,12 +974,18 @@
     </div>
     <div class="form-row" style="opacity:0.3;">
         <label for="node-input-efx_value"><i class="fa fa-snowflake-o"></i> Effect Value</label>
-        <input type="text" disabled id="node-input-efx_value">
+        <input type="text" disabled id="node-input-efx_value" style="display: none">
     </div>
     <blockquote class="form-group">
         <form id="cv2form" name="cv2form"></form>
     </blockquote>
 </script>
+
+
+<script type="text/html" data-help-name="image-manipulation">
+    <p>Image Manipulatation Help text...</p>
+</script>
+
 <!-- IMAGE MANIPULATION END -->
 
 

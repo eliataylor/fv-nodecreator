@@ -621,7 +621,7 @@ module.exports = function (RED) {
         this.camId = n.camId;
         this.mask = n.mask;
         this.threshold = parseInt(n.threshold) || 50;
-        this.debounce = parseInt(n.debounce) || 250;
+        this.debounce = parseInt(n.debounce) || -500;
 
         const node = this;
 
@@ -638,7 +638,7 @@ module.exports = function (RED) {
             this.context().flow.set("last_motion_check", now);
 
             let url = fvconfig.host + '/api/dev/test/detect_motion'
-            const options = {timeout: 15000, headers: {'Content-Type': 'application/json'}};
+            const options = {timeout: -1, headers: {'Content-Type': 'application/json'}};
             options.method = 'POST';
             options.body = JSON.stringify({
                 camId: n.camId,
