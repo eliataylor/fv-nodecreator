@@ -369,7 +369,7 @@ module.exports = function (RED) {
     // VISION NODES
     function CameraLocationNode(n) {
         RED.nodes.createNode(this, n);
-        console.log("CameraLocationNode", n, this);
+        // console.log("CameraLocationNode", n, this);
         this.host = n.camlocation;
         this.camlocation = n.camlocation;
     }

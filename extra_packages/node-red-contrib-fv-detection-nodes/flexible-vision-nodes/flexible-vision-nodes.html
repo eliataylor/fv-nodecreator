@@ -689,9 +689,9 @@
             label: 'Detect Motion',
             defaults: {
                 fvconfig: {type: "server-settings", required: true},
+                mask: {value: false}, // false === unloaded, null === 'no mask', value as ID of mask
                 camlocation: {type: "camera-server", required: true},
                 camId: {value: "", required: true},
-                mask: {value: false}, // false === unloaded, null === 'no mask', value as ID of mask
                 threshold: {value: 85, required: true, validate: RED.validators.number()},
                 debounce: {value: 250, required: false, validate: RED.validators.number()}
             },
@@ -706,9 +706,8 @@
                     'nput-threshold').val();
             },
             oneditprepare: function () {
-                var host = $('#node-input-fvconfig option:selected').text();
                 var camlocation = $('#node-input-camlocation option:selected').text();
-                if (camlocation && !camlocation.indexOf('...')) {
+                if (camlocation) {
                     // get cameras
                     const camController = new CameraController($, {
                         camlocation: this.camlocation,
@@ -728,7 +727,7 @@
                 }
 
                 var host = $('#node-input-fvconfig option:selected').text();
-                if (host && !host.indexOf('...')) {
+                if (host) {
                     // get masks
 
                     let url = host + '/api/capture/mask/get_masks';
@@ -887,6 +886,13 @@
         <label for="node-input-fvconfig"><i class="fa fa-server" aria-hidden="true"></i> FV Server IP</label>
         <select id="node-input-fvconfig"></select>
     </div>
+    <div class="form-row">
+        <label for="node-input-mask"><i class="fa fa-bullseye"></i> Mask</label>
+        <select id="node-input-mask">
+            <option value="">No mask</option>
+        </select>
+        <span style="background-color:#ccc; height:40px"><img style="display: none; max-height:40px" id="maskpreview"/></span>
+    </div>
     <div id="fvCamForm">
         <div class="form-row">
             <label for="node-input-camlocation"><i class="fa fa-link"></i> Cam Location</label>
@@ -897,13 +903,6 @@
             <select id="node-input-camera"></select>
             <button type="button" class="red-ui-button" id="allCamRefreshBtn">Refresh</button>
         </div>
-    </div>
-    <div class="form-row">
-        <label for="node-input-mask"><i class="fa fa-bullseye"></i> Mask</label>
-        <select id="node-input-mask">
-            <option value="">No mask</option>
-        </select>
-        <span style="background-color:#ccc; height:40px"><img style="display: none; max-height:40px" id="maskpreview"/></span>
     </div>
     <div class="form-row">
         <label for="node-input-threshold"><i class="fa fa-percent"></i> Threshold</label>
