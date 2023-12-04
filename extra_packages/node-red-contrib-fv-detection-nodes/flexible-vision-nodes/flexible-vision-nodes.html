@@ -14,12 +14,12 @@
     </div>
     <div class="form-row">
         <label for="node-config-input-host"><i class="fa fa-server" aria-hidden="true"></i> FV Server IP</label>
-        <input type="text" id="node-config-input-host" placeholder="123.45.6.7">
+        <input type="text" id="node-config-input-host" placeholder="192.168.196.2">
     </div>
 </script>
 
 <script type="text/html" data-help-name="server-settings">
-    <p>Flexible Vision Server Hostname</p>
+    <p>Flexible Vision Server. Only IP Address is required.</p>
 </script>
 
 <!-- fv upload inputs -->
@@ -182,7 +182,7 @@
     </div>
     <div class="form-row">
         <label for="node-input-state"><i class="fa fa-toggle-on" aria-hidden="true"></i> Enable</label>
-        <input type="checkbox" id="node-input-state">
+        <input type="checkbox" id="node-input-state"/>
     </div>
 </script>
 <!-- set pin state END -->
@@ -236,13 +236,223 @@
 </script>
 
 
+<!-- VISION NODES -->
+
+
+<!-- MOTION DETECTION START -->
+<script type="text/html" data-template-name="motion-detection">
+    <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css"/>
+    <div id="fvCamForm">
+        <div class="form-row">
+            <label for="node-input-fvconfig"><i class="fa fa-server" aria-hidden="true"></i> FV Server IP</label>
+            <select id="node-input-fvconfig"></select>
+        </div>
+        <div class="form-row">
+            <label for="node-input-camera"><i class="fa fa-camera"></i> Target Cam</label>
+            <select id="node-input-camera"></select>
+            <button type="button" class="red-ui-button" id="allCamRefreshBtn">Refresh</button>
+        </div>
+    </div>
+    <div class="form-row">
+        <label for="node-input-mask"><i class="fa fa-bullseye"></i> Mask</label>
+        <select id="node-input-mask">
+            <option value="">No mask</option>
+        </select>
+        <span style="background-color:#ccc; height:40px"><img style="display: none; max-height:40px" id="maskpreview"/></span>
+    </div>
+    <div class="form-row">
+        <label for="node-input-threshold"><i class="fa fa-percent"></i> Threshold</label>
+        <input type="text" id="node-input-threshold" placeholder="Enter minimum change threshold (%)">
+    </div>
+    <div class="form-row" style="display: none">
+        <label for="node-input-debounce"><i class="fa fa-hourglass-end"></i> Debounce (milliseconds)</label>
+        <input type="text" id="node-input-debounce" value="-500" placeholder="250 milliseconds">
+    </div>
+    <script type="text/javascript" src="resources/node-red-contrib-fv-detection-nodes/camera-controller.js"/>
+</script>
+<!-- MOTION DETECTION END -->
+
+
+<!-- IMAGE MANIPULATION START -->
+<script type="text/html" data-template-name="image-manipulation">
+    <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css"/>
+    <div class="form-row">
+        <label for="node-input-fvconfig"><i class="fa fa-server" aria-hidden="true"></i> FV Server IP</label>
+        <select id="node-input-fvconfig"></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-efx_name"><i class="fa fa-eercast"></i> Effect Type</label>
+        <select id="node-input-efx_name">
+            <option value="remove_bgr">Remove Background</option>
+            <option value="cvtColor">Convert Color Scale</option>
+            <optgroup label="Blur Filters">
+                <option value="GaussianBlur">Gaussian Blur</option>
+                <option value="medianBlur">Median Blur</option>
+                <option value="bilateralFilter">Bilateral Filter</option>
+            </optgroup>
+            <optgroup label="Edge Detection Filters">
+                <option value="Canny">Canny Edge Detection</option>
+                <option value="Sobel">Sobel Filter</option>
+                <option value="Laplacian">Laplacian Filter</option>
+            </optgroup>
+            <option value="adaptiveThreshold">Adaptive Thresholding</option>
+            <option value="fastNlMeansDenoising">Fast Non-Local Means Denoising</option>
+            <optgroup label="Morphological Filters">
+                <option value="erode">Erosion</option>
+                <option value="dilate">Dilation</option>
+                <option value="morphologyEx">Morphology Operations</option>
+            </optgroup>
+            <optgroup label="Histogram Equalization">
+                <option value="equalizeHist">Equalize Histogram</option>
+            </optgroup>
+            <optgroup label="Custom Kernel Convolution">
+                <option value="filter2D">Custom Kernel Convolution</option>
+            </optgroup>
+            <optgroup label="Resize and Scaling">
+                <option value="resize">Resize and Scaling</option>
+            </optgroup>
+            <optgroup label="Rotation and Affine Transformations">
+                <option value="getRotationMatrix2D">Get Rotation Matrix</option>
+                <option value="warpAffine">Warp Affine</option>
+            </optgroup>
+            <optgroup label="Image Warping">
+                <option value="warpPerspective">Image Warping</option>
+            </optgroup>
+            <optgroup label="Image Blending">
+                <option value="addWeighted">Image Blending</option>
+            </optgroup>
+        </select>
+        <blockquote style="display:none;">
+            <div style="font-weight:700" id="cv2description"></div>
+            <code>
+                <div id="cv2params"></div>
+            </code>
+        </blockquote>
+    </div>
+    <div class="form-row" style="opacity:0.3;">
+        <label for="node-input-efx_value"><i class="fa fa-snowflake-o"></i> Effect Value</label>
+        <input type="text" disabled id="node-input-efx_value" style="display: none">
+    </div>
+    <blockquote class="form-group">
+        <form id="cv2form" name="cv2form"></form>
+    </blockquote>
+</script>
+
+
+<script type="text/html" data-help-name="image-manipulation">
+    <p>Image Manipulation Help text...</p>
+</script>
+
+<!-- IMAGE MANIPULATION END -->
+
+
+<!-- UPDATE INFERENCE START -->
+<script type="text/html" data-template-name="update-inference">
+    <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css"/>
+    <div class="form-row">
+        <label for="node-input-fvconfig"><i class="fa fa-server" aria-hidden="true"></i> FV Server IP</label>
+        <select id="node-input-fvconfig"></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-inferenceobj"><i class="fa fa-percent"></i> Target Inference Object</label>
+        <input type="text" id="node-input-inferenceobj" placeholder="Target Inference Object">
+    </div>
+    <div class="form-row">
+        <label for="node-input-metadata"><i class="fa fa-hourglass-end"></i> Metadata to Add</label>
+        <input type="text" id="node-input-metadata" placeholder="json object">
+    </div>
+</script>
+<!-- UPDATE INFERENCE END -->
+
+<script type="text/html" data-template-name="set-camera-property">
+    <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css"/>
+    <div id="fvCamForm">
+        <div class="form-row">
+            <label for="node-input-fvconfig"><i class="fa fa-server" aria-hidden="true"></i> FV Server IP</label>
+            <select id="node-input-fvconfig"></select>
+        </div>
+        <div class="form-row">
+            <label for="node-input-camera"><i class="fa fa-camera"></i> Target Cam</label>
+            <select id="node-input-camera"></select>
+            <button type="button" class="red-ui-button" id="allCamRefreshBtn">Refresh</button>
+        </div>
+    </div>
+    <div class="form-row">
+        <label for="node-input-camprop"><i class="fa fa-tag"></i> Cam Property</label>
+        <select id="node-input-camprop"></select>
+    </div>
+    <div class="form-row" id="fvPropValRow">
+        <label for="node-input-propval"><i class="fa fa-outdent"></i> Property Value</label>
+        <select id="node-input-propval"></select>
+    </div>
+    <div id="camPropertyDesc"></div>
+    </div>
+    <script type="text/javascript" src="resources/node-red-contrib-fv-detection-nodes/camprop-controller.js"/>
+</script>
+
+<script type="text/html" data-help-name="set-camera-property">
+    <p>Camera Property Options</p>
+    <div id="camPropertyHelp"></div>
+</script>
+
+<script type="text/html" data-template-name="release-camera">
+    <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css"/>
+    <div id="fvCamForm">
+        <div class="form-row">
+            <label for="node-input-fvconfig"><i class="fa fa-server" aria-hidden="true"></i> FV Server IP</label>
+            <select id="node-input-fvconfig"></select>
+        </div>
+        <div class="form-row">
+            <label for="node-input-camera"><i class="fa fa-camera"></i> Target Cam</label>
+            <select id="node-input-camera"></select>
+            <button type="button" class="red-ui-button" id="allCamRefreshBtn">Refresh</button>
+        </div>
+    </div>
+    <script type="text/javascript" src="resources/node-red-contrib-fv-detection-nodes/camera-controller.js"/>
+</script>
+
+<script type="text/html" data-template-name="open-camera">
+    <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css"/>
+    <div id="fvCamForm">
+        <div class="form-row">
+            <label for="node-input-fvconfig"><i class="fa fa-server" aria-hidden="true"></i> FV Server IP</label>
+            <select id="node-input-fvconfig"></select>
+        </div>
+        <div class="form-row">
+            <label for="node-input-camera"><i class="fa fa-camera"></i> Target Cam</label>
+            <select id="node-input-camera"></select>
+            <button type="button" class="red-ui-button" id="allCamRefreshBtn">Refresh</button>
+        </div>
+    </div>
+    <script type="text/javascript" src="resources/node-red-contrib-fv-detection-nodes/camera-controller.js"/>
+</script>
+
+
 <script type="text/javascript">
+
     (function () {
         const FV_DOMAIN = 'v1.cloud.flexiblevision.com';
         let VERSION = null,
             MODEL = 'LOADING MODELS...',
             MASK = null,
             CAMERA = null
+
+        const ipToUri = function (ip, basepath) {
+            if (basepath.indexOf('/detect_motion') > -1 || basepath.indexOf('/image_manipulation') > -1) {
+                // return "http://" + ip + ":5123" + basepath;
+                return "http://127.0.0.1:5123" + basepath;
+            } else if (basepath.indexOf('/api/visiontools/') === 0) {
+                return "http://" + ip + ":5021" + basepath;
+            } else if (basepath.indexOf('/api/vision/') === 0) {
+                return "http://" + ip + ":5555" + basepath;
+            } else if (basepath.indexOf('/api/capture/') === 0) {
+                return "http://" + ip + ":5000" + basepath;
+            } else if (basepath.indexOf('/set_pin') === 0) {
+                return "http://" + ip + ":5001/set_pin"
+            } else {
+                return "http://" + ip + ":5555" // base vision host returned for camera-controller.js
+            }
+        }
 
         const main = function (model, version, preset) {
             VERSION = version;
@@ -279,14 +489,6 @@
             // }
         }
 
-        // const initCams = function(host) {
-        //     if (host && host[0] != 'A'){
-        //         PopulateCameras(host);
-        //     }else{
-        //         $('#node-input-model').html('<option>Please configure server IP</options>');
-        //     }
-        // }
-
         // $(document).on('click change', '.model-select', function() {
         //     var host  = $('#node-input-fvconfig option:selected').text();
         //     var model = $('#node-input-model option:selected').text();
@@ -300,21 +502,10 @@
         //     }
         // });
 
-        $(document).on('click change', '.preset-select', function () {
-            var host = $('#node-input-fvconfig option:selected').text();
+        $(document).on('click change', '.preset-select', function () { // WARN: this probably doesn't work and needs to be inside oneditprepare
             var preset = $('#node-input-preset option:selected').text();
             PRESET = preset;
         });
-
-        // $(document).on('change', '.version-select', function() {
-        //     var host = $('#node-input-fvconfig option:selected').text();
-        //     if (host && host[0] != 'A'){
-        //         $('.camera-select').show();
-        //         PopulateCameras(host);
-        //     }else{
-        //         $('#node-input-camera').html('<option>!Could not load cameras.</options>');
-        //     }
-        // });
 
         const populatePresets = function (host) {
             if (host && host[0] == 'A') {
@@ -322,7 +513,7 @@
                 return false;
             }
 
-            var url = 'http://' + host + ':5000/api/capture/io/';
+            var url = ipToUri(host, '/api/capture/io/');
             $('#node-input-preset').html('<option>' + PRESET + '</options>');
 
             $.ajax({
@@ -383,46 +574,6 @@
         //       console.log(err);
         //     });
         // }
-
-        // const PopulateCameras = function(host) {
-
-        //   if (host && host[0] == 'A') {
-        //     return false;
-        //   }
-
-        //   var url = 'http://'+host+':5000/api/capture/camera/';
-        //   $('#node-input-camera').html('<option>Loading cameras...</options>');
-
-        //   $.ajax({
-        //     url: url,
-        //     dataType: "json"
-        //   }).done(function (data) {
-
-        //     $('#node-input-camera').html('');
-        //     for (var d=0; d < data.length; d++) {
-
-        //         var option = document.createElement("option");
-        //         option.text = data[d].name;
-        //         option.value = data[d].index+"#"+data[d].uid;
-        //         if (CAMERA == data[d].index+"#"+data[d].uid) {
-        //             option.selected = true
-        //         }
-        //         var select = document.getElementById("node-input-camera");
-        //         select.appendChild(option);
-
-        //         // var selected = data[d].index+"#"+data[d].uid == CAMERA;
-        //         // $('<option/>',{
-        //         //     'value': data[d].index+"#"+data[d].uid,
-        //         //     'text': data[d].name,
-        //         //     'selected': selected
-        //         // }).appendTo('#node-input-camera');
-        //     }
-        //   }).error(function(err){
-        //     $('#node-input-camera').html('Error loading cameras');
-        //     console.log(err);
-        //   });
-        // }
-
 
         // cloud node functions----------------------------------------------
 
@@ -551,6 +702,9 @@
             label: function () {
                 return this.host;
             },
+            oneditprepare: function() {
+              // possibly just updated localStorage list on change here and use results globally?
+            },
             oneditsave: function () {
                 main();
             }
@@ -637,8 +791,7 @@
                 var host = $('#node-input-fvconfig option:selected').text();
                 if (host) {
                     let url = 'http://192.168.196.2:5000/api/capture/io/cur_pins_state';
-
-                    $('#node-input-pin').html('');
+                    $('#node-input-pin').html("");
 
                     $.ajax({
                         url: url,
@@ -690,7 +843,6 @@
             defaults: {
                 fvconfig: {type: "server-settings", required: true},
                 mask: {value: false}, // false === unloaded, null === 'no mask', value as ID of mask
-                camlocation: {type: "camera-server", required: true},
                 camId: {value: "", required: true},
                 threshold: {value: 85, required: true, validate: RED.validators.number()},
                 debounce: {value: 250, required: false, validate: RED.validators.number()}
@@ -706,31 +858,13 @@
                     'nput-threshold').val();
             },
             oneditprepare: function () {
-                var camlocation = $('#node-input-camlocation option:selected').text();
-                if (camlocation) {
-                    // get cameras
-                    const camController = new CameraController($, {
-                        camlocation: this.camlocation,
-                        camId: this.camId,
-                    })
-                    camController.startListeners();
-                    window.camController = camController; // debugging
+                function getMasks() {
+                    var host = $('#node-input-fvconfig option:selected').text();
+                    if (!host || host.indexOf('...') > -1) {
+                        return; // not ready
+                    }
 
-                    document.getElementById("fvCamForm").addEventListener('updateToolContext',
-                        (e) => {
-                            this.camlocation = e.detail.host
-                            this.camId = e.detail.camId
-                            console.log('ON UPDATE ' + e.detail.camId);
-                        },
-                        {capture: false}
-                    );
-                }
-
-                var host = $('#node-input-fvconfig option:selected').text();
-                if (host) {
-                    // get masks
-
-                    let url = host + '/api/capture/mask/get_masks';
+                    let url = ipToUri(host, '/api/capture/mask/get_masks');
                     if (!this.mask || this.mask == '') {
                         $('#node-input-mask').html('<option value="">Loading masks...</option>');
                     }
@@ -766,9 +900,25 @@
                     });
                 }
 
+                // get cameras
+                const camController = new CameraController($, {
+                    ip: this.fvconfig.host,
+                    camId: this.camId,
+                    ipToUri: ipToUri
+                })
+                camController.startListeners();
+                document.getElementById("fvCamForm").addEventListener('updateToolContext',
+                    (e) => {
+                        this.camId = e.detail.camId
+                        console.log("updateToolContext", e.detail);
+                        getMasks();
+                    },
+                    {capture: false}
+                );
+
+                getMasks();
             }
         });
-
 
         RED.nodes.registerType('image-manipulation', {
             category: 'Flexible Vision',
@@ -872,238 +1022,12 @@
             }
         });
 
-    })();
-</script>
-
-
-<!-- VISION NODES -->
-
-
-<!-- MOTION DETECTION START -->
-<script type="text/html" data-template-name="motion-detection">
-    <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css"/>
-    <div class="form-row">
-        <label for="node-input-fvconfig"><i class="fa fa-server" aria-hidden="true"></i> FV Server IP</label>
-        <select id="node-input-fvconfig"></select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-mask"><i class="fa fa-bullseye"></i> Mask</label>
-        <select id="node-input-mask">
-            <option value="">No mask</option>
-        </select>
-        <span style="background-color:#ccc; height:40px"><img style="display: none; max-height:40px" id="maskpreview"/></span>
-    </div>
-    <div id="fvCamForm">
-        <div class="form-row">
-            <label for="node-input-camlocation"><i class="fa fa-link"></i> Cam Location</label>
-            <input type="url" id="node-input-camlocation">
-        </div>
-        <div class="form-row">
-            <label for="node-input-camera"><i class="fa fa-camera"></i> Target Cam</label>
-            <select id="node-input-camera"></select>
-            <button type="button" class="red-ui-button" id="allCamRefreshBtn">Refresh</button>
-        </div>
-    </div>
-    <div class="form-row">
-        <label for="node-input-threshold"><i class="fa fa-percent"></i> Threshold</label>
-        <input type="text" id="node-input-threshold" placeholder="Enter minimum change threshold (%)">
-    </div>
-    <div class="form-row" style="display: none">
-        <label for="node-input-debounce"><i class="fa fa-hourglass-end"></i> Debounce (milliseconds)</label>
-        <input type="text" id="node-input-debounce" value="-500" placeholder="250 milliseconds">
-    </div>
-</script>
-<!-- MOTION DETECTION END -->
-
-
-<!-- IMAGE MANIPULATION START -->
-<script type="text/html" data-template-name="image-manipulation">
-    <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css"/>
-    <div class="form-row">
-        <label for="node-input-fvconfig"><i class="fa fa-server" aria-hidden="true"></i> FV Server IP</label>
-        <select id="node-input-fvconfig"></select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-efx_name"><i class="fa fa-eercast"></i> Effect Type</label>
-        <select id="node-input-efx_name">
-            <option value="remove_bgr">Remove Background</option>
-            <option value="cvtColor">Convert Color Scale</option>
-            <optgroup label="Blur Filters">
-                <option value="GaussianBlur">Gaussian Blur</option>
-                <option value="medianBlur">Median Blur</option>
-                <option value="bilateralFilter">Bilateral Filter</option>
-            </optgroup>
-            <optgroup label="Edge Detection Filters">
-                <option value="Canny">Canny Edge Detection</option>
-                <option value="Sobel">Sobel Filter</option>
-                <option value="Laplacian">Laplacian Filter</option>
-            </optgroup>
-            <option value="adaptiveThreshold">Adaptive Thresholding</option>
-            <option value="fastNlMeansDenoising">Fast Non-Local Means Denoising</option>
-            <optgroup label="Morphological Filters">
-                <option value="erode">Erosion</option>
-                <option value="dilate">Dilation</option>
-                <option value="morphologyEx">Morphology Operations</option>
-            </optgroup>
-            <optgroup label="Histogram Equalization">
-                <option value="equalizeHist">Equalize Histogram</option>
-            </optgroup>
-            <optgroup label="Custom Kernel Convolution">
-                <option value="filter2D">Custom Kernel Convolution</option>
-            </optgroup>
-            <optgroup label="Resize and Scaling">
-                <option value="resize">Resize and Scaling</option>
-            </optgroup>
-            <optgroup label="Rotation and Affine Transformations">
-                <option value="getRotationMatrix2D">Get Rotation Matrix</option>
-                <option value="warpAffine">Warp Affine</option>
-            </optgroup>
-            <optgroup label="Image Warping">
-                <option value="warpPerspective">Image Warping</option>
-            </optgroup>
-            <optgroup label="Image Blending">
-                <option value="addWeighted">Image Blending</option>
-            </optgroup>
-        </select>
-        <blockquote style="display:none;">
-            <div style="font-weight:700" id="cv2description"></div>
-            <code>
-                <dl id="cv2params"></dl>
-            </code>
-        </blockquote>
-    </div>
-    <div class="form-row" style="opacity:0.3;">
-        <label for="node-input-efx_value"><i class="fa fa-snowflake-o"></i> Effect Value</label>
-        <input type="text" disabled id="node-input-efx_value" style="display: none">
-    </div>
-    <blockquote class="form-group">
-        <form id="cv2form" name="cv2form"></form>
-    </blockquote>
-</script>
-
-
-<script type="text/html" data-help-name="image-manipulation">
-    <p>Image Manipulatation Help text...</p>
-</script>
-
-<!-- IMAGE MANIPULATION END -->
-
-
-<!-- UPDATE INFERENCE START -->
-<script type="text/html" data-template-name="update-inference">
-    <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css"/>
-    <div class="form-row">
-        <label for="node-input-fvconfig"><i class="fa fa-server" aria-hidden="true"></i> FV Server IP</label>
-        <select id="node-input-fvconfig"></select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-inferenceobj"><i class="fa fa-percent"></i> Target Inference Object</label>
-        <input type="text" id="node-input-inferenceobj" placeholder="Target Inference Object">
-    </div>
-    <div class="form-row">
-        <label for="node-input-metadata"><i class="fa fa-hourglass-end"></i> Metadata to Add</label>
-        <input type="text" id="node-input-metadata" placeholder="json object">
-    </div>
-</script>
-<!-- UPDATE INFERENCE END -->
-
-<script type="text/html" data-template-name="camera-server">
-    <div class="form-row">
-        <label for="node-config-input-camlocation"><i class="fa fa-link"></i> Host : Port</label>
-        <input type="url" id="node-config-input-camlocation" placeholder="http://locahost:8080">
-    </div>
-</script>
-
-<script type="text/html" data-help-name="camera-server">
-    <p>Camera Location</p>
-</script>
-
-<script type="text/javascript" src="resources/node-red-contrib-fv-detection-nodes/camera-controller.js"/>
-
-
-
-<script type="text/html" data-template-name="set-camera-property">
-    <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css"/>
-    <div id="fvCamForm">
-        <div class="form-row">
-            <label for="node-input-camlocation"><i class="fa fa-link"></i> Cam Location</label>
-            <select id="node-input-camlocation"></select>
-        </div>
-        <div class="form-row">
-            <label for="node-input-camera"><i class="fa fa-camera"></i> Target Cam</label>
-            <select id="node-input-camera"></select>
-            <button type="button" class="red-ui-button" id="allCamRefreshBtn">Refresh</button>
-        </div>
-    </div>
-    <div class="form-row">
-        <label for="node-input-camprop"><i class="fa fa-tag"></i> Cam Property</label>
-        <select id="node-input-camprop"></select>
-    </div>
-    <div class="form-row" id="fvPropValRow">
-        <label for="node-input-propval"><i class="fa fa-outdent"></i> Property Value</label>
-        <select id="node-input-propval"></select>
-    </div>
-    <div id="camPropertyDesc"></div>
-    </div>
-</script>
-
-<script type="text/html" data-help-name="set-camera-property">
-    <p>Camera Property Options</p>
-    <div id="camPropertyHelp"></div>
-</script>
-
-<script type="text/html" data-template-name="release-camera">
-    <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css"/>
-    <div id="fvCamForm">
-        <div class="form-row">
-            <label for="node-input-camlocation"><i class="fa fa-link"></i> Cam Location</label>
-            <select id="node-input-camlocation"></select>
-        </div>
-        <div class="form-row">
-            <label for="node-input-camera"><i class="fa fa-camera"></i> Target Cam</label>
-            <select id="node-input-camera"></select>
-            <button type="button" class="red-ui-button" id="allCamRefreshBtn">Refresh</button>
-        </div>
-    </div>
-</script>
-
-<script type="text/html" data-template-name="open-camera">
-    <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css"/>
-    <div id="fvCamForm">
-        <div class="form-row">
-            <label for="node-input-camlocation"><i class="fa fa-link"></i> Cam Location</label>
-            <select id="node-input-camlocation"></select>
-        </div>
-        <div class="form-row">
-            <label for="node-input-camera"><i class="fa fa-camera"></i> Target Cam</label>
-            <select id="node-input-camera"></select>
-            <button type="button" class="red-ui-button" id="allCamRefreshBtn">Refresh</button>
-        </div>
-    </div>
-</script>
-
-<script type="text/javascript">
-    (function () {
-
-        RED.nodes.registerType('camera-server', {
-            category: 'config',
-            paletteLabel: 'Camera Server',
-            defaults: {
-                camlocation: {value: "http://172.17.0.1:5555", required: true}
-            },
-            inputs: 0,
-            outputs: 0,
-            label: function () {
-                return this.camlocation || this.host;
-            }
-        });
-
         RED.nodes.registerType('set-camera-property', {
             category: 'Flexible Vision',
             paletteLabel: 'Configure Camera',
             color: '#42A5F5',
             defaults: {
-                camlocation: {type: "camera-server", required: true},
+                fvconfig: {type: "server-settings", required: true},
                 camId: {value: "", required: true},
                 camProp: {value: "", required: true},
                 propVal: {value: "", required: true},
@@ -1125,25 +1049,22 @@
                 return parts.join(' - ');
             },
             oneditprepare: function () {
-                const camController = new CameraController($, {
-                    camlocation: this.camlocation,
-                    host: this.host,
+                const camController = new CamPropController($, {
+                    ip: this.fvconfig.host,
                     camId: this.camId,
                     camProp: this.camProp,
                     propVal: this.propVal,
                     access_mode: this.access_mode,
                     node_type: this.node_type,
                     camProperty: this.camProperty,
+                    ipToUri: ipToUri
                 })
                 camController.startListeners();
-                window.camController = camController;  // debugging
+                window.camController = camController;  // expose to chrome dev tools
 
                 document.getElementById("fvCamForm").addEventListener('updateToolContext',
-//                    (e) => this.setFVContext(e),
                     (e) => {
                         console.log("updateToolContext", e.detail);
-                        this.camlocation = e.detail.camlocation
-                        this.host = e.detail.host
                         this.camId = e.detail.camId
                         this.camProp = e.detail.camProp
                         this.propVal = e.detail.propVal
@@ -1157,13 +1078,12 @@
             }
         });
 
-
         RED.nodes.registerType('release-camera', {
             category: 'Flexible Vision',
             paletteLabel: 'Release Camera',
             color: '#F44336',
             defaults: {
-                camlocation: {type: "camera-server", required: true},
+                fvconfig: {type: "server-settings", required: true},
                 camId: {value: "", required: true}
             },
             inputs: 1,
@@ -1178,30 +1098,27 @@
             },
             oneditprepare: function () {
                 const camController = new CameraController($, {
-                    camlocation: this.camlocation,
-                    camId: this.camId
+                    ip: this.fvconfig.host,
+                    camId: this.camId,
+                    ipToUri: ipToUri
                 })
                 camController.startListeners();
-                window.camController = camController; // debugging
-
                 document.getElementById("fvCamForm").addEventListener('updateToolContext',
                     (e) => {
-                        console.log("updateCamReleaseContext", e.detail);
-                        this.camlocation = e.detail.host
                         this.camId = e.detail.camId
+                        console.log("updateToolContext", e.detail);
                     },
                     {capture: false}
                 );
             }
         });
 
-
         RED.nodes.registerType('open-camera', {
             category: 'Flexible Vision',
             paletteLabel: 'Open Camera',
             color: '#43A047',
             defaults: {
-                camlocation: {type: "camera-server", required: true},
+                fvconfig: {type: "server-settings", required: true},
                 camId: {value: "", required: true}
             },
             inputs: 1,
@@ -1216,16 +1133,16 @@
             },
             oneditprepare: function () {
                 const camController = new CameraController($, {
-                    camlocation: this.camlocation,
-                    camId: this.camId
+                    ip: this.fvconfig.host,
+                    camId: this.camId,
+                    ipToUri: ipToUri
                 })
                 camController.startListeners();
-                window.camController = camController; // debugging
-
                 document.getElementById("fvCamForm").addEventListener('updateToolContext',
                     (e) => {
-                        this.camlocation = e.detail.host
                         this.camId = e.detail.camId
+                        console.log("updateToolContext", e.detail);
+                        getMasks();
                     },
                     {capture: false}
                 );
@@ -1248,3 +1165,5 @@
 
     })();
 </script>
+
+
