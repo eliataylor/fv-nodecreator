@@ -28,8 +28,8 @@
         "type": "motion-detection",
         "z": "e583048378e103aa",
         "fvconfig": "79dd73f42e833b44",
-        "mask": "9a2a06a0-6b42-4e1b-9269-e73c4000b026",
-        "camId": "233630185059636",
+        "mask": "",
+        "camId": "233630185059836",
         "threshold": "85",
         "debounce": "253",
         "x": 330,
@@ -980,6 +980,72 @@
         "statusType": "auto",
         "x": 740,
         "y": 20,
+        "wires": []
+    },
+    {
+        "id": "6657807230b2ec93",
+        "type": "set-camera-property",
+        "z": "e583048378e103aa",
+        "fvconfig": "79dd73f42e833b44",
+        "camId": "",
+        "camProp": "",
+        "propVal": "",
+        "host": "",
+        "access_mode": "",
+        "node_type": "",
+        "camProperty": {},
+        "lastUpdated": 0,
+        "x": 370,
+        "y": 1480,
+        "wires": [
+            [
+                "f0facb9dabaebcfe"
+            ]
+        ]
+    },
+    {
+        "id": "0bb4f3aede15b7e4",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 100,
+        "y": 1480,
+        "wires": [
+            [
+                "6657807230b2ec93"
+            ]
+        ]
+    },
+    {
+        "id": "f0facb9dabaebcfe",
+        "type": "debug",
+        "z": "e583048378e103aa",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 1480,
         "wires": []
     }
 ]

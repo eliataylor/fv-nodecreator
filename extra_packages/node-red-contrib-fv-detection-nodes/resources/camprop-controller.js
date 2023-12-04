@@ -322,7 +322,7 @@ class CamPropController {
             propVal: this.propVal
         };
         let check = this.$(this.camServerSelector + ' option:selected').text()
-        if (check.length > 0) {
+        if (check && check.length > 0) {
             if (this.isValidIP(check)) {
                 defaults.ip = check;
                 this.ip = check;
@@ -340,11 +340,11 @@ class CamPropController {
         }
 
         check = this.$(this.camPropSelector + ' option:selected')
-        if (check.length > 0 && check.attr('data-parent')) {
+        if (check && check.length > 0 && check.attr('data-parent')) {
             this.setProperty(check.attr('data-parent'), check.attr('data-label'));
             defaults.camProperty = this.camProperty;
             defaults.camProp = this.camProp;
-        } else if (defaults.camProp.length > 0) {
+        } else if (defaults.camProp && defaults.camProp.length > 0) {
             if (this.camSettings) {
                 outer: for(let j in this.camSettings) {
                     for(let i in this.camSettings[j]) {

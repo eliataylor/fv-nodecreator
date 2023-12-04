@@ -376,17 +376,16 @@
             <select id="node-input-camera"></select>
             <button type="button" class="red-ui-button" id="allCamRefreshBtn">Refresh</button>
         </div>
-    </div>
-    <div class="form-row">
-        <label for="node-input-camprop"><i class="fa fa-tag"></i> Cam Property</label>
-        <select id="node-input-camprop"></select>
-    </div>
-    <div class="form-row" id="fvPropValRow">
-        <label for="node-input-propval"><i class="fa fa-outdent"></i> Property Value</label>
-        <select id="node-input-propval"></select>
+        <div class="form-row">
+            <label for="node-input-camprop"><i class="fa fa-tag"></i> Cam Property</label>
+            <select id="node-input-camprop"></select>
+        </div>
+        <div class="form-row" id="fvPropValRow">
+            <label for="node-input-propval"><i class="fa fa-outdent"></i> Property Value</label>
+            <select id="node-input-propval"></select>
+        </div>
     </div>
     <div id="camPropertyDesc"></div>
-    </div>
     <script type="text/javascript" src="resources/node-red-contrib-fv-detection-nodes/camprop-controller.js"/>
 </script>
 
@@ -702,8 +701,8 @@
             label: function () {
                 return this.host;
             },
-            oneditprepare: function() {
-              // possibly just updated localStorage list on change here and use results globally?
+            oneditprepare: function () {
+                // possibly just updated localStorage list on change here and use results globally?
             },
             oneditsave: function () {
                 main();
