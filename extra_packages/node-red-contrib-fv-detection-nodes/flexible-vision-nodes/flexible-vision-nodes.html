@@ -340,7 +340,7 @@
 </script>
 
 
-<script type="text/html" data-help-name="image-manipulation">
+<script type="text/html" data-help-name="image-manipulation" id="imageManipulationHelp">
     <p>Image Manipulation Help text...</p>
 </script>
 
@@ -968,7 +968,6 @@
                     const existing = this.efx_value ? JSON.parse(this.efx_value) : {};
                     console.log('render filter: ' + efx_name, existing);
 
-
                     let formHtml = '';
 
                     document.getElementById("cv2description").innerText = FILTERS[efx_name]['description'];
@@ -1008,11 +1007,24 @@
                 fetch('resources/node-red-contrib-fv-detection-nodes/api/opencv-filters.json', {
                     headers: {'Content-Type': 'application/json'}
                 })
-                    .then(response => response.json())
-                    .then(json => {
-                        FILTERS = json
-                        buildParametersForm();
-                        console.log('filters: ', FILTERS)
+                .then(response => response.json())
+                .then(json => {
+                    FILTERS = json
+                    buildParametersForm();
+                    console.log('filters: ', FILTERS)
+                })
+                .catch((error) => {
+                    alert(error);
+                    console.error('Error:', error);
+                });
+
+                // load help
+                fetch('resources/node-red-contrib-fv-detection-nodes/api/opencv-help.html', {
+                    headers: {'Content-Type': 'text/html'}
+                })
+                    .then(response => response.text())
+                    .then(text => {
+                        document.getElementById("imageManipulationHelp").innerHTML = text;
                     })
                     .catch((error) => {
                         alert(error);
