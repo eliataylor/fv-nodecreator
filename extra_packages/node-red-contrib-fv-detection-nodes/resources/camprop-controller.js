@@ -20,56 +20,89 @@ class CamPropController {
         this.allCameras = [];
 
         this.ipToUri = p.ipToUri; // a function in flexible-vision-nodes.html & .js
-        this.ip = p.ip;
-        let check = this.$(this.camServerSelector + ' option:selected').text()
-        if (check.length > 0 && this.isValidIP(check)) {
-            this.ip = check;
+        this.ip = p.ip || "";
+        if (p.camId) {
+            this.$(this.camSelector).html(`<option value="${p.camId}" selected="true" />`)
+            this.camId = p.camId;
+        } else {
+            this.camId = "";
         }
-        this.camId = p.camId || "";
-        this.propVal = p.propVal || "";
-        this.camProp = p.camProp || undefined;
+        if (p.camProp) {
+            this.$(this.camPropSelector).html(`<option value="${p.camProp}" selected="true" />`)
+            this.camProp = p.camProp;
+        } else {
+            this.camProp = {};
+        }
+        if (p.propVal) {
+            this.$(this.camPropValSelector).html(`<input value="${p.propVal}"  />`)
+            this.propVal = p.propVal;
+        } else {
+            this.propVal = "";
+        }
         this.camProperty = p.camProperty || {};
 
-        console.log('CTR INITIALIZED', p, this.getContext('init'));
+        console.log('CTR INITIALIZED w/ ', p);
+        this.getContext('init');
+
+        this.loadFieldData();
+        this.startListeners();
+    }
+
+    async loadFieldData(forceReload) {
+        let test = await this.loadCameras(forceReload);
+        if (typeof test === 'string') {
+            console.warn(test);
+        } else {
+            const test = await this.loadCamConfigs(forceReload);
+            if (typeof test === 'string') {
+                console.warn(test);
+            } else {
+                this.buildPropValField();
+            }
+        }
+        this.syncToForm('done');
     }
 
     startListeners() {
+
         document.getElementById('allCamRefreshBtn').onclick = () => {
             console.log('refreshing cameras!');
-            this.loadCameras(true);
+            this.loadFieldData(true);
         }
 
-        this.$(this.camServerSelector).on('change', (e) => {
-            let check = this.$(this.camServerSelector + ' option:selected').text()
-            if (check.length > 0 && this.isValidIP(check)) {
+        this.$(this.camServerSelector).on('change', async (e) => {
+            let check = this.$(this.camServerSelector + ' option:selected').text(); // can't use target.value because it's a config ID not the host
+            if (typeof check === 'string' && this.isValidIP(check)) {
+                if (this.ip === check) return false;
                 this.ip = check;
-                this.$(this.camSelector).val('').trigger('change');
-                this.syncToForm('serverChange');
-                this.loadCameras();
+                this.loadFieldData(true);
             }
         })
 
-        this.$(this.camSelector).on('change', (e) => {
-            if (e.currentTarget.value !== this.camId) {
-                this.camProp = '';
-                this.camProperty = {};
-                this.$(this.camPropSelector).val('').trigger('change');
+        this.$(this.camSelector).on('change', async (e) => {
+            if (this.camId === e.currentTarget.value) return false;
+            this.camId = e.currentTarget.value;
+            this.camProp = '';
+            this.camProperty = {};
+            let test = await this.loadCamConfigs();
+            if (typeof test === 'string') {
+                console.warn(test);
+            } else {
+                this.buildPropValField();
+                this.syncToForm('camChange');
             }
-            this.syncToForm('camChange');
-            this.loadCamConfigs();
         });
 
         this.$(this.camPropSelector).on('change', (e) => {
-            if (e.currentTarget.value !== this.camProp) {
-                this.setCam(e.currentTarget.value)
-                this.$(this.camPropValSelector).val('')
-                this.propVal = '';
-            }
+            this.setProperty(e.currentTarget.getAttribute('data-parent'), e.currentTarget.getAttribute('data-label'));
             this.syncToForm('camPropChange');
-            this.buildPropValField()
         });
 
-        this.loadCameras();
+        this.$(this.camPropValSelector).on('change', (e) => {
+            this.propVal = e.currentTarget.value;
+            this.syncToForm('propValChange');
+        });
+
     }
 
     restoreFromLocalStorage() {
@@ -113,8 +146,56 @@ class CamPropController {
         localStorage.setItem(key, JSON.stringify(env));
     }
 
-    renderCameras() {
-        this.$(this.camSelector).html('<option value="">Select a Camera</option>');
+    loadCameras(forceReload) {
+
+        return new Promise((resolve, reject) => {
+
+             if (!this.ip || this.ip === "") {
+                console.log("cannot load cameras without a valid IP")
+                return false;
+            }
+
+            if (forceReload !== true) {
+                this.restoreFromLocalStorage();
+                if (this.allCameras && this.allCameras.length > 0) {
+                    this.allCamerasCallback(this.allCameras);
+                    return resolve(this.allCameras)
+                }
+            }
+
+            this.$('#allCamRefreshBtn').prop('disabled', true)
+            this.togglePreloader(this.camSelector, true)
+
+            const url = this.ipToUri(this.ip, '/api/vision/vision/cameras');
+
+            fetch(url)
+                .then(response => {
+                    this.$('#allCamRefreshBtn').prop('disabled', false);
+                    this.togglePreloader(this.camSelector, false);
+                    if (!response.ok) {
+                        throw new Error(`API call failed with status: ${response.status}`);
+                    }
+                    return response.json();
+
+                })
+                .then(cameras => {
+                    console.log("Got Cameras from Server ", cameras);
+                    this.allCameras = cameras;
+                    this.saveToLocalStorage();
+                    this.allCamerasCallback(cameras);
+                    return resolve(cameras)
+                })
+                .catch(error => {
+                    this.$('#allCamRefreshBtn').prop('disabled', false);
+                    this.togglePreloader(this.camSelector, false);
+                    return reject("LOAD CAM FAILED: " + error.message)
+                });
+
+        })
+    }
+
+    allCamerasCallback(cameras) {
+        const opts = ['<option value="">Select a Camera</option>'];
         this.allCameras.forEach(o => {
             const toPass = {
                 'value': o.serial_number,
@@ -123,81 +204,51 @@ class CamPropController {
             if (o.serial_number == this.camId) {
                 toPass.selected = true;
             }
-            this.$('<option/>', toPass).appendTo(this.camSelector);
+            opts.push($('<option/>', toPass));
         })
+        this.$(this.camSelector).html(opts);
+
         this.$('#allCamRefreshBtn').prop('disabled', false)
         this.togglePreloader(this.camSelector, false);
-        this.syncToForm('renderCameras');
-    }
 
-    loadCameras(forceReload) {
-        if (forceReload !== true) {
-            this.restoreFromLocalStorage();
-            if (this.allCameras && this.allCameras.length > 0) {
-                if (this.camId === '') {
-                    return this.allCamerasCallback(this.allCameras);
-                } else if (this.allCameras.findIndex(c => c.serial_number == this.camId) > -1) {
-                    return this.allCamerasCallback(this.allCameras);
-                } else {
-                    console.warn("selected camera missing: " + this.camId, this.allCameras)
-                }
-            }
-        }
-        if (!this.ip || this.ip === "") {
-            console.log("cannot load cameras without a valid IP")
-            return false;
-        }
+        if (this.camId || this.camId === '') return false;
 
-        this.$('#allCamRefreshBtn').prop('disabled', true)
-        this.togglePreloader(this.camSelector, true)
-        const url = this.ipToUri(this.ip, '/api/vision/vision/cameras');
-        this.$.ajax({
-            url: url,
-            dataType: "json"
-        }).done(async (cameras) => {
-            console.log("Got Cameras from Server ", cameras);
-            this.allCameras = cameras;
-            this.saveToLocalStorage();
-            this.allCamerasCallback(cameras);
-        }).fail((err) => {
-            console.error("LOAD CAM FAILED", err);
-            this.$('#allCamRefreshBtn').prop('disabled', false);
-            this.togglePreloader(this.camSelector, false);
-            this.getToolTip('loadCamFailed');
-        })
-    }
-
-    allCamerasCallback(cameras) {
-        this.renderCameras();
-        if (this.camId === '') {
-            return false;
-        }
         const index = cameras.findIndex(c => c.serial_number == this.camId);
         if (index < -1) {
-            return console.warn(index+ " - THIS CAMERA IS NO LONGER CONNECTED" + this.camId, cameras)
+            return console.warn(index + " - THIS CAMERA IS NO LONGER CONNECTED" + this.camId, cameras)
         }
 
-        this.loadCamConfigs();
     }
 
-    loadCamConfigs() {
-        if (typeof this.camProp === 'undefined') return false; // only use for set-config-prop node
-        var url = this.ipToUri(this.ip, '/api/vision/vision/configTree/' + this.camId);
-        this.togglePreloader(this.camPropSelector, true)
+    loadCamConfigs(forceReload) {
 
-        this.$.ajax({
-            url: url,
-            dataType: "json"
-        }).done(data => {
-            console.log("Got Cam Configs", data)
-            this.camSettings = data;
-            this.renderCamProps();
-            this.saveToLocalStorage();
-        }).fail(err => {
-            this.camSettings = false;
-            this.togglePreloader(this.camPropSelector, false);
-            console.error("LOAD CAM CONFIG FAILED", err);
-            this.getToolTip('loadCamConfigFailed');
+        return new Promise((resolve, reject) => {
+
+            if (this.camId === '') return reject('cam not ready');
+            this.togglePreloader(this.camPropSelector, true)
+
+            const url = this.ipToUri(this.ip, '/api/vision/vision/configTree/' + this.camId);
+            fetch(url)
+                .then(response => {
+                    this.togglePreloader(this.camPropSelector, false);
+                    if (!response.ok) {
+                        throw new Error(`API call failed with status: ${response.status}`);
+                    }
+                    return response.json();
+
+                })
+                .then(data => {
+                    console.log("Got Cam Configs", data)
+                    this.camSettings = data;
+                    this.renderCamProps();
+                    this.saveToLocalStorage();
+                    return resolve(data)
+                })
+                .catch(error => {
+                    this.togglePreloader(this.camPropSelector, false);
+                    return reject("cam config failed " + error.message)
+                });
+
         })
     }
 
@@ -233,39 +284,44 @@ class CamPropController {
                 this.$('<option/>', toPass).appendTo(this.camPropSelector);
             }
         }
-        this.togglePreloader(this.camPropSelector, false)
-        this.syncToForm('renderProps');
-
-        this.buildPropValField();
-        // console.info(allTypes);
     }
 
     buildPropValField() {
+
         if (!this.camProperty || !this.camProperty.type) {
-            this.getToolTip('buildPropValField: no camProperty');
-            console.log(this.getContext('missing camProperty'))
+            this.$(this.camPropValSelector).val(this.propVal)
+
+            return setTimeout(() => this.buildPropValField(), 250);
+
+            console.log(this.camProperty);
+            this.getToolTip('No camProperty yet ' );
             return;
         }
 
         let config = this.typeMap[this.camProperty.type];
 
-        if (this.$(this.camPropValSelector).prop('nodeName').toLowerCase() !== config.nodeName) {
+        if (this.$(this.camPropValSelector).prop('nodeName').toLowerCase() !== config.nodeName) { // warn: can switch between input and select components
             const newEl = document.createElement(config.nodeName);
             newEl.setAttribute('type', config.type);
             newEl.id = this.camPropValSelector.substring(1); // strip hash
             this.$(this.camPropValSelector).replaceWith(newEl)
+            this.$(this.camPropValSelector).on('change', (e) => {
+                this.propVal = e.currentTarget.value;
+                this.syncToForm('propValChange');
+            });
+
+        } else {
+            this.$(this.camPropValSelector).attr('type', config.type);
         }
 
-        const atts = {min:'min', max:'max', inc:'step'};
-        for(let att in atts) {
+        const atts = {min: 'min', max: 'max', inc: 'step'};
+        for (let att in atts) {
             if (typeof this.camProperty[att] !== 'undefined') {
                 this.$(this.camPropValSelector).attr(atts[att], this.camProperty[att])
             } else {
                 this.$(this.camPropValSelector).removeAttr(atts[att])
             }
         }
-
-        this.$(this.camPropValSelector).attr('type', config.type);
 
         if (this.camProperty.options) {
             this.$(this.camPropValSelector).html('');
@@ -276,20 +332,10 @@ class CamPropController {
                     selected: o == this.propVal
                 }).appendTo(this.camPropValSelector)
             })
+        } else {
+            this.$(this.camPropValSelector).val(this.propVal)
         }
 
-        this.$(this.camPropValSelector).val(this.propVal)
-
-        this.$(this.camPropValSelector).on('change', (e) => {
-            this.propVal = e.currentTarget.value;
-            this.syncToForm('propValChange');
-        });
-
-        this.syncToForm('buildPropValField')
-    }
-
-    releaseCamera() {
-        // TODO: when access_mode === "READ_ONLY"
     }
 
     setProperty(parent, label) {
@@ -301,10 +347,6 @@ class CamPropController {
         this.camProperty.parent = parent;
         this.camProperty.label = label;
         this.camProp = this.camProperty.node_name;
-    }
-
-    setCam(cam) {
-        this.camId = cam;
     }
 
     isValidIP(ip) {
@@ -321,33 +363,11 @@ class CamPropController {
             camProp: this.camProp,
             propVal: this.propVal
         };
-        let check = this.$(this.camServerSelector + ' option:selected').text()
-        if (check && check.length > 0) {
-            if (this.isValidIP(check)) {
-                defaults.ip = check;
-                this.ip = check;
-            } else {
-                console.error('invalid IP address', e.message)
-            }
-        }
 
-        check = this.$(this.camSelector).val()
-        if (check && check !== '') {
-            defaults.camId = check;
-            this.setCam(check)
-        } else if (defaults.camId) {
-            this.$(this.camSelector).val(defaults.camId);
-        }
-
-        check = this.$(this.camPropSelector + ' option:selected')
-        if (check && check.length > 0 && check.attr('data-parent')) {
-            this.setProperty(check.attr('data-parent'), check.attr('data-label'));
-            defaults.camProperty = this.camProperty;
-            defaults.camProp = this.camProp;
-        } else if (defaults.camProp && defaults.camProp.length > 0) {
+        if (defaults.camProp && defaults.camProp.length > 0) {
             if (this.camSettings) {
-                outer: for(let j in this.camSettings) {
-                    for(let i in this.camSettings[j]) {
+                outer: for (let j in this.camSettings) {
+                    for (let i in this.camSettings[j]) {
                         if (this.camSettings[j][i].node_name === defaults.camProp) {
                             this.setProperty(j, i);
                             defaults.camProperty = this.camProperty;
@@ -358,7 +378,6 @@ class CamPropController {
             } else {
                 console.warn("MISSING CAM SETTINGS??", defaults)
             }
-            this.$(this.camPropSelector).val(defaults.camProp);
         }
 
         if (defaults.camProperty) {
@@ -373,19 +392,15 @@ class CamPropController {
             }
         }
 
+        /*
         if (this.propVal === '' && this.camProperty.value) {
-            this.propVal = this.camProperty.value;
-            defaults.propVal = this.propVal;
             this.$(this.camPropValSelector).val(this.camProperty.value)
+            this.$(this.camPropValSelector).trigger('change');
         }
+         */
 
-        // console.log('synced form', defaults);
-        if (document.getElementById("fvCamForm")) {
-            const event = new CustomEvent('updateToolContext', {detail: defaults});
-            document.getElementById("fvCamForm").dispatchEvent(event);
-        } else {
-            console.warn('Form not in DOM', defaults);
-        }
+        const event = new CustomEvent('updateToolContext', {detail: defaults});
+        document.getElementById("fvCamForm").dispatchEvent(event);
 
         this.getToolTip('syncToForm: ' + src);
 
@@ -417,9 +432,9 @@ class CamPropController {
             camProp: prop.val(),
             propVal: this.$(this.camPropValSelector).val()
         }
-        if (prop.length > 0) {
+        if (prop.length > 0 && this.camSettings) {
             const group = this.camSettings[prop.attr('data-parent')];
-            for(let i in group) {
+            for (let i in group) {
                 if (group[i].node_name === form.camProp) {
                     form.camProperty = group[i];
                     break;
@@ -435,11 +450,15 @@ class CamPropController {
             camProperty: this.camProperty
         };
 
+        const resp = {"form": form, "ctx": ctx};
         if (JSON.stringify(ctx) !== JSON.stringify(form)) {
-            console.warn("OUT OF SYNC: " + src, ctx, form)
+            console.warn("OUT OF SYNC: " + src, resp)
         }
 
-        return {form: form, ctx: ctx}
+        return resp
+    }
+
+    onUpdates(clk) {
+        document.getElementById("fvCamForm").addEventListener('updateToolContext', clk, {capture: false});
     }
 }
-

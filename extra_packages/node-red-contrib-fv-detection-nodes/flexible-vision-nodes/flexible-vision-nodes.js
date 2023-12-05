@@ -16,8 +16,8 @@ module.exports = function (RED) {
 
     function ipToUri(ip, basepath) { // make sure this matches the same function in flexible-vision-nodes.html
         if (basepath.indexOf('/detect_motion') > -1 || basepath.indexOf('/image_manipulation') > -1) {
-            // return "http://" + ip + ":5123" + basepath;
-            return "http://127.0.0.1:5123" + basepath;
+            return "http://" + ip + ":5123" + basepath;
+            // return "http://127.0.0.1:5123" + basepath;
         } else if (basepath.indexOf('/api/visiontools/') === 0) {
             return "http://" + ip + ":5021" + basepath;
         } else if (basepath.indexOf('/api/vision/') === 0) {
@@ -615,7 +615,7 @@ module.exports = function (RED) {
                             return handleError('image manipulation json error', "invalid json: " + body, HOURGLASS)
                         }
                     }
-                    return handleError('image manipulation failed', error.message, HOURGLASS)
+                    return handleError('image manipulation failed', error.message, HOURGLASS);
                 });
             }
 

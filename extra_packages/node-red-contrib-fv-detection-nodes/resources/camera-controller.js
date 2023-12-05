@@ -1,4 +1,4 @@
-class CameraController {
+class CamController {
 
     constructor(jq, p) {
         this.$ = jq;
@@ -143,7 +143,7 @@ class CameraController {
         }
         const index = cameras.findIndex(c => c.serial_number == this.camId);
         if (index < -1) {
-            return console.warn(index+ " - THIS CAMERA IS NO LONGER CONNECTED" + this.camId, cameras)
+            return console.warn(index + " - THIS CAMERA IS NO LONGER CONNECTED" + this.camId, cameras)
         }
     }
 
@@ -227,4 +227,3 @@ class CameraController {
         return {"form": form, "ctx": ctx}
     }
 }
-

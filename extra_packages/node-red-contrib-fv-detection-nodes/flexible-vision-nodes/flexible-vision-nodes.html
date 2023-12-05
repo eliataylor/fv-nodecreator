@@ -336,6 +336,7 @@
     <blockquote class="form-group">
         <form id="cv2form" name="cv2form"></form>
     </blockquote>
+    <script type="text/javascript" src="resources/node-red-contrib-fv-detection-nodes/camera-controller.js"/>
 </script>
 
 
@@ -900,8 +901,8 @@
                 }
 
                 // get cameras
-                const camController = new CameraController($, {
-                    ip: this.fvconfig.host,
+                const camController = new CamController($, {
+                    ip: $('#node-input-fvconfig option:selected').text(),
                     camId: this.camId,
                     ipToUri: ipToUri
                 })
@@ -1030,7 +1031,6 @@
                 camId: {value: "", required: true},
                 camProp: {value: "", required: true},
                 propVal: {value: "", required: true},
-                host: {value: "", required: false, hidden: true},
                 access_mode: {value: "", required: false, hidden: true},
                 node_type: {value: "", required: false, hidden: true},
                 camProperty: {value: {}, required: false, hidden: true},
@@ -1049,31 +1049,22 @@
             },
             oneditprepare: function () {
                 const camController = new CamPropController($, {
-                    ip: this.fvconfig.host,
+                    ip: $('#node-input-fvconfig option:selected').text(),
                     camId: this.camId,
                     camProp: this.camProp,
                     propVal: this.propVal,
-                    access_mode: this.access_mode,
-                    node_type: this.node_type,
-                    camProperty: this.camProperty,
                     ipToUri: ipToUri
                 })
-                camController.startListeners();
-                window.camController = camController;  // expose to chrome dev tools
-
-                document.getElementById("fvCamForm").addEventListener('updateToolContext',
-                    (e) => {
-                        console.log("updateToolContext", e.detail);
-                        this.camId = e.detail.camId
-                        this.camProp = e.detail.camProp
-                        this.propVal = e.detail.propVal
-                        this.access_mode = e.detail.access_mode;
-                        this.node_type = e.detail.node_type;
-                        this.camProperty = e.detail.camProperty;
-                        this.lastUpdated = new Date().getTime()
-                    },
-                    {capture: false}
-                );
+                camController.onUpdates((e) => {
+                    console.log("updateToolContext", e.detail);
+                    this.camId = e.detail.camId
+                    this.camProp = e.detail.camProp
+                    this.propVal = e.detail.propVal
+                    this.access_mode = e.detail.access_mode;
+                    this.node_type = e.detail.node_type;
+                    this.camProperty = e.detail.camProperty;
+                    this.lastUpdated = new Date().getTime()
+                });
             }
         });
 
@@ -1096,8 +1087,8 @@
                 }
             },
             oneditprepare: function () {
-                const camController = new CameraController($, {
-                    ip: this.fvconfig.host,
+                const camController = new CamController($, {
+                    ip: $('#node-input-fvconfig option:selected').text(),
                     camId: this.camId,
                     ipToUri: ipToUri
                 })
@@ -1131,8 +1122,8 @@
                 }
             },
             oneditprepare: function () {
-                const camController = new CameraController($, {
-                    ip: this.fvconfig.host,
+                const camController = new CamController($, {
+                    ip: $('#node-input-fvconfig option:selected').text(),
                     camId: this.camId,
                     ipToUri: ipToUri
                 })
