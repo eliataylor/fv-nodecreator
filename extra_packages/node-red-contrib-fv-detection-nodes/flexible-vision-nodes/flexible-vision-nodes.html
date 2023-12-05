@@ -1045,8 +1045,7 @@
                 propVal: {value: "", required: true},
                 access_mode: {value: "", required: false, hidden: true},
                 node_type: {value: "", required: false, hidden: true},
-                camProperty: {value: {}, required: false, hidden: true},
-                lastUpdated: {value: 0, required: false, hidden: true},
+                lastUpdated: {value: 1, required: true, hidden: true},
             },
             inputs: 1,
             outputs: 1,
@@ -1067,16 +1066,18 @@
                     propVal: this.propVal,
                     ipToUri: ipToUri
                 })
-                camController.onUpdates((e) => {
-                    console.log("updateToolContext", e.detail);
+                const that = this;
+                document.getElementById("fvCamForm").addEventListener('updateToolContext', (e) => {
                     this.camId = e.detail.camId
                     this.camProp = e.detail.camProp
                     this.propVal = e.detail.propVal
                     this.access_mode = e.detail.access_mode;
                     this.node_type = e.detail.node_type;
-                    this.camProperty = e.detail.camProperty;
-                    this.lastUpdated = new Date().getTime()
-                });
+                    this.lastUpdated = new Date().getTime();
+                    console.log("updateToolContext", e.detail, this.propVal, that.propVal);
+                }, {capture: false});
+
+                // camController.onUpdates(onUpdates);
             }
         });
 

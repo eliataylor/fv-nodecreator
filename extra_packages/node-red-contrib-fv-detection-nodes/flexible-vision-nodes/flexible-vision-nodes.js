@@ -126,13 +126,16 @@ module.exports = function (RED) {
             //   return alert("Select a model");
             // }
 
+            // accept base64
+
             var file = msg.filename;
             if (msg.file instanceof Buffer) {
                 file = msg.file;
                 console.log("as buffer ");
             } else if (typeof file == 'string') {
                 console.log("from filepath ");
-                file = fs.createReadStream(file);
+                // file = fs.createReadStream(file);
+                file = Buffer.from(file, 'base64');
                 console.log("to stream ");
             }
 

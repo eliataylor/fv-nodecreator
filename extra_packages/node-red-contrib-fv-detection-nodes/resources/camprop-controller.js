@@ -22,19 +22,19 @@ class CamPropController {
         this.ipToUri = p.ipToUri; // a function in flexible-vision-nodes.html & .js
         this.ip = p.ip || "";
         if (p.camId) {
-            this.$(this.camSelector).html(`<option value="${p.camId}" selected="true" />`)
+            // this.$(this.camSelector).html(`<option value="${p.camId}" selected="true" />`)
             this.camId = p.camId;
         } else {
             this.camId = "";
         }
         if (p.camProp) {
-            this.$(this.camPropSelector).html(`<option value="${p.camProp}" selected="true" />`)
+            // this.$(this.camPropSelector).html(`<option value="${p.camProp}" selected="true" />`)
             this.camProp = p.camProp;
         } else {
             this.camProp = {};
         }
         if (p.propVal) {
-            this.$(this.camPropValSelector).html(`<input value="${p.propVal}"  />`)
+            // this.$(this.camPropValSelector).html(`<input value="${p.propVal}" />`); // warn: get rerendered as correct nodeType
             this.propVal = p.propVal;
         } else {
             this.propVal = "";
@@ -42,7 +42,7 @@ class CamPropController {
         this.camProperty = p.camProperty || {};
 
         console.log('CTR INITIALIZED w/ ', p);
-        this.getContext('init');
+        this.getToolTip('Initial');
 
         this.loadFieldData();
         this.startListeners();
@@ -60,7 +60,7 @@ class CamPropController {
                 this.buildPropValField();
             }
         }
-        this.syncToForm('done');
+        this.syncToForm('');
     }
 
     startListeners() {
@@ -82,34 +82,31 @@ class CamPropController {
         this.$(this.camSelector).on('change', async (e) => {
             if (this.camId === e.currentTarget.value) return false;
             this.camId = e.currentTarget.value;
-            this.camProp = '';
-            this.camProperty = {};
             let test = await this.loadCamConfigs();
             if (typeof test === 'string') {
                 console.warn(test);
             } else {
                 this.buildPropValField();
-                this.syncToForm('camChange');
+                this.syncToForm('Camera Change');
             }
         });
 
         this.$(this.camPropSelector).on('change', (e) => {
-            this.setProperty(e.currentTarget.getAttribute('data-parent'), e.currentTarget.getAttribute('data-label'));
-            this.syncToForm('camPropChange');
+            var selectedOption = e.currentTarget.options[e.currentTarget.selectedIndex];
+            this.setProperty(selectedOption.getAttribute('data-parent'), selectedOption.getAttribute('data-label'));
+            this.buildPropValField();
+            this.syncToForm('Property Change');
         });
 
         this.$(this.camPropValSelector).on('change', (e) => {
             this.propVal = e.currentTarget.value;
-            this.syncToForm('propValChange');
+            this.syncToForm('Value Change');
         });
 
     }
 
     restoreFromLocalStorage() {
-        if (this.ip === "") {
-            console.warn(this.getContext('missing IP Address from localStorage'))
-            return {};
-        }
+        if (this.ip === "") return {};
         let key = 'fvenv' + this.ip;
         let env = localStorage.getItem(key);
         if (!env) return {};
@@ -238,7 +235,7 @@ class CamPropController {
 
                 })
                 .then(data => {
-                    console.log("Got Cam Configs", data)
+                    console.log("Got cam configs", data)
                     this.camSettings = data;
                     this.renderCamProps();
                     this.saveToLocalStorage();
@@ -253,7 +250,6 @@ class CamPropController {
     }
 
     renderCamProps() {
-        // let allTypes = {}
         if (!this.camSettings) {
             this.$(this.camPropSelector).html('<option value="">No available settings. Try refreshing the camera list.</option>');
             return true;
@@ -289,13 +285,10 @@ class CamPropController {
     buildPropValField() {
 
         if (!this.camProperty || !this.camProperty.type) {
-            this.$(this.camPropValSelector).val(this.propVal)
-
+            this.$(this.camPropValSelector).val(this.propVal);
+            this.findAndSetCamProperty();
+            this.getToolTip('Still loading camera properties');
             return setTimeout(() => this.buildPropValField(), 250);
-
-            console.log(this.camProperty);
-            this.getToolTip('No camProperty yet ' );
-            return;
         }
 
         let config = this.typeMap[this.camProperty.type];
@@ -304,12 +297,11 @@ class CamPropController {
             const newEl = document.createElement(config.nodeName);
             newEl.setAttribute('type', config.type);
             newEl.id = this.camPropValSelector.substring(1); // strip hash
-            this.$(this.camPropValSelector).replaceWith(newEl)
-            this.$(this.camPropValSelector).on('change', (e) => {
+            newEl.onchange = (e) => {
                 this.propVal = e.currentTarget.value;
-                this.syncToForm('propValChange');
-            });
-
+                this.syncToForm(this.camProperty.type + ' Value Change');
+            }
+            this.$(this.camPropValSelector).replaceWith(newEl);
         } else {
             this.$(this.camPropValSelector).attr('type', config.type);
         }
@@ -324,18 +316,32 @@ class CamPropController {
         }
 
         if (this.camProperty.options) {
-            this.$(this.camPropValSelector).html('');
-            this.camProperty.options.forEach(o => {
-                this.$('<option/>', {
+            const opts = this.camProperty.options.map(o => {
+                return this.$('<option/>', {
                     text: o,
                     value: o,
                     selected: o == this.propVal
-                }).appendTo(this.camPropValSelector)
+                })
             })
+            this.$(this.camPropValSelector).html(opts);
         } else {
             this.$(this.camPropValSelector).val(this.propVal)
         }
 
+    }
+
+    findAndSetCamProperty() {
+        if (this.camSettings) {
+            for (let j in this.camSettings) {
+                for (let i in this.camSettings[j]) {
+                    if (this.camSettings[j][i].node_name === this.camProp) {
+                        return this.setProperty(j, i);
+                    }
+                }
+            }
+        } else {
+            console.warn("MISSING CAM SETTINGS");
+        }
     }
 
     setProperty(parent, label) {
@@ -346,6 +352,9 @@ class CamPropController {
         this.camProperty = this.camSettings[parent][label];
         this.camProperty.parent = parent;
         this.camProperty.label = label;
+        if (this.propVal === ''  || this.camProp !== this.camProperty.node_name) {
+            this.propVal = this.camProperty.value;
+        }
         this.camProp = this.camProperty.node_name;
     }
 
@@ -364,53 +373,32 @@ class CamPropController {
             propVal: this.propVal
         };
 
-        if (defaults.camProp && defaults.camProp.length > 0) {
-            if (this.camSettings) {
-                outer: for (let j in this.camSettings) {
-                    for (let i in this.camSettings[j]) {
-                        if (this.camSettings[j][i].node_name === defaults.camProp) {
-                            this.setProperty(j, i);
-                            defaults.camProperty = this.camProperty;
-                            break outer;
-                        }
-                    }
-                }
-            } else {
-                console.warn("MISSING CAM SETTINGS??", defaults)
-            }
-        }
-
         if (defaults.camProperty) {
             defaults.node_type = defaults.camProperty.type;
             if (defaults.camProperty.access_mode) {
                 defaults.access_mode = defaults.camProperty.access_mode;
                 if (defaults.access_mode.toUpperCase() === 'READ ONLY') {
-                    this.$('#fvPropValRow').hide();
+                    this.$(this.camPropValSelector).prop('disabled', true);
+                    // this.$('#fvPropValRow').hide();
                 } else {
-                    this.$('#fvPropValRow').show();
+                    this.$(this.camPropValSelector).prop('disabled', false);
+                    // this.$('#fvPropValRow').show();
                 }
             }
         }
 
-        /*
-        if (this.propVal === '' && this.camProperty.value) {
-            this.$(this.camPropValSelector).val(this.camProperty.value)
-            this.$(this.camPropValSelector).trigger('change');
-        }
-         */
-
         const event = new CustomEvent('updateToolContext', {detail: defaults});
         document.getElementById("fvCamForm").dispatchEvent(event);
 
-        this.getToolTip('syncToForm: ' + src);
+        this.getToolTip(src);
 
         return defaults;
     }
 
-    getToolTip(src) {
+    getToolTip(desc) {
         let html = JSON.stringify(this.camProperty, null, 2);
-        let ctx = JSON.stringify(this.getContext(src), null, 2);
-        this.$('#camPropertyDesc').html(`<h3>Selected Property</h3><pre>${html}</pre><h3>Context</h3><pre>${ctx}</pre>`)
+        let ctx = JSON.stringify(this.getContext(desc), null, 2);
+        this.$('#camPropertyDesc').html(`<h3>Selected Property</h3><pre>${html}</pre><h3>${desc}</h3><pre>${ctx}</pre>`)
     }
 
     togglePreloader(sel, show) {
@@ -432,22 +420,12 @@ class CamPropController {
             camProp: prop.val(),
             propVal: this.$(this.camPropValSelector).val()
         }
-        if (prop.length > 0 && this.camSettings) {
-            const group = this.camSettings[prop.attr('data-parent')];
-            for (let i in group) {
-                if (group[i].node_name === form.camProp) {
-                    form.camProperty = group[i];
-                    break;
-                }
-            }
-        }
 
         const ctx = {
             ip: this.ip,
             camId: this.camId,
             camProp: this.camProp,
-            propVal: this.propVal,
-            camProperty: this.camProperty
+            propVal: this.propVal
         };
 
         const resp = {"form": form, "ctx": ctx};
@@ -459,6 +437,6 @@ class CamPropController {
     }
 
     onUpdates(clk) {
-        document.getElementById("fvCamForm").addEventListener('updateToolContext', clk, {capture: false});
+        document.getElementById("fvCamForm").addEventListener('updateToolContext', (e) => clk(e), {capture: false});
     }
 }
