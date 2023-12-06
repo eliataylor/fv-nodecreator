@@ -398,7 +398,7 @@ class CamPropController {
     getToolTip(desc) {
         let html = JSON.stringify(this.camProperty, null, 2);
         let ctx = JSON.stringify(this.getContext(desc), null, 2);
-        this.$('#camPropertyDesc').html(`<h3>Selected Property</h3><pre>${html}</pre><h3>${desc}</h3><pre>${ctx}</pre>`)
+        this.$('#camPropertyDesc').html(`<h3>Selected Property</h3><pre>${html}</pre><div style="opacity:.5"><h3>${desc}</h3><pre>${ctx}</pre></div>`)
     }
 
     togglePreloader(sel, show) {

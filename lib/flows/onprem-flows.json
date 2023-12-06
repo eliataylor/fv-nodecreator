@@ -989,24 +989,11 @@
         "fvconfig": "79dd73f42e833b44",
         "camId": "233630185059636",
         "camProp": "OffsetX",
-        "propVal": 384,
+        "propVal": "400",
         "access_mode": "Read and Write",
         "node_type": "Integer",
-        "camProperty": {
-            "options": null,
-            "tooltip": "Horizontal offset from the origin to the region of interest (in pixels).",
-            "value": 384,
-            "node_name": "OffsetX",
-            "access_mode": "Read and Write",
-            "type": "Integer",
-            "min": 0,
-            "max": 624,
-            "inc": 8,
-            "parent": "Image Format Control",
-            "label": "Offset X"
-        },
-        "lastUpdated": 1701776732235,
-        "x": 350,
+        "lastUpdated": 1701815787659,
+        "x": 310,
         "y": 1480,
         "wires": [
             [
