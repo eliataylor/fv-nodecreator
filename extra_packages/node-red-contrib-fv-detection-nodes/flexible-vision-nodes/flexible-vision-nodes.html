@@ -365,6 +365,25 @@
 </script>
 <!-- UPDATE INFERENCE END -->
 
+
+<!-- GET CAM IMAGE START -->
+<script type="text/html" data-template-name="get-cam-image">
+    <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css"/>
+    <div id="fvCamForm">
+        <div class="form-row">
+            <label for="node-input-fvconfig"><i class="fa fa-server" aria-hidden="true"></i> FV Server IP</label>
+            <select id="node-input-fvconfig"></select>
+        </div>
+        <div class="form-row">
+            <label for="node-input-camera"><i class="fa fa-camera"></i> Target Cam</label>
+            <select id="node-input-camera"></select>
+            <button type="button" class="red-ui-button" id="allCamRefreshBtn">Refresh</button>
+        </div>
+    </div>
+    <script type="text/javascript" src="resources/node-red-contrib-fv-detection-nodes/camera-controller.js"/>
+</script>
+<!-- GET CAM IMAGE END -->
+
 <script type="text/html" data-template-name="set-camera-property">
     <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css"/>
     <div id="fvCamForm">
@@ -383,7 +402,7 @@
         </div>
         <div class="form-row" id="fvPropValRow">
             <label for="node-input-propVal"><i class="fa fa-outdent"></i> Property Value</label>
-            <input id="node-input-propVal" />
+            <input id="node-input-propVal"/>
         </div>
     </div>
     <div id="camPropertyDesc"></div>
@@ -712,6 +731,30 @@
             }
         });
 
+
+        RED.nodes.registerType('cloud-upload', {
+            category: 'Flexible Vision',
+            paletteLabel: 'Cloud Upload',
+            color: '#b5e5f1',
+            defaults: {
+                username: {value: "", required: true},
+                password: {value: "", required: true},
+                project: {value: "", required: true},
+                auth: {value: ""}
+            },
+            inputs: 1,
+            outputs: 1,
+            icon: "outline-videocam-24px.svg",
+            label: function () {
+                return "Cloud Upload " + this.project;
+            },
+            oneditprepare: function () {
+                //encryptPassword(this.password);
+                get_token(this.username, this.password, this.auth);
+                // cloudMain(this.username, this.password, this.auth);
+            }
+        });
+
         RED.nodes.registerType('onprem-upload', {
             category: 'Flexible Vision',
             paletteLabel: 'OnPrem Upload',
@@ -756,91 +799,123 @@
             }
         });
 
-        RED.nodes.registerType('cloud-upload', {
+
+        RED.nodes.registerType('open-camera', {
             category: 'Flexible Vision',
-            paletteLabel: 'Cloud Upload',
-            color: '#00bcd4',
+            paletteLabel: 'Open Camera',
+            color: '#43A047',
             defaults: {
-                username: {value: "", required: true},
-                password: {value: "", required: true},
-                project: {value: "", required: true},
-                auth: {value: ""}
+                fvconfig: {type: "server-settings", required: true},
+                camId: {value: "", required: true}
             },
             inputs: 1,
             outputs: 1,
             icon: "outline-videocam-24px.svg",
             label: function () {
-                return "Cloud Upload " + this.project;
-            },
-            oneditprepare: function () {
-                //encryptPassword(this.password);
-                get_token(this.username, this.password, this.auth);
-                // cloudMain(this.username, this.password, this.auth);
-            }
-        });
-
-        RED.nodes.registerType('pin-state-get', {
-            category: 'Flexible Vision',
-            paletteLabel: 'Get Pin',
-            color: '#078668',
-            defaults: {
-                fvconfig: {type: "server-settings", required: true},
-                pin: {value: '', required: true}
-            },
-            inputs: 1,
-            outputs: 1,
-            icon: "fiber_pin_black_24dp.svg",
-            label: function () {
-                return 'get ' + this.pin + ' state';
-            },
-            oneditprepare: function () {
-                var host = $('#node-input-fvconfig option:selected').text();
-                if (host) {
-                    let url = 'http://192.168.196.2:5000/api/capture/io/cur_pins_state';
-                    $('#node-input-pin').html("");
-
-                    $.ajax({
-                        url: url,
-                        dataType: "json"
-                    }).done((data) => {
-                        console.log(data)
-                        const select = document.getElementById("node-input-pin");
-                        select.innerText = '';
-                        let src = false;
-                        for (let key in data) {
-                            if (key.indexOf('GP') !== 0) continue;
-                            var option = document.createElement("option");
-                            option.text = key;
-                            option.value = key;
-                            if (this.pin == key) {
-                                option.selected = true
-                                src = key;
-                            }
-                            select.appendChild(option);
-                        }
-                    }).error(function (err) {
-                        $('#node-input-pin').html('<option value="">Error loading pins</option>');
-                        console.log(err);
-                    });
+                if (this.camId && this.camId.length > 0) {
+                    return 'Open ' + this.camId;
+                } else {
+                    return this._def.paletteLabel;
                 }
+            },
+            oneditprepare: function () {
+                const camController = new CamController($, {
+                    ip: $('#node-input-fvconfig option:selected').text(),
+                    camId: this.camId,
+                    ipToUri: ipToUri
+                })
+                camController.startListeners();
+                document.getElementById("fvCamForm").addEventListener('updateToolContext',
+                    (e) => {
+                        this.camId = e.detail.camId
+                        console.log("updateToolContext", e.detail);
+                        getMasks();
+                    },
+                    {capture: false}
+                );
             }
         });
 
-        RED.nodes.registerType('pin-state-set', {
+        RED.nodes.registerType('get-cam-image', {
             category: 'Flexible Vision',
-            color: '#55ff00',
-            paletteLabel: 'Set Pin',
+            paletteLabel: 'Get Image',
+            label: function () {
+                if (this.camId && this.camId.length > 0) {
+                    return 'Get ' + this.camId + ' Frame';
+                } else {
+                    return this._def.paletteLabel;
+                }
+            },
+            color: '#88bd53',
             defaults: {
                 fvconfig: {type: "server-settings", required: true},
-                pin: {value: '', required: true},
-                state: {value: false, required: true}
+                camId: {value: "", required: true},
             },
             inputs: 1,
             outputs: 1,
-            icon: "fiber_pin_black_24dp.svg",
+            icon: "outline-videocam-24px.svg",
+            oneditprepare: function () {
+                const camController = new CamController($, {
+                    ip: $('#node-input-fvconfig option:selected').text(),
+                    camId: this.camId,
+                    ipToUri: ipToUri
+                })
+                document.getElementById("fvCamForm").addEventListener('updateToolContext', (e) => {
+                    this.camId = e.detail.camId;
+                    console.log("updateToolContext", e.detail);
+                }, {capture: false});
+            },
+        });
+
+        RED.nodes.registerType('set-camera-property', {
+            category: 'Flexible Vision',
+            paletteLabel: 'Configure Camera',
+            color: '#42A5F5',
+            defaults: {
+                fvconfig: {type: "server-settings", required: true},
+                camera: {value: "", required: true},
+                camId: {value: "", required: true},
+                camProp: {value: "", required: true},
+                propVal: {value: "", required: true},
+                access_mode: {value: "", required: false, hidden: true},
+                node_type: {value: "", required: false, hidden: true},
+                lastUpdated: {value: 1, required: true, hidden: true},
+            },
+            inputs: 1,
+            outputs: 1,
+            icon: "baseline_video_settings_black_24dp.png",
             label: function () {
-                return (this.state ? " enable " : "disable ") + this.pin;
-            }
+                let parts = [];
+                if (this.camProp && this.camProp.length > 0) parts.push(this.camProp.length > 20 ? this.camProp.substring(0, 20) + '...' : this.camProp);
+                if (this.propVal && String(this.propVal).length > 0) parts.push(String(this.propVal).length > 20 ? String(this.propVal).substring(0, 20) + '...' : this.propVal);
+                if (parts.length === 0) parts.unshift(this._def.paletteLabel);
+                else if (parts.length === 1) parts.unshift("Set");
+                return parts.join(' - ');
+            },
+            oneditprepare: function () {
+                const camController = new CamPropController($, {
+                    ip: $('#node-input-fvconfig option:selected').text(),
+                    camId: this.camId,
+                    camProp: this.camProp,
+                    propVal: this.propVal,
+                    ipToUri: ipToUri
+                })
+                document.getElementById("fvCamForm").addEventListener('updateToolContext', (e) => {
+                    console.log("updateToolContext", e.detail);
+                    this.camId = e.detail.camId;
+                    this.camProp = e.detail.camProp;
+                    this.propVal = e.detail.propVal;
+                    this.access_mode = e.detail.access_mode;
+                    this.node_type = e.detail.node_type;
+                    this.lastUpdated = new Date().getTime();
+                }, {capture: false});
+
+                // camController.onUpdates(onUpdates);
+            },
+            oneditsave: function () {
+                this.camProp = $('#node-input-camProp').val(this.camProp); // odd assignment but works
+                this.propVal = $('#node-input-propVal').val(this.propVal);
+            },
         });
 
         RED.nodes.registerType('motion-detection', {
@@ -929,7 +1004,7 @@
 
         RED.nodes.registerType('image-manipulation', {
             category: 'Flexible Vision',
-            color: '#857d0c',
+            color: '#a9a35b',
             paletteLabel: 'Manipulate Image',
             label: function () {
                 if (this.efx_name && this.efx_name.length > 0) {
@@ -1015,16 +1090,16 @@
                 fetch('resources/node-red-contrib-fv-detection-nodes/api/opencv-filters.json', {
                     headers: {'Content-Type': 'application/json'}
                 })
-                .then(response => response.json())
-                .then(json => {
-                    FILTERS = json
-                    buildParametersForm();
-                    console.log('filters: ', FILTERS)
-                })
-                .catch((error) => {
-                    alert(error);
-                    console.error('Error:', error);
-                });
+                    .then(response => response.json())
+                    .then(json => {
+                        FILTERS = json
+                        buildParametersForm();
+                        console.log('filters: ', FILTERS)
+                    })
+                    .catch((error) => {
+                        alert(error);
+                        console.error('Error:', error);
+                    });
 
                 // load help
                 fetch('resources/node-red-contrib-fv-detection-nodes/api/opencv-help.html', {
@@ -1040,58 +1115,6 @@
                     });
 
             }
-        });
-
-        RED.nodes.registerType('set-camera-property', {
-            category: 'Flexible Vision',
-            paletteLabel: 'Configure Camera',
-            color: '#42A5F5',
-            defaults: {
-                fvconfig: {type: "server-settings", required: true},
-                camera: {value: "", required: true},
-                camId: {value: "", required: true},
-                camProp: {value: "", required: true},
-                propVal: {value: "", required: true},
-                access_mode: {value: "", required: false, hidden: true},
-                node_type: {value: "", required: false, hidden: true},
-                lastUpdated: {value: 1, required: true, hidden: true},
-            },
-            inputs: 1,
-            outputs: 1,
-            icon: "baseline_video_settings_black_24dp.png",
-            label: function () {
-                let parts = [];
-                if (this.camProp && this.camProp.length > 0) parts.push(this.camProp.length > 20 ? this.camProp.substring(0, 20) + '...' : this.camProp);
-                if (this.propVal && String(this.propVal).length > 0) parts.push(String(this.propVal).length > 20 ? String(this.propVal).substring(0, 20) + '...' : this.propVal);
-                if (parts.length === 0) parts.unshift(this._def.paletteLabel);
-                else if (parts.length === 1) parts.unshift("Set");
-                return parts.join(' - ');
-            },
-            oneditprepare: function () {
-                const camController = new CamPropController($, {
-                    ip: $('#node-input-fvconfig option:selected').text(),
-                    camId: this.camId,
-                    camProp: this.camProp,
-                    propVal: this.propVal,
-                    ipToUri: ipToUri
-                })
-                const that = this;
-                document.getElementById("fvCamForm").addEventListener('updateToolContext', (e) => {
-                    this.camId = e.detail.camId;
-                    this.camProp = e.detail.camProp;
-                    this.propVal = e.detail.propVal;
-                    this.access_mode = e.detail.access_mode;
-                    this.node_type = e.detail.node_type;
-                    this.lastUpdated = new Date().getTime();
-                    console.log("updateToolContext", e.detail, this.propVal, that.propVal);
-                }, {capture: false});
-
-                // camController.onUpdates(onUpdates);
-            },
-            oneditsave: function () {
-                this.camProp = $('#node-input-camProp').val(this.camProp);
-                this.propVal = $('#node-input-propVal').val(this.propVal);
-            },
         });
 
         RED.nodes.registerType('release-camera', {
@@ -1129,45 +1152,10 @@
             }
         });
 
-        RED.nodes.registerType('open-camera', {
-            category: 'Flexible Vision',
-            paletteLabel: 'Open Camera',
-            color: '#43A047',
-            defaults: {
-                fvconfig: {type: "server-settings", required: true},
-                camId: {value: "", required: true}
-            },
-            inputs: 1,
-            outputs: 1,
-            icon: "outline-videocam-24px.svg",
-            label: function () {
-                if (this.camId && this.camId.length > 0) {
-                    return 'Open ' + this.camId;
-                } else {
-                    return this._def.paletteLabel;
-                }
-            },
-            oneditprepare: function () {
-                const camController = new CamController($, {
-                    ip: $('#node-input-fvconfig option:selected').text(),
-                    camId: this.camId,
-                    ipToUri: ipToUri
-                })
-                camController.startListeners();
-                document.getElementById("fvCamForm").addEventListener('updateToolContext',
-                    (e) => {
-                        this.camId = e.detail.camId
-                        console.log("updateToolContext", e.detail);
-                        getMasks();
-                    },
-                    {capture: false}
-                );
-            }
-        });
-
         RED.nodes.registerType('update-inference', {
             category: 'Flexible Vision',
             paletteLabel: 'Update Inference Object',
+            label: 'Update Inference',
             color: '#ba78ff',
             defaults: {
                 fvconfig: {type: "server-settings", required: true},
@@ -1178,6 +1166,72 @@
             outputs: 1,
             icon: "hub_black_24dp.svg"
         });
+
+
+        RED.nodes.registerType('pin-state-get', {
+            category: 'Flexible Vision',
+            paletteLabel: 'Get Pin',
+            color: '#e583d5',
+            defaults: {
+                fvconfig: {type: "server-settings", required: true},
+                pin: {value: '', required: true}
+            },
+            inputs: 1,
+            outputs: 1,
+            icon: "fiber_pin_black_24dp.svg",
+            label: function () {
+                return 'get ' + this.pin + ' state';
+            },
+            oneditprepare: function () {
+                var host = $('#node-input-fvconfig option:selected').text();
+                if (host) {
+                    let url = 'http://192.168.196.2:5000/api/capture/io/cur_pins_state';
+                    $('#node-input-pin').html("");
+
+                    $.ajax({
+                        url: url,
+                        dataType: "json"
+                    }).done((data) => {
+                        console.log(data)
+                        const select = document.getElementById("node-input-pin");
+                        select.innerText = '';
+                        let src = false;
+                        for (let key in data) {
+                            if (key.indexOf('GP') !== 0) continue;
+                            var option = document.createElement("option");
+                            option.text = key;
+                            option.value = key;
+                            if (this.pin == key) {
+                                option.selected = true
+                                src = key;
+                            }
+                            select.appendChild(option);
+                        }
+                    }).error(function (err) {
+                        $('#node-input-pin').html('<option value="">Error loading pins</option>');
+                        console.log(err);
+                    });
+                }
+            }
+        });
+
+        RED.nodes.registerType('pin-state-set', {
+            category: 'Flexible Vision',
+            color: '#c08ebf',
+            paletteLabel: 'Set Pin',
+            defaults: {
+                fvconfig: {type: "server-settings", required: true},
+                pin: {value: '', required: true},
+                state: {value: false, required: true}
+            },
+            inputs: 1,
+            outputs: 1,
+            icon: "fiber_pin_black_24dp.svg",
+            label: function () {
+                return (this.state ? " enable " : "disable ") + this.pin;
+            }
+        });
+
 
     })();
 </script>

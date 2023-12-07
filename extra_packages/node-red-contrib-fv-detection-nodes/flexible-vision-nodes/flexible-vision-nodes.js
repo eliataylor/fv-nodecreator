@@ -142,7 +142,7 @@ module.exports = function (RED) {
         // node.version = n.version;
         node.ws = config.workstation;
 
-        var authToken = authenticate(node.host, config.username, config.password);
+        // var authToken = authenticate(node.host, config.username, config.password);
 
         node.on('input', function (msg) {
             // if (!auth){
@@ -153,6 +153,8 @@ module.exports = function (RED) {
             // }
 
             // accept base64
+
+            // Get Image
 
             var file = msg.filename;
             if (msg.file instanceof Buffer) {
@@ -165,14 +167,18 @@ module.exports = function (RED) {
                     console.log("to stream ");
                 } else {
                     const base64Data = file.replace(/^data:image\/\w+;base64,/, '');
-                    console.log("from base64 " + base64Data);
-                    const buffer = Buffer.from(base64Data, 'base64');
                     const filename = getExtensionFromBase64(file);
-                    fs.writeFileSync('TMP File: ' + filename, buffer);
+                    console.log("from base64 to " + filename, base64Data);
+                    const buffer = Buffer.from(base64Data, 'base64');
+                    fs.writeFileSync('tmpfile.' + filename, buffer);
                     console.log('File Created:', fileName);
                     file = fs.createReadStream(fileName)
                 }
             }
+
+            // visioncell
+            // admin
+            // fvonprem
 
             var form = new FormData();
             form.append('images', file);
@@ -238,15 +244,19 @@ module.exports = function (RED) {
         authenticate(node.host, config.username, config.password);
 
         node.on('input', function (msg) {
+
             // if (!auth){
             //   return alert("Please login");
             // }
+
             // if (!node.model) {
             //   return alert("Select a model");
             // }
+
             // if (!node.version) {
             //   return alert("Select a version");
             // }
+
             // if (!node.camera) {
             //   return alert("Select a camera");
             // }
@@ -701,8 +711,6 @@ module.exports = function (RED) {
             node.status({fill: "blue", text: n.camId + ' expects > ' + n.threshold})
 
             request(options, (error, response, body) => {
-                console.log(url + " BODY IS", JSON.stringify(body));
-                node.debug(url + " RESPONSE IS", JSON.stringify(response));
                 if (!error && body) {
                     let bodyjson = false, err = 'bad response';
                     if (response.statusCode !== 200) {
@@ -857,7 +865,50 @@ module.exports = function (RED) {
         });
     }
 
+    function GetCamImage(n) {
+        RED.nodes.createNode(this, n);
+        const node = this;
+
+        const fvconfig = RED.nodes.getNode(n.fvconfig);
+        node.camId = n.camId;
+
+        node.on('input', function (msg) {
+
+            function handleError(topic, err, payload) {
+                msg.topic = topic;
+                msg.payload = payload
+                node.status({fill: "red", shape: "dot", text: err});
+                return node.send(msg);
+            }
+
+            let url = ipToUri(fvconfig.host, '/api/capture/vision/b64frame/' + node.camId);
+            const options = {"url": url, method: "GET", timeout: 15000, headers: {'Content-Type': 'application/json'}};
+            node.status({fill: "blue", text: 'loading frame'})
+            request(options, (error, response, body) => {
+                if (error) {
+                    return handleError('get frame error', "invalid json: " + body, HOURGLASS)
+                } else {
+                    try {
+                        let bodyjson = JSON.parse(body);
+                        if (typeof bodyjson['error'] === 'string') {
+                            return handleError('get frame error', bodyjson['error'], HOURGLASS)
+                        }
+                        if (typeof bodyjson["b64"] === "string") {
+                            msg.topic = 'got image';
+                            msg.payload = bodyjson['b64']
+                            node.status({fill: "green", shape: "dot"});
+                            return node.send(msg);
+                        }
+                    } catch (err) {
+                        return handleError('get frame json error', "invalid json: " + body, HOURGLASS)
+                    }
+                }
+            });
+        });
+    }
+
     RED.nodes.registerType('update-inference', UpdateInference);
+    RED.nodes.registerType('get-cam-image', GetCamImage);
     RED.nodes.registerType('pin-state-get', PinStateGet);
     RED.nodes.registerType('pin-state-set', PinStateSet);
     RED.nodes.registerType('motion-detection', MotionDetection);

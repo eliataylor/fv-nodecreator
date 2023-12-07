@@ -1038,5 +1038,64 @@
         "x": 640,
         "y": 1480,
         "wires": []
+    },
+    {
+        "id": "2ce56deab4969fca",
+        "type": "get-cam-image",
+        "z": "e583048378e103aa",
+        "fvconfig": "79dd73f42e833b44",
+        "camId": "",
+        "x": 310,
+        "y": 1580,
+        "wires": [
+            [
+                "b7690fb72c50bd24"
+            ]
+        ]
+    },
+    {
+        "id": "c5b3abb17e284f71",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 100,
+        "y": 1580,
+        "wires": [
+            [
+                "2ce56deab4969fca"
+            ]
+        ]
+    },
+    {
+        "id": "b7690fb72c50bd24",
+        "type": "debug",
+        "z": "e583048378e103aa",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 1580,
+        "wires": []
     }
 ]
