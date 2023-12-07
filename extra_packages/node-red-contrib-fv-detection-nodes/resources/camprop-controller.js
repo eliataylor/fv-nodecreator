@@ -5,8 +5,8 @@ class CamPropController {
 
         this.camServerSelector = '#node-input-fvconfig';
         this.camSelector = '#node-input-camera';
-        this.camPropSelector = '#node-input-camprop';
-        this.camPropValSelector = '#node-input-propval';
+        this.camPropSelector = '#node-input-camProp';
+        this.camPropValSelector = '#node-input-propVal';
 
         this.typeMap = {
             'Enumerate': {type: 'select', nodeName: 'select'},
@@ -22,19 +22,19 @@ class CamPropController {
         this.ipToUri = p.ipToUri; // a function in flexible-vision-nodes.html & .js
         this.ip = p.ip || "";
         if (p.camId) {
-            // this.$(this.camSelector).html(`<option value="${p.camId}" selected="true" />`)
+            this.$(this.camSelector).html(`<option value="${p.camId}" id="node-input-camera" selected="true" />`)
             this.camId = p.camId;
         } else {
             this.camId = "";
         }
         if (p.camProp) {
-            // this.$(this.camPropSelector).html(`<option value="${p.camProp}" selected="true" />`)
+            this.$(this.camPropSelector).html(`<option value="${p.camProp}" id="node-input-camProp" selected="true" />`)
             this.camProp = p.camProp;
         } else {
             this.camProp = {};
         }
         if (p.propVal) {
-            // this.$(this.camPropValSelector).html(`<input value="${p.propVal}" />`); // warn: get rerendered as correct nodeType
+            this.$(this.camPropValSelector).val(p.propVal); // warn: get rerendered as correct nodeType
             this.propVal = p.propVal;
         } else {
             this.propVal = "";
@@ -93,9 +93,13 @@ class CamPropController {
 
         this.$(this.camPropSelector).on('change', (e) => {
             var selectedOption = e.currentTarget.options[e.currentTarget.selectedIndex];
-            this.setProperty(selectedOption.getAttribute('data-parent'), selectedOption.getAttribute('data-label'));
-            this.buildPropValField();
-            this.syncToForm('Property Change');
+            if (selectedOption && selectedOption.getAttribute('data-parent')) {
+                this.setProperty(selectedOption.getAttribute('data-parent'), selectedOption.getAttribute('data-label'));
+                this.buildPropValField();
+                this.syncToForm('Property Change');
+            } else {
+                console.warn('no selected cam prop', selectedOption);
+            }
         });
 
         this.$(this.camPropValSelector).on('change', (e) => {
@@ -221,7 +225,9 @@ class CamPropController {
 
         return new Promise((resolve, reject) => {
 
-            if (this.camId === '') return reject('cam not ready');
+            if (this.camId === '') {
+                return reject('cam not ready');
+            }
             this.togglePreloader(this.camPropSelector, true)
 
             const url = this.ipToUri(this.ip, '/api/vision/vision/configTree/' + this.camId);
@@ -254,13 +260,11 @@ class CamPropController {
             this.$(this.camPropSelector).html('<option value="">No available settings. Try refreshing the camera list.</option>');
             return true;
         }
-        this.$(this.camPropSelector).html('<option value="">Select a Property</option>');
+        const opts = [];
         for (let parent in this.camSettings) {
-
-            this.$('<option/>', {
-                'text': parent,
-                'disabled': true
-            }).appendTo(this.camPropSelector);
+            opts.push(this.$('<optgroup />', {
+                'label': parent
+            }));
 
             for (let label in this.camSettings[parent]) {
                 const setting = this.camSettings[parent][label];
@@ -277,14 +281,18 @@ class CamPropController {
                 if (this.camProp === setting.node_name) {
                     toPass.selected = true;
                 }
-                this.$('<option/>', toPass).appendTo(this.camPropSelector);
+                opts.push(this.$('<option/>', toPass));
             }
         }
+        this.$(this.camPropSelector).html(opts);
     }
 
     buildPropValField() {
 
         if (!this.camProperty || !this.camProperty.type) {
+            if (this.camId === '') {
+                return this.getToolTip('Reselect your camera');
+            }
             this.$(this.camPropValSelector).val(this.propVal);
             this.findAndSetCamProperty();
             this.getToolTip('Still loading camera properties');
@@ -340,6 +348,7 @@ class CamPropController {
                 }
             }
         } else {
+            this.loadCamConfigs(true);
             console.warn("MISSING CAM SETTINGS");
         }
     }

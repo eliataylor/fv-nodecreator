@@ -378,12 +378,12 @@
             <button type="button" class="red-ui-button" id="allCamRefreshBtn">Refresh</button>
         </div>
         <div class="form-row">
-            <label for="node-input-camprop"><i class="fa fa-tag"></i> Cam Property</label>
-            <select id="node-input-camprop"></select>
+            <label for="node-input-camProp"><i class="fa fa-tag"></i> Cam Property</label>
+            <select id="node-input-camProp"></select>
         </div>
         <div class="form-row" id="fvPropValRow">
-            <label for="node-input-propval"><i class="fa fa-outdent"></i> Property Value</label>
-            <select id="node-input-propval"></select>
+            <label for="node-input-propVal"><i class="fa fa-outdent"></i> Property Value</label>
+            <input id="node-input-propVal" />
         </div>
     </div>
     <div id="camPropertyDesc"></div>
@@ -391,7 +391,7 @@
 </script>
 
 <script type="text/html" data-help-name="set-camera-property">
-    <p>Camera Property Options</p>
+    <p>Configure your selected camera</p>
     <div id="camPropertyHelp"></div>
 </script>
 
@@ -431,6 +431,7 @@
 <script type="text/javascript">
 
     (function () {
+
         const FV_DOMAIN = 'v1.cloud.flexiblevision.com';
         let VERSION = null,
             MODEL = 'LOADING MODELS...',
@@ -691,6 +692,7 @@
 
         RED.nodes.registerType('server-settings', {
             category: 'config',
+            paletteLabel: 'Server Config',
             defaults: {
                 workstation: {value: "", required: false},
                 username: {value: "", required: false},
@@ -712,6 +714,7 @@
 
         RED.nodes.registerType('onprem-upload', {
             category: 'Flexible Vision',
+            paletteLabel: 'OnPrem Upload',
             color: '#00bcd4',
             defaults: {
                 preset: {value: this.preset, required: true},
@@ -732,6 +735,7 @@
 
         RED.nodes.registerType('onprem-snap', {
             category: 'Flexible Vision',
+            paletteLabel: 'OnPrem Snap',
             color: '#ffdb20',
             defaults: {
                 preset: {value: this.preset, required: true},
@@ -754,6 +758,7 @@
 
         RED.nodes.registerType('cloud-upload', {
             category: 'Flexible Vision',
+            paletteLabel: 'Cloud Upload',
             color: '#00bcd4',
             defaults: {
                 username: {value: "", required: true},
@@ -776,6 +781,7 @@
 
         RED.nodes.registerType('pin-state-get', {
             category: 'Flexible Vision',
+            paletteLabel: 'Get Pin',
             color: '#078668',
             defaults: {
                 fvconfig: {type: "server-settings", required: true},
@@ -823,6 +829,7 @@
         RED.nodes.registerType('pin-state-set', {
             category: 'Flexible Vision',
             color: '#55ff00',
+            paletteLabel: 'Set Pin',
             defaults: {
                 fvconfig: {type: "server-settings", required: true},
                 pin: {value: '', required: true},
@@ -839,6 +846,7 @@
         RED.nodes.registerType('motion-detection', {
             category: 'Flexible Vision',
             color: '#d09f25',
+            paletteLabel: 'Detect Motion',
             label: 'Detect Motion',
             defaults: {
                 fvconfig: {type: "server-settings", required: true},
@@ -854,8 +862,7 @@
             oneditsave: function () {
                 this.mask = $('#node-input-mask').val();
                 this.debounce = $('#node-input-debounce').val();
-                this.threshold = $('#node-i' +
-                    'nput-threshold').val();
+                this.threshold = $('#node-input-threshold').val();
             },
             oneditprepare: function () {
                 function getMasks() {
@@ -923,6 +930,7 @@
         RED.nodes.registerType('image-manipulation', {
             category: 'Flexible Vision',
             color: '#857d0c',
+            paletteLabel: 'Manipulate Image',
             label: function () {
                 if (this.efx_name && this.efx_name.length > 0) {
                     return this.efx_name;
@@ -1056,7 +1064,7 @@
                 if (this.camProp && this.camProp.length > 0) parts.push(this.camProp.length > 20 ? this.camProp.substring(0, 20) + '...' : this.camProp);
                 if (this.propVal && String(this.propVal).length > 0) parts.push(String(this.propVal).length > 20 ? String(this.propVal).substring(0, 20) + '...' : this.propVal);
                 if (parts.length === 0) parts.unshift(this._def.paletteLabel);
-                else if (parts.length === 1) parts.unshift("Config");
+                else if (parts.length === 1) parts.unshift("Set");
                 return parts.join(' - ');
             },
             oneditprepare: function () {
@@ -1069,9 +1077,9 @@
                 })
                 const that = this;
                 document.getElementById("fvCamForm").addEventListener('updateToolContext', (e) => {
-                    this.camId = e.detail.camId
-                    this.camProp = e.detail.camProp
-                    this.propVal = e.detail.propVal
+                    this.camId = e.detail.camId;
+                    this.camProp = e.detail.camProp;
+                    this.propVal = e.detail.propVal;
                     this.access_mode = e.detail.access_mode;
                     this.node_type = e.detail.node_type;
                     this.lastUpdated = new Date().getTime();
@@ -1079,7 +1087,11 @@
                 }, {capture: false});
 
                 // camController.onUpdates(onUpdates);
-            }
+            },
+            oneditsave: function () {
+                this.camProp = $('#node-input-camProp').val(this.camProp);
+                this.propVal = $('#node-input-propVal').val(this.propVal);
+            },
         });
 
         RED.nodes.registerType('release-camera', {

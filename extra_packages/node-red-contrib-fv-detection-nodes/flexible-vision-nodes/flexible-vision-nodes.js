@@ -14,6 +14,32 @@ module.exports = function (RED) {
     const fs = require("fs");
     const http = require('http');
 
+    function getExtensionFromBase64(base64String) {
+        // Extract the first few characters of the Base64 string to identify the magic number
+        const magicNumber = base64String.substring(0, 20);
+
+        // Define magic numbers and their corresponding file extensions
+        const magicNumbers = {
+            '/9j/': 'jpg',
+            'iVBORw': 'png',
+            'R0lGOD': 'gif',
+            'UklGRg': 'webp',
+            'AAAAI': 'ico',
+            'PHN2Zy': 'svg+xml',
+            // Add more as needed...
+        };
+
+        // Check for a match and return the corresponding file extension
+        for (const [magic, ext] of Object.entries(magicNumbers)) {
+            if (magicNumber.startsWith(magic)) {
+                return `.${ext}`;
+            }
+        }
+
+        // If no match is found, return a default extension (you may adjust this)
+        return '.bin';
+    }
+
     function ipToUri(ip, basepath) { // make sure this matches the same function in flexible-vision-nodes.html
         if (basepath.indexOf('/detect_motion') > -1 || basepath.indexOf('/image_manipulation') > -1) {
             return "http://" + ip + ":5123" + basepath;
@@ -133,10 +159,19 @@ module.exports = function (RED) {
                 file = msg.file;
                 console.log("as buffer ");
             } else if (typeof file == 'string') {
-                console.log("from filepath ");
-                // file = fs.createReadStream(file);
-                file = Buffer.from(file, 'base64');
-                console.log("to stream ");
+                if (file.indexOf('/') === 0) {
+                    console.log("from filepath ");
+                    file = fs.createReadStream(file);
+                    console.log("to stream ");
+                } else {
+                    const base64Data = file.replace(/^data:image\/\w+;base64,/, '');
+                    console.log("from base64 " + base64Data);
+                    const buffer = Buffer.from(base64Data, 'base64');
+                    const filename = getExtensionFromBase64(file);
+                    fs.writeFileSync('TMP File: ' + filename, buffer);
+                    console.log('File Created:', fileName);
+                    file = fs.createReadStream(fileName)
+                }
             }
 
             var form = new FormData();
@@ -350,7 +385,6 @@ module.exports = function (RED) {
             var data = {
                 images: fs.createReadStream(msg.filename)
             };
-
 
             var auth = AUTH_TOKEN.trim();
             var headers = {'content-type': 'multipart/form-data', 'Authorization': 'Bearer ' + auth}

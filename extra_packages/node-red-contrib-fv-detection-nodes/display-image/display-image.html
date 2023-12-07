@@ -3,6 +3,7 @@
     const DEFAULT_IMAGE_WIDTH = 160
     RED.nodes.registerType('display-image', {
         category: 'Flexible Vision',
+        paletteLabel: 'Display Image',
         color: '#88A882',
         defaults: {
             name: { value: "" },
@@ -25,7 +26,7 @@
         inputs: 1,
         outputs: 0,
         icon: "font-awesome/fa-image",
-        align: 'right',
+        align: 'left',
         palettelabel: "image preview",
         label: function () {
             return this.name || "image preview";
