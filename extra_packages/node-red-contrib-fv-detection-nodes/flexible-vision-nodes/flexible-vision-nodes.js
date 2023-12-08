@@ -40,6 +40,16 @@ module.exports = function (RED) {
         return '.bin';
     }
 
+    function isBase64(str) {
+        try {
+            const decoded = Buffer.from(str, 'base64').toString('utf-8');
+            const reencoded = Buffer.from(decoded, 'utf-8').toString('base64');
+            return reencoded === str;
+        } catch (error) {
+            return false;
+        }
+    }
+
     function ipToUri(ip, basepath) { // make sure this matches the same function in flexible-vision-nodes.html
         if (basepath.indexOf('/detect_motion') > -1 || basepath.indexOf('/image_manipulation') > -1) {
             return "http://" + ip + ":5123" + basepath;
@@ -142,43 +152,26 @@ module.exports = function (RED) {
         // node.version = n.version;
         node.ws = config.workstation;
 
-        // var authToken = authenticate(node.host, config.username, config.password);
-
         node.on('input', function (msg) {
-            // if (!auth){
-            //   return alert("Please login")
-            // }
-            // if (!node.model) {
-            //   return alert("Select a model");
-            // }
 
-            // accept base64
-
-            // Get Image
-
-            var file = msg.filename;
-            if (msg.file instanceof Buffer) {
+            let file = null;
+            if (typeof msg.file !== 'undefined' && msg.file instanceof Buffer) {
                 file = msg.file;
                 console.log("as buffer ");
-            } else if (typeof file == 'string') {
-                if (file.indexOf('/') === 0) {
-                    console.log("from filepath ");
-                    file = fs.createReadStream(file);
-                    console.log("to stream ");
+            } else {
+                if (typeof msg.filename === 'string' && fs.existsSync(msg.filename)) {
+                    file = fs.createReadStream(msg.filename);
+                    console.log("from filepath to stream ");
                 } else {
-                    const base64Data = file.replace(/^data:image\/\w+;base64,/, '');
-                    const filename = getExtensionFromBase64(file);
-                    console.log("from base64 to " + filename, base64Data);
-                    const buffer = Buffer.from(base64Data, 'base64');
-                    fs.writeFileSync('tmpfile.' + filename, buffer);
-                    console.log('File Created:', fileName);
-                    file = fs.createReadStream(fileName)
+                    const buffer = Buffer.from(msg.payload, 'base64');
+                    const filename = `tmpfile${getExtensionFromBase64(msg.payload)}`;
+                    fs.writeFileSync(filename, buffer);
+                    fs.writeFileSync(`tmpfile.txt`, msg.payload);
+                    console.log('File Created:', filename);
+                    file = fs.createReadStream(filename)
+
                 }
             }
-
-            // visioncell
-            // admin
-            // fvonprem
 
             var form = new FormData();
             form.append('images', file);
@@ -215,7 +208,7 @@ module.exports = function (RED) {
                                 payload: parsedData
                             });
                         } catch (e) {
-                            //console.error('error');
+                            console.error('error', e);
                         }
                     });
                 }
@@ -881,14 +874,13 @@ module.exports = function (RED) {
                 return node.send(msg);
             }
 
-            let url = ipToUri(fvconfig.host, '/api/capture/vision/b64frame/' + node.camId);
+            let url = ipToUri(fvconfig.host, '/api/vision/vision/b64Frame/' + node.camId);
             const options = {"url": url, method: "GET", timeout: 15000, headers: {'Content-Type': 'application/json'}};
             node.status({fill: "blue", text: 'loading frame'})
             request(options, (error, response, body) => {
                 if (error) {
                     return handleError('get frame error', "invalid json: " + body, HOURGLASS)
                 } else {
-                    console.log('get frame ', body);
                     try {
                         let bodyjson = JSON.parse(body);
                         if (typeof bodyjson['error'] === 'string') {

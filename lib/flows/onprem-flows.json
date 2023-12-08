@@ -10,9 +10,9 @@
     {
         "id": "79dd73f42e833b44",
         "type": "server-settings",
-        "workstation": "",
-        "username": "",
-        "password": "",
+        "workstation": "elitesting",
+        "username": "admin",
+        "password": "fvonprem",
         "host": "192.168.196.2"
     },
     {
@@ -1045,11 +1045,12 @@
         "z": "e583048378e103aa",
         "fvconfig": "79dd73f42e833b44",
         "camId": "233630185059636",
-        "x": 370,
-        "y": 1580,
+        "x": 330,
+        "y": 1680,
         "wires": [
             [
-                "b7690fb72c50bd24"
+                "717a2013c4506353",
+                "53928a033058a93a"
             ]
         ]
     },
@@ -1075,7 +1076,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 100,
-        "y": 1580,
+        "y": 1680,
         "wires": [
             [
                 "2ce56deab4969fca"
@@ -1083,7 +1084,137 @@
         ]
     },
     {
-        "id": "b7690fb72c50bd24",
+        "id": "717a2013c4506353",
+        "type": "display-image",
+        "z": "e583048378e103aa",
+        "name": "",
+        "width": "160",
+        "data": "payload",
+        "dataType": "msg",
+        "thumbnail": false,
+        "active": true,
+        "pass": true,
+        "outputs": 1,
+        "x": 600,
+        "y": 1740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "53928a033058a93a",
+        "type": "onprem-upload",
+        "z": "e583048378e103aa",
+        "preset": "1",
+        "fvconfig": "79dd73f42e833b44",
+        "x": 640,
+        "y": 1680,
+        "wires": [
+            [
+                "d39dc53a46f3e0ef"
+            ]
+        ]
+    },
+    {
+        "id": "7f2da31a5e87dcc3",
+        "type": "file in",
+        "z": "e583048378e103aa",
+        "name": "binary file",
+        "filename": "extra_packages/node-red-contrib-fv-detection-nodes/resources/images/refined_motion_logo.png",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "binary",
+        "allProps": false,
+        "x": 400,
+        "y": 1640,
+        "wires": [
+            [
+                "53928a033058a93a"
+            ]
+        ]
+    },
+    {
+        "id": "69ed5cdf7dc51d3b",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 260,
+        "y": 1640,
+        "wires": [
+            [
+                "7f2da31a5e87dcc3"
+            ]
+        ]
+    },
+    {
+        "id": "3fe8668dd6646cf9",
+        "type": "inject",
+        "z": "e583048378e103aa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 260,
+        "y": 1600,
+        "wires": [
+            [
+                "4e35ca4d4ef1db1f"
+            ]
+        ]
+    },
+    {
+        "id": "4e35ca4d4ef1db1f",
+        "type": "function",
+        "z": "e583048378e103aa",
+        "name": "file path",
+        "func": "msg.filename = \"extra_packages/node-red-contrib-fv-detection-nodes/resources/images/refined_motion_logo.png\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 1600,
+        "wires": [
+            [
+                "53928a033058a93a"
+            ]
+        ]
+    },
+    {
+        "id": "d39dc53a46f3e0ef",
         "type": "debug",
         "z": "e583048378e103aa",
         "name": "debug 5",
@@ -1094,8 +1225,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 620,
-        "y": 1580,
+        "x": 860,
+        "y": 1680,
         "wires": []
     }
 ]
