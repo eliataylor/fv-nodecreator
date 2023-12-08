@@ -1044,8 +1044,8 @@
         "type": "get-cam-image",
         "z": "e583048378e103aa",
         "fvconfig": "79dd73f42e833b44",
-        "camId": "",
-        "x": 310,
+        "camId": "233630185059636",
+        "x": 370,
         "y": 1580,
         "wires": [
             [
@@ -1094,7 +1094,7 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 560,
+        "x": 620,
         "y": 1580,
         "wires": []
     }

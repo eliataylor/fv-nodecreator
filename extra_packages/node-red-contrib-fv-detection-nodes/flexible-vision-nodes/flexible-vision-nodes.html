@@ -341,7 +341,7 @@
 
 
 <script type="text/html" data-help-name="image-manipulation" id="imageManipulationHelp">
-    <p>Image Manipulation Help text...</p>
+    <p>Loading Image Manipulation Documentation...</p>
 </script>
 
 <!-- IMAGE MANIPULATION END -->
@@ -368,7 +368,7 @@
 
 <!-- GET CAM IMAGE START -->
 <script type="text/html" data-template-name="get-cam-image">
-    <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css"/>
+    <link rel="stylesheet" href="resources/node-red-contrib-fv-detection-nodes/camera-controller.css" />
     <div id="fvCamForm">
         <div class="form-row">
             <label for="node-input-fvconfig"><i class="fa fa-server" aria-hidden="true"></i> FV Server IP</label>
@@ -411,7 +411,7 @@
 
 <script type="text/html" data-help-name="set-camera-property">
     <p>Configure your selected camera</p>
-    <div id="camPropertyHelp"></div>
+    <div id="camPropertyHelp">Loading camera config documentation...</div>
 </script>
 
 <script type="text/html" data-template-name="release-camera">
@@ -860,6 +860,7 @@
                     camId: this.camId,
                     ipToUri: ipToUri
                 })
+                camController.startListeners();
                 document.getElementById("fvCamForm").addEventListener('updateToolContext', (e) => {
                     this.camId = e.detail.camId;
                     console.log("updateToolContext", e.detail);

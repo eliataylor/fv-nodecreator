@@ -888,6 +888,7 @@ module.exports = function (RED) {
                 if (error) {
                     return handleError('get frame error', "invalid json: " + body, HOURGLASS)
                 } else {
+                    console.log('get frame ', body);
                     try {
                         let bodyjson = JSON.parse(body);
                         if (typeof bodyjson['error'] === 'string') {

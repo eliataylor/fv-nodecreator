@@ -28,11 +28,11 @@ class CamController {
             let check = this.$(this.camServerSelector + ' option:selected').text()
             if (check.length > 0 && this.isValidIP(check)) {
                 this.ip = check;
-                this.$(this.camSelector).val('').trigger('change');
+                // this.$(this.camSelector).val('').trigger('change');
                 this.syncToForm('serverChange');
                 this.loadCameras();
             }
-        })
+        });
 
         this.$(this.camSelector).on('change', (e) => {
             this.syncToForm('camChange');
