@@ -166,7 +166,6 @@ module.exports = function (RED) {
                     const buffer = Buffer.from(msg.payload, 'base64');
                     const filename = `tmpfile${getExtensionFromBase64(msg.payload)}`;
                     fs.writeFileSync(filename, buffer);
-                    fs.writeFileSync(`tmpfile.txt`, msg.payload);
                     console.log('File Created:', filename);
                     file = fs.createReadStream(filename)
 
