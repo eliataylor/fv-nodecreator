@@ -981,12 +981,12 @@
         "fvconfig": "79dd73f42e833b44",
         "camera": "233630185059636",
         "camId": "233630185059636",
-        "camProp": "OffsetX",
-        "propVal": "0",
+        "camProp": "PixelCorrectionEnabled",
+        "propVal": "false",
         "access_mode": "Read and Write",
-        "node_type": "Integer",
-        "lastUpdated": 1701986139824,
-        "x": 310,
+        "node_type": "Bool",
+        "lastUpdated": 1705618997118,
+        "x": 370,
         "y": 1480,
         "wires": [
             [

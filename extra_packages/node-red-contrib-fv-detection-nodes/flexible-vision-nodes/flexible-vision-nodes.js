@@ -555,8 +555,7 @@ module.exports = function (RED) {
             options.url = ipToUri(fvconfig.host, url);
             msg.url = url;
 
-            node.debug(url);
-            node.debug(JSON.stringify(options));
+            node.debug("SETTING CAM CONFIG " + JSON.stringify(options));
 
             node.status({fill: "yellow", shape: "dot", text: url})
 

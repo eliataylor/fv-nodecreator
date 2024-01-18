@@ -894,7 +894,7 @@
                 return parts.join(' - ');
             },
             oneditprepare: function () {
-                const camController = new CamPropController($, {
+                new CamPropController($, {
                     ip: $('#node-input-fvconfig option:selected').text(),
                     camId: this.camId,
                     camProp: this.camProp,
@@ -914,8 +914,7 @@
                 // camController.onUpdates(onUpdates);
             },
             oneditsave: function () {
-                this.camProp = $('#node-input-camProp').val(this.camProp); // odd assignment but works
-                this.propVal = $('#node-input-propVal').val(this.propVal);
+                this.lastUpdated = new Date().getTime(); // force "Deploy" button to enable
             },
         });
 

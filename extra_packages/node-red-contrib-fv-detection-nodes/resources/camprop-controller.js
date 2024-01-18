@@ -60,7 +60,7 @@ class CamPropController {
                 this.buildPropValField();
             }
         }
-        this.syncToForm('');
+        this.syncToForm('loadFieldData');
     }
 
     startListeners() {
@@ -103,7 +103,7 @@ class CamPropController {
         });
 
         this.$(this.camPropValSelector).on('change', (e) => {
-            this.propVal = e.currentTarget.value;
+            this.propVal = e.target.value;
             this.syncToForm('Value Change');
         });
 
@@ -266,6 +266,8 @@ class CamPropController {
                 'label': parent
             }));
 
+            this.camSettings[parent] = Object.fromEntries(Object.entries(this.camSettings[parent]).sort());
+
             for (let label in this.camSettings[parent]) {
                 const setting = this.camSettings[parent][label];
                 // allTypes[setting.type] = label;
@@ -314,6 +316,10 @@ class CamPropController {
             this.$(this.camPropValSelector).attr('type', config.type);
         }
 
+        if (this.camProperty.access_mode.toUpperCase() === 'READ ONLY') {
+            this.$(this.camPropValSelector).prop('disabled', true);
+        }
+
         const atts = {min: 'min', max: 'max', inc: 'step'};
         for (let att in atts) {
             if (typeof this.camProperty[att] !== 'undefined') {
@@ -325,17 +331,18 @@ class CamPropController {
 
         if (this.camProperty.options) {
             const opts = this.camProperty.options.map(o => {
-                return this.$('<option/>', {
-                    text: o,
-                    value: o,
-                    selected: o == this.propVal
-                })
+                const opt = document.createElement("OPTION");
+                opt.value = 0;
+                opt.innerText = o;
+                if (o.toString() == this.propVal) { // do not use ===
+                    opt.setAttribute('selected', true);
+                }
+                return opt;
             })
             this.$(this.camPropValSelector).html(opts);
         } else {
-            this.$(this.camPropValSelector).val(this.propVal)
+            this.$(this.camPropValSelector).val(this.propVal);
         }
-
     }
 
     findAndSetCamProperty() {
@@ -362,8 +369,18 @@ class CamPropController {
         this.camProperty.parent = parent;
         this.camProperty.label = label;
         if (this.propVal === ''  || this.camProp !== this.camProperty.node_name) {
-            this.propVal = this.camProperty.value;
+            if (typeof this.camProperty.value === 'object') {
+                console.warn("camProperty.value should always be a string. found: " + typeof this.camProperty.value);
+                this.propVal = JSON.stringify(this.camProperty.value);
+            } else {
+                this.propVal = this.camProperty.value;
+            }
         }
+
+        if (this.camProperty.access_mode.toUpperCase() === 'READ ONLY') {
+            this.$(this.camPropValSelector).prop('disabled', true);
+        }
+
         this.camProp = this.camProperty.node_name;
     }
 
@@ -388,10 +405,8 @@ class CamPropController {
                 defaults.access_mode = defaults.camProperty.access_mode;
                 if (defaults.access_mode.toUpperCase() === 'READ ONLY') {
                     this.$(this.camPropValSelector).prop('disabled', true);
-                    // this.$('#fvPropValRow').hide();
                 } else {
                     this.$(this.camPropValSelector).prop('disabled', false);
-                    // this.$('#fvPropValRow').show();
                 }
             }
         }
@@ -422,11 +437,10 @@ class CamPropController {
     }
 
     getContext(src) {
-        const prop = this.$(this.camPropSelector + ' option:selected');
         let form = {
             ip: this.$(this.camServerSelector + ' option:selected').text(),
             camId: this.$(this.camSelector).val(),
-            camProp: prop.val(),
+            camProp: this.$(this.camPropSelector).val(),
             propVal: this.$(this.camPropValSelector).val()
         }
 
