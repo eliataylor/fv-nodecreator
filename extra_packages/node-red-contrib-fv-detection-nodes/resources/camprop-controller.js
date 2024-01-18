@@ -266,7 +266,7 @@ class CamPropController {
                 'label': parent
             }));
 
-            this.camSettings[parent] = Object.fromEntries(Object.entries(this.camSettings[parent]).sort());
+            // this.camSettings[parent] = Object.fromEntries(Object.entries(this.camSettings[parent]).sort());
 
             for (let label in this.camSettings[parent]) {
                 const setting = this.camSettings[parent][label];
